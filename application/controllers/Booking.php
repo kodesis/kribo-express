@@ -75,6 +75,7 @@ class Booking extends CI_Controller
                     $data[] = [
                         'customer_id' => $this->input->post('customer_id'),
                         'alamat_pickup' => trim($this->input->post('alamat_pickup')),
+                        'lokasi_gudang' => trim($this->input->post('lokasi_gudang')),
                         'awb' => $awb,
                         'origin' => $origin,
                         'destination' => $destination,

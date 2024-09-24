@@ -68,7 +68,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Lokasi gudang</label>
-                                    <input name="lokasi_gudang" id="lokasi_gudang" class="form-control" placeholder="Masukkan lokasi gudang..." oninput="this.value = this.value.toUpperCase()">
+                                    <input name="lokasi_gudang" id="lokasi_gudang" class="form-control" placeholder="Masukkan lokasi gudang pengantaran..." oninput="this.value = this.value.toUpperCase()">
                                 </div>
                             </div>
                         </div>
