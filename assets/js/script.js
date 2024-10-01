@@ -145,7 +145,7 @@ $(document).ready(function () {
 		var previousRow = $('.baris').last();
 		var isEmpty = false;
 
-		// // Cek apakah ada input kosong di baris terakhir
+		// Cek apakah ada input kosong di baris terakhir
 		previousRow.find('input[type="text"]').each(function () {
 			if ($(this).val().trim() === '') {
 				isEmpty = true;
@@ -161,24 +161,70 @@ $(document).ready(function () {
 				text: 'Harap isi minimal 1 baris detail!'
 			});
 			return;
-		} else {
-			// Tampilkan SweetAlert untuk meminta konfirmasi dari pengguna
-			Swal.fire({
-				title: "Are you sure?",
-				text: "You won't be able to revert this!",
-				icon: "warning",
-				showCancelButton: true,
-				confirmButtonColor: "#3085d6",
-				cancelButtonColor: "#d33",
-				confirmButtonText: "Yes, confirm!"
-			}).then((result) => {
-				// Jika pengguna mengonfirmasi, submit form secara manual
-				if (result.isConfirmed) {
-					form.submit(); // Submit form secara manual setelah konfirmasi
-				}
-			});
 		}
+
+		// Validasi semua input form
+		let inputs = form.find('input, select');
+		let valid = true;
+
+		inputs.each(function () {
+			if (!$(this).val()) {
+				$(this).addClass('is-invalid');
+				valid = false;
+			} else {
+				$(this).removeClass('is-invalid').addClass('is-valid');
+			}
+		});
+
+		// Validasi khusus untuk Select2 customer_id
+		if (!$('#customer_id').val()) {
+			$('#customer_id').next('.select2-container').find('.select2-selection').addClass('is-invalid');
+			valid = false; // Tandai sebagai tidak valid
+		} else {
+			$('#customer_id').next('.select2-container').find('.select2-selection').removeClass('is-invalid').addClass('is-valid');
+			valid = true;
+		}
+
+		// Jika ada input yang tidak valid, cegah submit dan tampilkan peringatan
+		if (!valid) {
+			Swal.fire({
+				icon: 'error',
+				text: 'Please fill out all required fields!'
+			});
+			return;
+		}
+
+		// Tampilkan SweetAlert untuk meminta konfirmasi dari pengguna
+		Swal.fire({
+			title: "Are you sure?",
+			text: "You won't be able to revert this!",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: "Yes, confirm!"
+		}).then((result) => {
+			// Jika pengguna mengonfirmasi, submit form secara manual
+			if (result.isConfirmed) {
+				// Nonaktifkan tombol submit untuk menghindari double submit
+				$(".btn-submit-detail").prop('disabled', true);
+
+				// Tampilkan SweetAlert untuk loading
+				Swal.fire({
+					title: "Loading...",
+					timerProgressBar: true,
+					allowOutsideClick: false,
+					didOpen: () => {
+						Swal.showLoading();
+					},
+				});
+
+				// Submit form
+				form.submit();
+			}
+		});
 	});
+
 });
 
 function reloadTable() {

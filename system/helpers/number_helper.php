@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeIgniter
  *
@@ -36,7 +37,7 @@
  * @since	Version 1.0.0
  * @filesource
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * CodeIgniter Number Helpers
@@ -50,8 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('byte_format'))
-{
+if (!function_exists('byte_format')) {
 	/**
 	 * Formats a numbers as bytes, based on size, and adds the appropriate suffix
 	 *
@@ -61,35 +61,97 @@ if ( ! function_exists('byte_format'))
 	 */
 	function byte_format($num, $precision = 1)
 	{
-		$CI =& get_instance();
+		$CI = &get_instance();
 		$CI->lang->load('number');
 
-		if ($num >= 1000000000000)
-		{
+		if ($num >= 1000000000000) {
 			$num = round($num / 1099511627776, $precision);
 			$unit = $CI->lang->line('terabyte_abbr');
-		}
-		elseif ($num >= 1000000000)
-		{
+		} elseif ($num >= 1000000000) {
 			$num = round($num / 1073741824, $precision);
 			$unit = $CI->lang->line('gigabyte_abbr');
-		}
-		elseif ($num >= 1000000)
-		{
+		} elseif ($num >= 1000000) {
 			$num = round($num / 1048576, $precision);
 			$unit = $CI->lang->line('megabyte_abbr');
-		}
-		elseif ($num >= 1000)
-		{
+		} elseif ($num >= 1000) {
 			$num = round($num / 1024, $precision);
 			$unit = $CI->lang->line('kilobyte_abbr');
-		}
-		else
-		{
+		} else {
 			$unit = $CI->lang->line('bytes');
-			return number_format($num).' '.$unit;
+			return number_format($num) . ' ' . $unit;
 		}
 
-		return number_format($num, $precision).' '.$unit;
+		return number_format($num, $precision) . ' ' . $unit;
+	}
+}
+
+function intToRoman($num)
+{
+	$mapping = [
+		1000 => 'M',
+		900 => 'CM',
+		500 => 'D',
+		400 => 'CD',
+		100 => 'C',
+		90 => 'XC',
+		50 => 'L',
+		40 => 'XL',
+		10 => 'X',
+		9 => 'IX',
+		5 => 'V',
+		4 => 'IV',
+		1 => 'I'
+	];
+
+	$result = '';
+
+	foreach ($mapping as $value => $roman) {
+		while ($num >= $value) {
+			$result .= $roman;
+			$num -= $value;
+		}
+	}
+
+	return $result;
+}
+
+if (!function_exists('terbilang')) {
+	function terbilang($angka)
+	{
+		$angka = floatval($angka);
+		$bilangan = [
+			'',
+			'Satu',
+			'Dua',
+			'Tiga',
+			'Empat',
+			'Lima',
+			'Enam',
+			'Tujuh',
+			'Delapan',
+			'Sembilan',
+			'Sepuluh',
+			'Sebelas'
+		];
+
+		if ($angka < 12) {
+			return $bilangan[$angka];
+		} else if ($angka < 20) {
+			return $bilangan[$angka - 10] . ' Belas';
+		} else if ($angka < 100) {
+			return $bilangan[floor($angka / 10)] . ' Puluh ' . $bilangan[$angka % 10];
+		} else if ($angka < 200) {
+			return 'Seratus ' . terbilang($angka - 100);
+		} else if ($angka < 1000) {
+			return $bilangan[floor($angka / 100)] . ' Ratus ' . terbilang($angka % 100);
+		} else if ($angka < 2000) {
+			return 'Seribu ' . terbilang($angka - 1000);
+		} else if ($angka < 1000000) {
+			return terbilang(floor($angka / 1000)) . ' Ribu ' . terbilang($angka % 1000);
+		} else if ($angka < 1000000000) {
+			return terbilang(floor($angka / 1000000)) . ' Juta ' . terbilang($angka % 1000000);
+		} else {
+			return 'Angka terlalu besar';
+		}
 	}
 }

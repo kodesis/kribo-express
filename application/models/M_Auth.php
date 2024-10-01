@@ -84,4 +84,9 @@ class M_Auth extends CI_Model
 
         return $this->db->from('user u')->join('user_role ur', 'u.role_id = ur.Id', 'left')->order_by('name', 'ASC')->limit($limit, $from)->get()->result();
     }
+
+    public function getUserById($id)
+    {
+        return $this->db->where('Id', $id)->get('user')->row_array();
+    }
 }

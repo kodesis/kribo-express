@@ -42,6 +42,7 @@ class Dashboard extends CI_Controller
 			"customer" => ['search_customer', 'customer'],
 			"user" => ['search_user', 'setting/user'],
 			"menu" => ['search_menu', 'setting/menu'],
+			"agent" => ['search_agent', 'agent'],
 		];
 
 		if (isset($data[$jenis])) {

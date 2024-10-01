@@ -62,9 +62,9 @@
 
 		.bs4-order-tracking-2 li>div {
 			color: #fff;
-			width: 75px;
+			width: 80px;
 			text-align: center;
-			line-height: 75px;
+			line-height: 80px;
 			display: block;
 			font-size: 12px;
 			background: #878788;
@@ -80,8 +80,9 @@
 			position: absolute;
 			left: 0%;
 			right: 0%;
-			top: 40%;
-			z-index: -1
+			z-index: -1;
+			/* mengatur posisi ketinggian baris */
+			top: 30%;
 		}
 
 		.bs4-order-tracking-2 li:first-child:after {
@@ -150,9 +151,9 @@
 			<div class="row g-5">
 				<div class="col-lg-4 col-md-6">
 					<h4 class="text-light mb-4">Address</h4>
-					<p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+					<p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Jl. Andara Raya No.1 A, Pondok Labu, Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12450</p>
 					<p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-					<p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+					<p class="mb-2"><i class="fa fa-envelope me-3"></i>admin@kriboexpress.com</p>
 					<div class="d-flex pt-2">
 						<a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
 						<a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
@@ -170,11 +171,9 @@
 				</div>
 				<div class="col-lg-4 col-md-6">
 					<h4 class="text-light mb-4">Quick Links</h4>
-					<a class="btn btn-link" href="">About Us</a>
-					<a class="btn btn-link" href="">Contact Us</a>
-					<a class="btn btn-link" href="">Our Services</a>
-					<a class="btn btn-link" href="">Terms & Condition</a>
-					<a class="btn btn-link" href="">Support</a>
+					<a class="btn btn-link" href="">Tentang</a>
+					<a class="btn btn-link" href="">Layanan</a>
+					<a class="btn btn-link" href="">Cek Resi</a>
 				</div>
 			</div>
 		</div>

@@ -39,7 +39,7 @@
     <div class="page page-center">
         <div class="container container-tight py-4">
             <div class="text-center mb-4">
-                <a href="." class="navbar-brand navbar-brand-autodark"><img src="<?= base_url() ?>assets/logo/logo-03.png" height="36" alt=""></a>
+                <a href="<?= base_url() ?>" class="navbar-brand navbar-brand-autodark"><img src="<?= base_url() ?>assets/logo/logo-03.png" height="36" alt=""></a>
             </div>
             <div class="card card-md">
                 <?php if (isset($pages)) $this->load->view($pages); ?>

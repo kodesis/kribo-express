@@ -268,7 +268,7 @@
             $('#editData .modal-title').text('Edit data ' + nama);
 
             $.ajax({
-                url: "<?= site_url('user/formEdit') ?>",
+                url: "<?= site_url('setting/formEditMenu') ?>",
                 type: "POST",
                 data: {
                     id: id,

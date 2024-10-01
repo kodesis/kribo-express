@@ -40,61 +40,115 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-12">
-                <form action="<?= base_url('booking/store_booking') ?>" method="post" class="card">
+                <form action="<?= base_url('booking/store_booking') ?>" method="post" class="card" id="formBooking">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-4 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Customer</label>
-                                    <select class="select2 form-select" name="customer_id" id="customer_id" style="width: 100%" required>
-                                        <option value="">:: Pilih customer</option>
+                                    <select class="form-select select2" name="customer_id" id="customer_id" style="width: 100%" onchange="addNewCustomer(this)" required>
+                                        <option value="">:: Choose customer</option>
                                         <?php
                                         foreach ($customers as $c) :
                                         ?>
                                             <option value="<?= $c->id ?>"><?= $c->nama_customer ?></option>
                                         <?php
                                         endforeach; ?>
+                                        <option value="__tambah__" style="background-color: red; color: white">:: ADD NEW CUSTOMER ::</option>
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-4 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Titik jemput</label>
-                                    <input name="alamat_pickup" id="alamat_pickup" class="form-control" placeholder="Masukkan titik penjemputan..." oninput="this.value = this.value.toUpperCase()">
+                                    <label for="opsi_service" class="form-label">Service</label>
+                                    <select name="opsi_service" id="opsi_service" class="form-select" onchange="showTitikJemput(this)" required>
+                                        <option value="">:: Choose service </option>
+                                        <option value="door-to-port">Door to Port</option>
+                                        <option value="port-to-port">Port to Port</option>
+                                        <option value="port-to-door">Port to Door</option>
+                                        <option value="door-to-door">Door to Door</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <div class="mb-3">
+                                    <label for="driver_id" class="form-label">Driver</label>
+                                    <select name="driver_id" id="driver_id" class="form-select" required>
+                                        <option value="">:: Choose driver</option>
+                                        <?php
+                                        foreach ($drivers as $d) :
+                                        ?>
+                                            <option value="<?= $d->Id ?>"><?= $d->name ?></option>
+                                        <?php
+                                        endforeach; ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Lokasi gudang</label>
-                                    <input name="lokasi_gudang" id="lokasi_gudang" class="form-control" placeholder="Masukkan lokasi gudang pengantaran..." oninput="this.value = this.value.toUpperCase()">
+                                    <label class="form-label">Pickup point</label>
+                                    <input name="alamat_pickup" id="alamat_pickup" class="form-control" placeholder="Enter pickup point..." oninput="this.value = this.value.toUpperCase()" required>
                                 </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Warehouse</label>
+                                    <input name="lokasi_gudang" id="lokasi_gudang" class="form-control" placeholder="Enter warehouse location..." oninput="this.value = this.value.toUpperCase()" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="newCustomer" style="display: none;">
+                            <div class="row">
+                                <hr>
+                                <h4>New Customer</h4>
+                                <div class="col-md-4 col-12">
+                                    <div class="mb-3">
+                                        <label for="" class="form-label">Name</label>
+                                        <input type="text" name="nama_customer is-valid" id="nama_customer" class="form-control" placeholder="Enter customer's name..." oninput="this.value = this.value.toUpperCase()">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <div class="mb-3">
+                                        <label for="" class="form-label">Phone</label>
+                                        <input type="text" name="telepon_customer is-valid" id="telepon_customer" class="form-control" placeholder="Enter customer's whatsapp number...">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <div class="mb-3">
+                                        <label for="" class="form-label">Address</label>
+                                        <input type="text" name="alamat_customer is-valid" id="alamat_customer" class="form-control" placeholder="Enter customer's address..." oninput="this.value = this.value.toUpperCase()">
+                                    </div>
+                                </div>
+                                <hr>
                             </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>AWB</th>
+                                        <th class="">#</th>
                                         <th class="w-8">Origin</th>
                                         <th class="w-8">Destination</th>
+                                        <th class="w-8">Qty</th>
+                                        <th class="w-8">Chargeable</th>
                                         <th>Commodity</th>
                                         <th class="w-1"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body">
                                     <tr class="baris">
-                                        <td class="nomor-urut text-end">1.</td>
-                                        <td>
-                                            <input type="text" name="awb[]" id="awb[]" class="form-control" placeholder="Enter awb number..." required>
-                                        </td>
+                                        <td class="nomor-urut text-end"></td>
                                         <td>
                                             <input type="text" name="origin[]" id="origin[]" class="form-control" placeholder="Enter origin..." oninput="this.value = this.value.toUpperCase()" required>
                                         </td>
                                         <td>
                                             <input type="text" name="destination[]" id="destination[]" class="form-control" placeholder="Enter destination..." oninput="this.value = this.value.toUpperCase()" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="qty[]" id="qty[]" class="form-control angka" placeholder="Enter qty..." required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="chargeable[]" id="chargeable[]" class="form-control angka" placeholder="Enter chargeable..." required>
                                         </td>
                                         <td>
                                             <input type="text" name="commodity[]" id="commodity[]" class="form-control" placeholder="Enter commodity..." oninput="this.value = this.value.toUpperCase()" required>
@@ -110,7 +164,7 @@
                     <div class="card-footer text-end">
                         <div class="d-flex">
                             <button type="button" class="btn btn-secondary" id="addRow">Add new row</button>
-                            <button type="submit" class="btn btn-primary ms-auto">
+                            <button type="submit" class="btn btn-primary ms-auto btn-submit-detail">
                                 Simpan
                             </button>
                         </div>
@@ -124,11 +178,41 @@
 <script type="text/javascript" src="<?= base_url(); ?>assets/vendor/select2/js/select2.min.js"></script>
 
 <script>
+    function showTitikJemput() {
+        var x = document.getElementById("opsi_service").value;
+
+        if (x == 'port-to-port' || x == 'port-to-door') {
+            $("#alamat_pickup").val("Kribo Express Andara");
+        } else {
+            $("#alamat_pickup").val("");
+        }
+    }
+
+    function addNewCustomer() {
+        var option = document.getElementById("customer_id").value;
+
+        if (option == "__tambah__") {
+            $("#newCustomer").css("display", "block");
+        } else {
+            $("#newCustomer").css("display", "none");
+        }
+    }
+
+    function showPickup() {
+        var option = document.getElementById("opsi_service").value;
+
+        if (option == "no") {
+            $("#newCustomer").css("display", "block");
+        } else {
+            $("#newCustomer").css("display", "none");
+        }
+    }
     $(document).ready(function() {
+
         $('.select2').select2();
 
         // Menggunakan mask untuk input uang
-        $('.uang').mask('000.000.000.000.000', {
+        $('.angka').mask('000.000.000.000.000', {
             reverse: true
         });
 
@@ -137,6 +221,9 @@
 
         function updateRowNumbers() {
             $('#table-body .baris').each(function(index) {
+                // var number = index + 1;
+                // $(this).find('.nomor-urut').val(number.toString().padStart(2, '0'));
+
                 $(this).find('.nomor-urut').text(index + 1);
             });
         }
@@ -180,6 +267,10 @@
             previousRow.after(newRow);
             // initializeAutocomplete();
             updateRowNumbers();
+
+            newRow.find('.angka').mask('000.000.000.000.000', {
+                reverse: true
+            });
         });
 
         // Hapus baris ketika tombol hapus diklik

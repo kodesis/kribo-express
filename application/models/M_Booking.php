@@ -12,7 +12,7 @@ class M_Booking extends CI_Model
 
     public function list_booking()
     {
-        return $this->db->from('booking b')->join('customer c', 'b.customer_id = c.id')->order_by('b.id', 'DESC')->get()->result();
+        return $this->db->from('booking b')->join('customer c', 'b.customer_id = c.id', 'left')->order_by('b.id', 'DESC')->get()->result();
     }
 
     public function insert_batch($data)
@@ -25,23 +25,36 @@ class M_Booking extends CI_Model
         return $this->db->where('Id', $id)->update('booking', $data);
     }
 
-    public function is_available($awb)
+    public function updateAwb($id, $data)
     {
-        $this->queryId($awb);
+        return $this->db->where('awb', $id)->update('booking', $data);
+    }
+
+    public function is_available($no_booking)
+    {
+        $this->queryBooking($no_booking);
 
         return $this->db->get('booking')->num_rows();
     }
 
-    public function detailAwb($awb)
+    public function detailBookingByAwb($awb)
     {
-        $this->queryId($awb);
+        $this->db->where('awb', $awb);
 
         return $this->db->get('booking')->row_array();
     }
 
-    private function queryId($awb)
+    public function detailBooking($no_booking)
     {
-        $this->db->where('awb', $awb);
+        $this->db->from('booking b')->join('customer c', 'b.customer_id = c.id', 'left');
+        $this->queryBooking($no_booking);
+
+        return $this->db->get()->row_array();
+    }
+
+    private function queryBooking($no_booking)
+    {
+        $this->db->where('no_booking', $no_booking);
     }
 
     public function insert_batch_detail_awb($data)
@@ -51,19 +64,19 @@ class M_Booking extends CI_Model
 
     public function delete_detail_awb($id)
     {
-        return $this->db->where('awb_id', $id)->delete('awb_detail');
+        return $this->db->where('booking_id', $id)->delete('awb_detail');
     }
 
-    public function detailItemAwb($id)
+    public function detailItemBooking($id)
     {
-        return $this->db->where('awb_id', $id)->get('awb_detail')->result();
+        return $this->db->where('booking_id', $id)->get('awb_detail')->result();
     }
 
     public function list_detail_awb()
     {
         // return $this->db->order_by('slug', 'ASC')->get('awb_detail')->result();
 
-        return $this->db->from('awb_detail ad')->join('booking b', 'ad.awb_id = b.Id', 'left')->order_by('slug', 'ASC')->get()->result();
+        return $this->db->from('awb_detail ad')->join('booking b', 'ad.booking_id = b.Id', 'left')->order_by('slug', 'ASC')->get()->result();
     }
 
     public function updateAwbDetail($slug, $data)
@@ -74,6 +87,16 @@ class M_Booking extends CI_Model
     public function list_driver()
     {
         return $this->db->where('role_id', '4')->get('user')->result();
+    }
+
+    public function getBooking($no_booking)
+    {
+        return $this->db->where('no_booking', $no_booking)->get('booking')->row_array();
+    }
+
+    public function getBookingById($id_booking)
+    {
+        return $this->db->where('Id', $id_booking)->get('booking')->row_array();
     }
 
     public function getItemAwb($slug)
@@ -91,9 +114,9 @@ class M_Booking extends CI_Model
         if ($keyword) {
             $this->db->like('a.slug', $keyword);
             $this->db->or_like('nama_customer', $keyword);
-            $this->db->or_like('alamat_pickup', $keyword);
+            // $this->db->or_like('alamat_pickup', $keyword);
         }
-        return $this->db->select('*, a.slug as slug_item')->from('awb_detail a')->join('booking b', 'a.awb_id = b.Id', 'left')->join('customer c', 'b.customer_id = c.id', 'left')->count_all_results();
+        return $this->db->select('*, a.slug as slug_item')->from('awb_detail a')->join('booking b', 'a.booking_id = b.Id', 'left')->join('customer c', 'b.customer_id = c.id', 'left')->count_all_results();
     }
 
     public function listItemAwbPaginate($limit, $from, $keyword)
@@ -101,9 +124,9 @@ class M_Booking extends CI_Model
         if ($keyword) {
             $this->db->like('a.slug', $keyword);
             $this->db->or_like('nama_customer', $keyword);
-            $this->db->or_like('alamat_pickup', $keyword);
+            // $this->db->or_like('alamat_pickup', $keyword);
         }
-        return $this->db->select('*, a.slug as slug_item')->from('awb_detail a')->join('booking b', 'a.awb_id = b.Id', 'left')->join('customer c', 'b.customer_id = c.id', 'left')->limit($limit, $from)->get()->result();
+        return $this->db->select('*, a.slug as slug_item')->from('awb_detail a')->join('booking b', 'a.booking_id = b.Id', 'left')->join('customer c', 'b.customer_id = c.id', 'left')->order_by('a.created_at', 'DESC')->order_by('a.slug', 'DESC')->limit($limit, $from)->get()->result();
     }
 
     public function dashboard()
@@ -115,5 +138,34 @@ class M_Booking extends CI_Model
         SUM(CASE WHEN status_tracking = 4 THEN 1 ELSE 0 END) AS 'status_4' ");
 
         return $this->db->from('awb_detail')->get()->row_array();
+    }
+
+    public function updateBatchBooking($data)
+    {
+        return $this->db->update_batch('awb_detail', $data, 'slug');
+    }
+
+    public function updateAwbDetailByBookingId($id, $data)
+    {
+        return $this->db->where('booking_id', $id)->update('awb_detail', $data);
+    }
+
+    public function select_max_booking()
+    {
+        return $this->db->select('max(no_urut) as max')->where('DATE(created_at)', date('Y-m-d'))->get('booking')->row_array();
+    }
+
+    public function getPrice($origin, $destination)
+    {
+        $this->db->group_start();
+        $this->db->where('origin', $origin);
+        $this->db->where('destination', $destination);
+        $this->db->group_end();
+        return $this->db->get('mt_pricelist')->row_array();
+    }
+
+    public function selectMaxResi($slug)
+    {
+        return $this->db->select('max(no_urut) as max')->where('slug', $slug)->get('awb_detail')->row_array();
     }
 }

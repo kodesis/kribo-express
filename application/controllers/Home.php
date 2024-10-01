@@ -45,8 +45,19 @@ class Home extends CI_Controller
 
 	public function track()
 	{
+		$nomor_resi = $this->input->post('nomor_resi');
+
+
+		$resi = $this->M_Booking->getItemAwb($nomor_resi);
+		// // $booking = $this->M_Booking->getBookingById($resi['booking_id']);
+
+		// echo '<pre>';
+		// print_r($nomor_resi);
+		// // print_r($booking);
+		// echo '</pre>';
+		// exit;
 		$resi = null;
-		if (!empty($this->input->post('nomor_resi'))) {
+		if (!empty($nomor_resi)) {
 			$this->form_validation->set_rules('g-recaptcha-response', 'reCAPTCHA', 'required');
 
 			// if ($this->form_validation->run() == FALSE) {
@@ -97,23 +108,39 @@ class Home extends CI_Controller
 
 			$nomor_resi = $this->input->post('nomor_resi');
 
+
+			$resi = $this->M_Booking->getItemAwb($nomor_resi);
+			$booking = $this->M_Booking->getBookingById($resi['booking_id']);
+			$driver = $this->M_Auth->getUserById($booking['id_driver']);
+
 			$cek_resi = $this->M_Booking->cekItemAwb($nomor_resi);
 
 			if ($cek_resi) {
-				$resi = $this->M_Booking->getItemAwb($nomor_resi);
 
 				$this->session->set_flashdata('message', "Nomor resi  $nomor_resi ditemukan!");
 			} else {
 				$this->session->set_flashdata('message', "Nomor resi  $nomor_resi tidak ditemukan!");
 			}
-		}
 
-		$data = [
-			'title' => 'Track',
-			'segment' => 'track',
-			'pages' => 'pages/front/home/v_track',
-			'resi' => ($resi) ? $resi : ''
-		];
+
+			$data = [
+				'title' => 'Track',
+				'segment' => 'track',
+				'pages' => 'pages/front/home/v_track',
+				'resi' => ($resi) ? $resi : '',
+				'booking' => ($booking) ? $booking : '',
+				'driver' => ($driver) ? $driver : '',
+			];
+		} else {
+			$data = [
+				'title' => 'Track',
+				'segment' => 'track',
+				'pages' => 'pages/front/home/v_track',
+				'resi' => '',
+				'booking' => '',
+				'driver' => '',
+			];
+		}
 
 		$this->load->view('pages/front/index', $data);
 	}
