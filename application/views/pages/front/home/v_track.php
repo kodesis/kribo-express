@@ -31,7 +31,11 @@
 							</div>
 							<div class="col-12">
 								<!-- Google reCAPTCHA v2 widget -->
-								<div class="g-recaptcha" data-sitekey="6Le8ZkcqAAAAAMaPLJPvTfEmiAJxPdh-wBXJmoma"></div>
+								<!-- Local -->
+								<!-- <div class="g-recaptcha" data-sitekey="6Le8ZkcqAAAAAMaPLJPvTfEmiAJxPdh-wBXJmoma"></div> -->
+
+								<!-- Hosting -->
+								<div class="g-recaptcha" data-sitekey="6LcrQFQqAAAAAEa0DkcI1dUU0mxEt48SZ6LXMiic"></div>
 							</div>
 							<div class="col-12">
 								<button class="btn btn-primary w-100 py-3" type="submit">Lacak Sekarang</button>
