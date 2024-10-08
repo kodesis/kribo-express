@@ -15,7 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 
-<body onload="startTimeEnglish()">
+<body onload="startTimeEnglish()" class="">
 
     <?php
     $user = $this->M_Auth->cek_user($this->session->userdata('username'));

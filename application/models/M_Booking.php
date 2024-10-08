@@ -10,6 +10,42 @@ class M_Booking extends CI_Model
         $this->load->database();
     }
 
+    public function countBooking($keyword)
+    {
+        $role_id = $this->session->userdata('role_id');
+
+        if ($role_id == '3') {
+            $this->db->where('customer_id', $role_id);
+        }
+
+        if ($keyword) {
+            $this->db->like('b.no_resi', $keyword);
+            $this->db->or_like('b.origin', $keyword);
+            $this->db->or_like('b.destination', $keyword);
+            $this->db->or_like('nama_customer', $keyword);
+        }
+
+        return $this->db->from('resi b')->join('customer c', 'b.customer_id = c.id', 'left')->count_all_results();
+    }
+
+    public function listBookingPaginate($limit, $from, $keyword)
+    {
+        $role_id = $this->session->userdata('role_id');
+
+        if ($role_id == '3') {
+            $this->db->where('customer_id', $this->session->userdata('customer_id'));
+        }
+
+        if ($keyword) {
+            $this->db->like('b.no_resi', $keyword);
+            $this->db->or_like('b.origin', $keyword);
+            $this->db->or_like('b.destination', $keyword);
+            $this->db->or_like('nama_customer', $keyword);
+        }
+
+        return $this->db->from('resi b')->join('customer c', 'b.customer_id = c.id', 'left')->order_by('b.no_resi', 'DESC')->limit($limit, $from)->get()->result();
+    }
+
     public function list_booking()
     {
         return $this->db->from('booking b')->join('customer c', 'b.customer_id = c.id', 'left')->order_by('b.id', 'DESC')->get()->result();
@@ -164,8 +200,28 @@ class M_Booking extends CI_Model
         return $this->db->get('mt_pricelist')->row_array();
     }
 
-    public function selectMaxResi($slug)
+    public function selectMaxResi()
     {
-        return $this->db->select('max(no_urut) as max')->where('slug', $slug)->get('awb_detail')->row_array();
+        return $this->db->select('max(no_urut) as max')->where('DATE(created_at)', date('Y-m-d'))->get('resi')->row_array();
+    }
+
+    public function insertResi($data)
+    {
+        return $this->db->insert('resi', $data);
+    }
+
+    public function getResi($no_resi)
+    {
+        return $this->db->where('no_resi', $no_resi)->get('resi')->row_array();
+    }
+
+    public function updateResi($no_resi, $data)
+    {
+        return $this->db->where('no_resi', $no_resi)->update('resi', $data);
+    }
+
+    public function cekResi($slug)
+    {
+        return $this->db->where('no_resi', $slug)->get('resi')->num_rows();
     }
 }

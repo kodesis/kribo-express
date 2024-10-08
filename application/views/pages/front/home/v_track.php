@@ -32,10 +32,10 @@
 							<div class="col-12">
 								<!-- Google reCAPTCHA v2 widget -->
 								<!-- Local -->
-								<!-- <div class="g-recaptcha" data-sitekey="6Le8ZkcqAAAAAMaPLJPvTfEmiAJxPdh-wBXJmoma"></div> -->
+								<div class="g-recaptcha" data-sitekey="6Le8ZkcqAAAAAMaPLJPvTfEmiAJxPdh-wBXJmoma"></div>
 
 								<!-- Hosting -->
-								<div class="g-recaptcha" data-sitekey="6LcrQFQqAAAAAEa0DkcI1dUU0mxEt48SZ6LXMiic"></div>
+								<!-- <div class="g-recaptcha" data-sitekey="6LcrQFQqAAAAAEa0DkcI1dUU0mxEt48SZ6LXMiic"></div> -->
 							</div>
 							<div class="col-12">
 								<button class="btn btn-primary w-100 py-3" type="submit">Lacak Sekarang</button>
@@ -69,34 +69,40 @@
 						Dalam proses
 						<p class="text-center fst-italic mt-0">In Process</p>
 					</li>
-					<li class="step <?= ($resi['status_tracking'] == '1') ? 'active' : '' ?>">
+					<!-- <li class="step <?= ($resi['status_tracking'] == '1') ? 'active' : '' ?>">
 						<div style="margin-bottom: 10px;"><i class="fa fa-dolly fa-2x"></i></div> Penjemputan
 						<p class="text-center fst-italic mt-0">Pickup</p>
-					</li>
+					</li> -->
 					<li class="step <?= ($resi['status_tracking'] == '2') ? 'active' : '' ?>">
 						<div style="margin-bottom: 10px;"><i class="fa fa-shipping-fast fa-2x"></i></div> Perjalanan ke gudang
 						<p class="text-center fst-italic mt-0">In delivery to warehouse</p>
 					</li>
 					<li class="step <?= ($resi['status_tracking'] == '3') ? 'active' : '' ?>">
-						<div style="margin-bottom: 10px;"><i class="fa fa-warehouse fa-2x"></i></div> Tiba di <?= $booking['gudang_tujuan'] ?>
-						<p class="text-center fst-italic mt-0">Arrived at <?= $booking['gudang_tujuan'] ?></p>
+						<div style="margin-bottom: 10px;"><i class="fa fa-warehouse fa-2x"></i></div> Tiba di <?= $resi['gudang_tujuan'] ?>
+						<p class="text-center fst-italic mt-0">Arrived at <?= $resi['gudang_tujuan'] ?></p>
 					</li>
 					<li class="step <?= ($resi['status_tracking'] == '4') ? 'active' : '' ?>">
-						<div style="margin-bottom: 10px;"><i class="fa fa-map-marker-alt fa-2x"></i></div> Tiba di tujuan (<?= $resi['kota_tujuan'] ?>)
-						<p class="text-center fst-italic mt-0">Arrived at destination (<?= $resi['kota_tujuan'] ?>)</p>
+						<div style="margin-bottom: 10px;"><i class="fa fa-map-marker-alt fa-2x"></i></div> Tiba di tujuan
+						<p class="text-center fst-italic mt-0">Arrived at destination</p>
 					</li>
 				</ul>
 				<?php
-				if ($resi['status_tracking'] == '3') {
+				if ($resi['status_tracking'] == '4') {
 				?>
-					<p class="text-center">Paket akan dikirimkan dengan <?= ucfirst($resi['moda_pengiriman']) ?> pada <?= format_indo($resi['tanggal_berangkat']) ?> dari <?= $booking['origin'] ?> menuju <?= $booking['destination'] ?></p>
+					<p class="text-center"><?= ucfirst($resi['alamat_penerima']) ?>.</p>
 					<p class="text-center fst-italic mt-0">
-						The package will be shipped by <?= ucfirst($resi['moda_pengiriman']) ?> on <?= format_english($resi['tanggal_berangkat']) ?> from CGK to KNO.</p>
+						<?= ucfirst($resi['alamat_penerima']) ?> .</p>
+				<?php
+				} else if ($resi['status_tracking'] == '3') {
+				?>
+					<p class="text-center">Paket akan dikirimkan dengan <?= ucfirst($resi['moda_pengiriman']) ?> pada <?= format_indo($resi['tanggal_berangkat']) ?> dari <?= $resi['origin'] ?> menuju <?= $resi['destination'] ?></p>
+					<p class="text-center fst-italic mt-0">
+						The package will be shipped by <?= ucfirst($resi['moda_pengiriman']) ?> on <?= format_english($resi['tanggal_berangkat']) ?> from <?= $resi['origin'] ?> to <?= $resi['destination'] ?>.</p>
 				<?php
 				} else if ($resi['status_tracking'] == '2') {
 				?>
-					<p class="text-center">Paket sedang dalam pengantaran ke <?= $booking['gudang_tujuan'] ?> oleh <?= $driver['name'] ?>. <br>
-					<p class="text-center fst-italic mt-0">The package is currently being delivered to <?= $booking['gudang_tujuan'] ?> by <?= $driver['name'] ?>.</p>
+					<p class="text-center">Paket sedang dalam pengantaran ke <?= $resi['gudang_tujuan'] ?>. <br>
+					<p class="text-center fst-italic mt-0">The package is currently being delivered to <?= $resi['gudang_tujuan'] ?>.</p>
 				<?php
 				} ?>
 			<?php

@@ -89,7 +89,7 @@
 
         <div class="barcode">
             <img src="<?= $qr_code ?>" alt="Barcode Resi">
-            <p><?= $resi['slug'] ?></p>
+            <p><?= $resi['no_resi'] ?></p>
         </div>
 
         <table class="detail">
@@ -116,21 +116,21 @@
             <tr>
                 <td>
                     <h3>Deskripsi Barang:</h3>
-                    <p><?= $booking['commodity'] ?></p>
+                    <p><?= $resi['commodity'] ?></p>
                 </td>
                 <td>
                     <h3>Biaya Kiriman:</h3>
-                    <p>Rp. <?= number_format($resi['total_amount']) ?></p>
+                    <p>Rp. <?= number_format($resi['nominal']) ?></p>
                 </td>
             </tr>
             <tr>
                 <td>
                     <h3>Kota Asal:</h3>
-                    <p>JAKARTA</p>
+                    <p><?= $resi['origin'] ?></p>
                 </td>
                 <td>
                     <h3>Kota Tujuan:</h3>
-                    <p><?= $resi['kota_tujuan'] ?></p>
+                    <p><?= $resi['destination'] ?></p>
                 </td>
             </tr>
         </table>

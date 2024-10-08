@@ -11,37 +11,37 @@
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
                         <label for="resi" class="form-label">No. Resi</label>
-                        <input type="text" name="resi" id="resi" class="form-control" value="<?= $resi['slug'] ?>" readonly>
+                        <input type="text" name="resi" id="resi" class="form-control" value="<?= $resi['no_resi'] ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label for="resi" class="form-label">Jenis barang</label>
-                        <input type="text" name="resi" id="resi" class="form-control" value="<?= $commodity ?>" readonly>
+                        <label for="jenis_barang" class="form-label">Jenis barang</label>
+                        <input type="text" name="jenis_barang" id="jenis_barang" class="form-control" value="<?= $commodity ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label for="resi" class="form-label">Qty</label>
-                        <input type="text" name="resi" id="resi" class="form-control" value="<?= $resi['qty'] ?>" readonly>
+                        <label for="qty" class="form-label">Qty</label>
+                        <input type="text" name="qty" id="qty" class="form-control" value="<?= $resi['qty'] ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label for="resi" class="form-label">Chargeable</label>
-                        <input type="text" name="resi" id="resi" class="form-control" value="<?= $resi['chargeable'] ?>" readonly>
+                        <label for="chargeable" class="form-label">Chargeable</label>
+                        <input type="text" name="chargeable" id="chargeable" class="form-control" value="<?= $resi['chargeable'] ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-12 col-12">
                     <div class="mb-3">
-                        <label for="resi" class="form-label">Agent</label>
-                        <input type="text" name="resi" id="resi" class="form-control" value="<?= $agent ?>" readonly>
+                        <label for="nama_penerima" class="form-label">Nama penerima</label>
+                        <input type="text" name="nama_penerima" id="nama_penerima" class="form-control" value="<?= $resi['nama_penerima'] ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-12 col-12">
                     <div class="mb-3">
-                        <label for="resi" class="form-label">Alamat</label>
-                        <input type="text" name="resi" id="resi" class="form-control" value="<?= $resi['kota_tujuan'] ?>" readonly>
+                        <label for="alamat_penerima" class="form-label">Alamat penerima</label>
+                        <input type="text" name="alamat_penerima" id="alamat_penerima" class="form-control" value="<?= $resi['alamat_penerima'] ?>" readonly>
                     </div>
                 </div>
             </div>

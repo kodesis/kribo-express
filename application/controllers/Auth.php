@@ -50,6 +50,7 @@ class Auth extends CI_Controller
                         'username' => $user['username'],
                         'email' => $user['email'],
                         'role_id' => $user['role_id'],
+                        'customer_id' => $user['customer_id'],
                         'is_logged_in' => true,
                     ];
                     $this->session->set_userdata($data);
@@ -90,7 +91,7 @@ class Auth extends CI_Controller
     public function registration()
     {
         if ($this->session->userdata('is_logged_in')) {
-            redirect('dash/dashboard');
+            redirect('dashboard');
         }
 
         $this->form_validation->set_rules('name', 'Name', 'required|trim');

@@ -2,32 +2,32 @@
 <div class="container-fluid p-0 pb-5">
     <div class="owl-carousel header-carousel position-relative mb-5">
         <div class="owl-carousel-item position-relative">
-            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/carousel-2.jpg" alt="">
-            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(6, 3, 21, .5);">
+            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kribo-01.png" alt="">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center">
                 <div class="container">
                     <div class="row justify-content-start">
                         <div class="col-10 col-lg-8">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Pengiriman Cepat & Terpercaya</h5>
+                            <!-- <h5 class="text-white text-uppercase mb-3 animated slideInDown">Pengiriman Cepat & Terpercaya</h5>
                             <h1 class="display-3 text-white animated slideInDown mb-4">Mitra Utama Anda untuk <span class="text-primary">Solusi Logistik</span></h1>
-                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Dengan Kribo Express, paket Anda berada di tangan yang aman. Cepat, aman, dan selalu tepat waktu.</p>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Baca Selengkapnya</a>
-                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Dapatkan Penawaran</a>
+                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Dengan Kribo Express, paket Anda berada di tangan yang aman. Cepat, aman, dan selalu tepat waktu.</p> -->
+                            <!-- <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Baca Selengkapnya</a>
+                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Dapatkan Penawaran</a> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="owl-carousel-item position-relative">
-            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/carousel-1.jpg" alt="">
-            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(6, 3, 21, .5);">
+            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kribo-02.png" alt="">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center">
                 <div class="container">
                     <div class="row justify-content-start">
                         <div class="col-10 col-lg-8">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Layanan Logistik Global</h5>
+                            <!-- <h5 class="text-white text-uppercase mb-3 animated slideInDown">Layanan Logistik Global</h5>
                             <h1 class="display-3 text-white animated slideInDown mb-4">Solusi <span class="text-primary">Transportasi</span> Cepat & Aman</h1>
-                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Dari lokal hingga internasional, Kribo Express mengantarkan barang Anda dengan cepat dan handal.</p>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Baca Selengkapnya</a>
-                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Dapatkan Penawaran</a>
+                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Dari lokal hingga internasional, Kribo Express mengantarkan barang Anda dengan cepat dan handal.</p> -->
+                            <!-- <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Baca Selengkapnya</a>
+                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Dapatkan Penawaran</a> -->
                         </div>
                     </div>
                 </div>
@@ -43,13 +43,13 @@
         <div class="row g-5 mx-lg-0">
             <div class="col-lg-6 ps-lg-0 wow fadeInLeft" data-wow-delay="0.1s" style="min-height: 400px;">
                 <div class="position-relative h-100">
-                    <img class="position-absolute img-fluid w-100 h-100" src="<?= base_url() ?>assets/front/img/about.jpg" style="object-fit: cover;" alt="">
+                    <img class="position-absolute img-fluid w-100 h-100" src="<?= base_url() ?>assets/front/img/kribo-03.png" style="object-fit: cover;" alt="">
                 </div>
             </div>
             <div class="col-lg-6 about-text wow fadeInUp" data-wow-delay="0.3s">
                 <h6 class="text-secondary text-uppercase mb-3">Tentang Kami</h6>
                 <h1 class="mb-5">Solusi Transportasi dan Logistik Cepat</h1>
-                <p class="mb-5">Kribo Express berdedikasi untuk menyediakan solusi logistik yang cepat, aman, dan terpercaya bagi bisnis maupun individu. Kami memastikan cakupan global dan pengiriman tepat waktu dengan layanan kami yang canggih.</p>
+                <p class="mb-5">Perusahaan ekspedisi KRIBO Express berdiri sejak NOVEMBER 2023 yang mulanya bernama PT. INDONESIA KRIBO NUSANTARA (IKN). Usaha kami tidak hanya jasa kurir paket DOMESTIK, tetapi juga pada kegiatan PENGIRIMAN barang dan pengiriman dokumen ke luar negeri.</p>
                 <div class="row g-4 mb-5">
                     <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
                         <i class="fa fa-globe fa-3x text-primary mb-3"></i>
@@ -139,34 +139,19 @@
         </div>
     </div>
 </div>
-<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+<!-- <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
     <div class="container py-5">
         <div class="text-center">
-            <h6 class="text-secondary text-uppercase">Testimoni</h6>
+            <h6 class="text-secondary text-uppercase">Mitra</h6>
             <h1 class="mb-0">Apa Kata Klien Kami!</h1>
         </div>
         <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
             <div class="testimonial-item p-4 my-5">
-                <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
-                <div class="d-flex align-items-end mb-4">
-                    <img class="img-fluid flex-shrink-0" src="<?= base_url() ?>assets/front/img/testimonial-1.jpg" style="width: 80px; height: 80px;" alt="Testimonial 1">
-                    <div class="ms-4">
-                        <h5 class="mb-1">Budi Santoso</h5>
-                        <p class="m-0">CEO, Perusahaan Logistik</p>
-                    </div>
-                </div>
-                <p class="mb-0">Pelayanan yang sangat profesional dan tepat waktu. Kami sangat puas dengan solusi yang diberikan oleh perusahaan ini.</p>
+                <img src="assets/img/clients/logo-bandes-group.png" alt="Client 1" class="" />
             </div>
             <div class="testimonial-item p-4 my-5">
-                <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
-                <div class="d-flex align-items-end mb-4">
-                    <img class="img-fluid flex-shrink-0" src="<?= base_url() ?>assets/front/img/testimonial-2.jpg" style="width: 80px; height: 80px;" alt="Testimonial 2">
-                    <div class="ms-4">
-                        <h5 class="mb-1">Siti Aisyah</h5>
-                        <p class="m-0">Manajer Operasional, PT Global Transport</p>
-                    </div>
-                </div>
-                <p class="mb-0">Tim yang sangat berpengalaman dan selalu siap membantu kami dalam setiap kebutuhan logistik. Layanan luar biasa!</p>
+
+                <img src="assets/img/clients/logo-bdt.png" alt="Client 2" />
             </div>
             <div class="testimonial-item p-4 my-5">
                 <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
@@ -192,4 +177,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

@@ -100,4 +100,24 @@ class M_Setting extends CI_Model
     {
         return $this->db->get_where('menu', ['url' => $url])->row_array();
     }
+
+    public function getProvinsi()
+    {
+        return $this->db->order_by('nama_provinsi', 'ASC')->get('mt_provinsi')->result();
+    }
+
+    public function getKota($id)
+    {
+        return $this->db->where('provinsi_id', $id)->order_by('nama_kota', 'ASC')->get('mt_kota')->result();
+    }
+
+    public function getKecamatan($id)
+    {
+        return $this->db->where('kota_id', $id)->order_by('nama_kecamatan', 'ASC')->get('mt_kecamatan')->result();
+    }
+
+    public function getKelurahan($id)
+    {
+        return $this->db->where('kecamatan_id', $id)->order_by('nama_kelurahan', 'ASC')->get('mt_kelurahan')->result();
+    }
 }

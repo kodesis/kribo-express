@@ -111,6 +111,29 @@ $(document).ready(function () {
 		e.preventDefault();
 		const form = $(this).parents("form");
 
+
+		// Validasi semua input form
+		let inputs = form.find('input, select');
+		let valid = true;
+
+		inputs.each(function () {
+			if (!$(this).val()) {
+				$(this).addClass('is-invalid');
+				valid = false;
+			} else {
+				$(this).removeClass('is-invalid').addClass('is-valid');
+			}
+		});
+
+		// Jika ada input yang tidak valid, cegah submit dan tampilkan peringatan
+		if (!valid) {
+			Swal.fire({
+				icon: 'error',
+				text: 'Please fill out all required fields!'
+			});
+			return;
+		}
+
 		Swal.fire({
 			title: "Are you sure?",
 			text: "You won't be able to revert this!",
@@ -123,6 +146,7 @@ $(document).ready(function () {
 			if (result.isConfirmed) {
 
 				form.on("submit", function () {
+					$(".btn-submit").prop('disabled', true);
 					Swal.fire({
 						title: "Loading...",
 						timerProgressBar: true,

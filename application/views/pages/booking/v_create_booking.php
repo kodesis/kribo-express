@@ -42,86 +42,136 @@
             <div class="col-12">
                 <form action="<?= base_url('booking/store_booking') ?>" method="post" class="card" id="formBooking">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4 col-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Customer</label>
-                                    <select class="form-select select2" name="customer_id" id="customer_id" style="width: 100%" onchange="addNewCustomer(this)" required>
-                                        <option value="">:: Choose customer</option>
-                                        <?php
-                                        foreach ($customers as $c) :
-                                        ?>
-                                            <option value="<?= $c->id ?>"><?= $c->nama_customer ?></option>
-                                        <?php
-                                        endforeach; ?>
-                                        <option value="__tambah__" style="background-color: red; color: white">:: ADD NEW CUSTOMER ::</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-12">
-                                <div class="mb-3">
-                                    <label for="opsi_service" class="form-label">Service</label>
-                                    <select name="opsi_service" id="opsi_service" class="form-select" onchange="showTitikJemput(this)" required>
-                                        <option value="">:: Choose service </option>
-                                        <option value="door-to-port">Door to Port</option>
-                                        <option value="port-to-port">Port to Port</option>
-                                        <option value="port-to-door">Port to Door</option>
-                                        <option value="door-to-door">Door to Door</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-12">
-                                <div class="mb-3">
-                                    <label for="driver_id" class="form-label">Driver</label>
-                                    <select name="driver_id" id="driver_id" class="form-select" required>
-                                        <option value="">:: Choose driver</option>
-                                        <?php
-                                        foreach ($drivers as $d) :
-                                        ?>
-                                            <option value="<?= $d->Id ?>"><?= $d->name ?></option>
-                                        <?php
-                                        endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Pickup point</label>
-                                    <input name="alamat_pickup" id="alamat_pickup" class="form-control" placeholder="Enter pickup point..." oninput="this.value = this.value.toUpperCase()" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Warehouse</label>
-                                    <input name="lokasi_gudang" id="lokasi_gudang" class="form-control" placeholder="Enter warehouse location..." oninput="this.value = this.value.toUpperCase()" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="newCustomer" style="display: none;">
+                        <h5></h5>
+                        <?php
+                        $role_id = $this->session->userdata('role_id');
+
+
+                        if ($role_id == '3') {
+                            $user_id = $this->session->userdata('user_id');
+                            $id_customer = $this->session->userdata('customer_id');
+                            // $id_customer = $this->M_Auth->getUserById($user_id)['customer_id']; 
+                        ?>
+
                             <div class="row">
-                                <hr>
-                                <h4>New Customer</h4>
                                 <div class="col-md-4 col-12">
                                     <div class="mb-3">
-                                        <label for="" class="form-label">Name</label>
-                                        <input type="text" name="nama_customer is-valid" id="nama_customer" class="form-control" placeholder="Enter customer's name..." oninput="this.value = this.value.toUpperCase()">
+                                        <label class="form-label">Customer</label>
+                                        <select class="form-select" name="customer_id" id="customer_id" style="width: 100%" required>
+                                            <?php
+                                            foreach ($customers as $c) :
+                                                if ($c->id == $id_customer) { ?>
+                                                    <option value="<?= $c->id ?>"><?= $c->nama_customer ?></option>
+                                            <?php
+                                                }
+                                            endforeach; ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="mb-3">
-                                        <label for="" class="form-label">Phone</label>
-                                        <input type="text" name="telepon_customer is-valid" id="telepon_customer" class="form-control" placeholder="Enter customer's whatsapp number...">
+                                        <label for="opsi_service" class="form-label">Service</label>
+                                        <select name="opsi_service" id="opsi_service" class="form-select" onchange="showTitikJemput(this)" required>
+                                            <option value="">:: Choose service </option>
+                                            <option value="door-to-port">Door to Port</option>
+                                            <option value="port-to-port">Port to Port</option>
+                                            <option value="port-to-door">Port to Door</option>
+                                            <option value="door-to-door">Door to Door</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="mb-3">
-                                        <label for="" class="form-label">Address</label>
-                                        <input type="text" name="alamat_customer is-valid" id="alamat_customer" class="form-control" placeholder="Enter customer's address..." oninput="this.value = this.value.toUpperCase()">
+                                        <label class="form-label">Pickup point</label>
+                                        <input name="alamat_pickup" id="alamat_pickup" class="form-control" placeholder="Enter pickup point..." oninput="this.value = this.value.toUpperCase()" required>
                                     </div>
                                 </div>
-                                <hr>
                             </div>
-                        </div>
+                        <?php
+                        } else {
+                        ?>
+                            <div class="row">
+                                <div class="col-md-4 col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Customer</label>
+                                        <select class="form-select select2" name="customer_id" id="customer_id" style="width: 100%" onchange="addNewCustomer(this)" required>
+                                            <option value="">:: Choose customer</option>
+                                            <?php
+                                            foreach ($customers as $c) :
+                                            ?>
+                                                <option value="<?= $c->id ?>"><?= $c->nama_customer ?></option>
+                                            <?php
+                                            endforeach; ?>
+                                            <option value="__tambah__" style="background-color: red; color: white">:: ADD NEW CUSTOMER ::</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <div class="mb-3">
+                                        <label for="opsi_service" class="form-label">Service</label>
+                                        <select name="opsi_service" id="opsi_service" class="form-select" onchange="showTitikJemput(this)" required>
+                                            <option value="">:: Choose service </option>
+                                            <option value="door-to-port">Door to Port</option>
+                                            <option value="port-to-port">Port to Port</option>
+                                            <option value="port-to-door">Port to Door</option>
+                                            <option value="door-to-door">Door to Door</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <div class="mb-3">
+                                        <label for="driver_id" class="form-label">Driver</label>
+                                        <select name="driver_id" id="driver_id" class="form-select" required>
+                                            <option value="">:: Choose driver</option>
+                                            <?php
+                                            foreach ($drivers as $d) :
+                                            ?>
+                                                <option value="<?= $d->Id ?>"><?= $d->name ?></option>
+                                            <?php
+                                            endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Pickup point</label>
+                                        <input name="alamat_pickup" id="alamat_pickup" class="form-control" placeholder="Enter pickup point..." oninput="this.value = this.value.toUpperCase()" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Warehouse</label>
+                                        <input name="lokasi_gudang" id="lokasi_gudang" class="form-control" placeholder="Enter warehouse location..." oninput="this.value = this.value.toUpperCase()" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="newCustomer" style="display: none;">
+                                <div class="row">
+                                    <hr>
+                                    <h4>New Customer</h4>
+                                    <div class="col-md-4 col-12">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Name</label>
+                                            <input type="text" name="nama_customer is-valid" id="nama_customer" class="form-control" placeholder="Enter customer's name..." oninput="this.value = this.value.toUpperCase()">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Phone</label>
+                                            <input type="text" name="telepon_customer is-valid" id="telepon_customer" class="form-control" placeholder="Enter customer's whatsapp number...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Address</label>
+                                            <input type="text" name="alamat_customer is-valid" id="alamat_customer" class="form-control" placeholder="Enter customer's address..." oninput="this.value = this.value.toUpperCase()">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                        <?php
+                        } ?>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>

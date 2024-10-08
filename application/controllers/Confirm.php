@@ -156,17 +156,16 @@ class Confirm extends CI_Controller
 
     public function arrDestination()
     {
-        $no_smu = $this->uri->segment(3);
-        $no_resi = $this->uri->segment(4);
+        $no_resi = $this->uri->segment(3);
         $token = $_GET['token'];
         $secret_key = "kriboexpress-kirimbro-sampaibro";
 
         // Generate token hash ulang dan cocokkan dengan yang ada di URL
-        $valid_token = hash_hmac('sha256', $no_smu . $no_resi, $secret_key);
+        $valid_token = hash_hmac('sha256', $no_resi, $secret_key);
 
-        $cek = $this->M_Booking->cekItemAwb($no_resi);
+        $cek = $this->M_Booking->cekResi($no_resi);
 
-        $detail = $this->M_Booking->getItemAwb($no_resi);
+        $detail = $this->M_Booking->getResi($no_resi);
 
         if ($cek) {
             if ($detail['status_tracking'] == '3') {
@@ -204,7 +203,7 @@ class Confirm extends CI_Controller
             'title' => 'Confirm arrival',
             'pages' => 'pages/confirm/v_arrival',
             'status' => $status,
-            'commodity' => $this->M_Booking->getBookingById($detail['booking_id'])['commodity']
+            'commodity' => $detail['commodity']
         ];
 
         // print_r($data);
@@ -217,11 +216,10 @@ class Confirm extends CI_Controller
     {
         $resi = $this->input->post('resi');
 
-        $detailResi = $this->M_Booking->getItemAwb($resi);
+        $detailResi = $this->M_Booking->getResi($resi);
 
-        $customer_id = $this->M_Booking->getBookingById($detailResi['booking_id'])['customer_id'];
-
-        $customer_phone = $this->M_Customer->showById($customer_id);
+        // print_r($detailResi);
+        // exit;
 
 
         $photo = $_FILES['file_upload']['name']; // Nama file 
@@ -251,16 +249,19 @@ class Confirm extends CI_Controller
         } else {
             $data_resi = [
                 'status_tracking' => '4',
+                'confirm_arrival' => '1',
             ];
 
             $this->db->trans_begin();
 
-            if ($this->M_Booking->updateAwbDetail($resi, $data_resi)) {
+            if ($this->M_Booking->updateResi($resi, $data_resi)) {
                 $this->db->trans_commit();
 
-                $pesan_customer = $this->messageToCustomer($detailResi);
+                $pesan_pengirim = $this->messageToCustomer($detailResi);
+                $pesan_penerima = $this->messageToCustomer($detailResi);
 
-                $this->api_whatsapp->wa_notif($pesan_customer, $customer_phone);
+                $this->api_whatsapp->wa_notif($pesan_pengirim, $detailResi['telepon_pengirim']);
+                $this->api_whatsapp->wa_notif($pesan_penerima, $detailResi['telepon_penerima']);
 
                 $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Resi dengan nomor ' . $resi . ' telah dikonfirmasi tiba di kota tujuan.
@@ -285,13 +286,13 @@ class Confirm extends CI_Controller
     {
         $pesan_customer = "*Halo, Sobat Kribo Express!*\n";
         $pesan_customer .= "Kami dengan senang hati menginformasikan bahwa paket Anda telah tiba di tujuan dengan selamat. Berikut adalah rincian pengirimannya:\n";
-        $pesan_customer .= "*• Nomor Resi: {$detailResi['slug']}*\n";
+        $pesan_customer .= "*• Nomor Resi: {$detailResi['no_resi']}*\n";
         $pesan_customer .= "*• Kuantitas Barang: {$detailResi['qty']}*\n";
         $pesan_customer .= "*• Berat Barang: {$detailResi['chargeable']}*\n\n";
         $pesan_customer .= "Terima kasih telah menggunakan layanan kami. Jika ada pertanyaan atau membutuhkan bantuan lebih lanjut, jangan ragu untuk menghubungi kami.\n\n";
         $pesan_customer .= "*Salam hangat,*\n";
         $pesan_customer .= "Tim Kribo Express\n";
-        $pesan_customer .= "Lebih dari Sekadar Kiriman";
+        $pesan_customer .= "_Kirim Bro_";
 
         return $pesan_customer;
     }
