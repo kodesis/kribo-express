@@ -55,8 +55,8 @@ class Home extends CI_Controller
 				redirect('home/track');
 			} else {
 				$recaptchaResponse = $this->input->post('g-recaptcha-response');
-				$secretKey = '6Le8ZkcqAAAAACRQtxwa7SSZpcyETjp_gWkVmLBE'; // Local
-				// $secretKey = '6LcrQFQqAAAAAKO2oNf5Gx-8MOR1vExhoD0oiDVY'; // Hosting
+				// $secretKey = '6Le8ZkcqAAAAACRQtxwa7SSZpcyETjp_gWkVmLBE'; // Local
+				$secretKey = '6LcrQFQqAAAAAKO2oNf5Gx-8MOR1vExhoD0oiDVY'; // Hosting
 				$userIP = $this->input->ip_address();
 
 				$url = 'https://www.google.com/recaptcha/api/siteverify';

@@ -219,7 +219,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="newAgent" style="display: none;">
+                        <!-- <div id="newAgent" style="display: none;">
                             <div class="row">
                                 <hr>
                                 <h4>New Agent</h4>
@@ -243,7 +243,7 @@
                                 </div>
                                 <hr>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="card-footer text-end">
                         <div class="d-flex">

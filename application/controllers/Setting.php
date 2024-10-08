@@ -178,6 +178,7 @@ class Setting extends CI_Controller
     public function addNewMenu()
     {
         $url = trim($this->input->post('url'));
+        $icon = trim($this->input->post('icon'));
         $segment = trim($this->input->post('segment'));
 
         $cekMenu = $this->M_Setting->isAvailableMenu($url);
@@ -190,6 +191,7 @@ class Setting extends CI_Controller
             $data_parent = [
                 'nama_menu' => trim($this->input->post('nama_menu')),
                 'url' => $url,
+                'icon' => $icon,
                 'has_child' => trim($this->input->post('has_child')),
                 'controller' => trim($this->input->post('url')),
                 'segment' => $segment,

@@ -82,4 +82,9 @@ class M_agent extends CI_Model
     {
         return $this->db->where('origin', $destination)->get('agent')->result();
     }
+
+    public function insertMitra($data)
+    {
+        return $this->db->insert('mitra', $data);
+    }
 }

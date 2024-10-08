@@ -1,5 +1,5 @@
-<div class="container-fluid p-0 pb-5">
-    <div class="owl-carousel header-carousel position-relative mb-2">
+<div class="container-fluid p-0">
+    <div class="owl-carousel header-carousel mb-2">
         <div class="owl-carousel-item position-relative">
             <img class="img-fluid w-100" src="<?= base_url() ?>assets/front/img/mitra-01.png" alt="">
             <!-- <div class="position-absolute top-0 start-0 w-100 h-100 d-flex" style="margin-top:550px">
@@ -30,6 +30,10 @@
     <div class="container py-5 px-lg-0">
         <div class="row g-5 mx-lg-0">
             <div class="col-lg-12 about-text wow fadeInUp" data-wow-delay="0.3s">
+                <h1 class="mb-3 text-center">Bisnis siap jalan dengan 4 langkah saja!</h1>
+                <img class="img-fluid mb-5" src="<?= base_url() ?>assets/front/img/step-mitra.png" alt="">
+            </div>
+            <div class="col-lg-12 about-text wow fadeInUp" data-wow-delay="0.3s">
                 <h1 class="mb-5 text-center">Keuntungan jadi Agen Kribo Express</h1>
                 <div class="row justify-content-center g-4 mb-5">
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.5s">
@@ -39,8 +43,8 @@
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.7s">
                         <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
-                        <h5>Diskon sampai 35%</h5>
-                        <p class="m-0">*Dapatkan diskon penjualan 35% untuk setiap jasa pengiriman barang.</p>
+                        <h5>Diskon sampai 20%</h5>
+                        <p class="m-0">*Dapatkan diskon penjualan 20% untuk setiap jasa pengiriman barang.</p>
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.9s">
                         <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
@@ -143,7 +147,7 @@
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>FRANCHISE KRIBO Express hanya dengan biaya Rp5.000.000! Dengan minimum kontrak selama 2 tahun, kesempatan ini pas banget buat Anda yang ingin memulai bisnis dengan modal terjangkau dan jaminan keamanan investasi!</p>
+                                    <p>FRANCHISE KRIBO Express hanya dengan biaya Rp15.000.000! Dengan minimum kontrak selama 2 tahun.</p>
                                 </div>
                             </div>
                         </div>
@@ -163,54 +167,56 @@
 
                     <form method="POST" action="<?= base_url('registration/submitRegistrasi') ?>" enctype="multipart/form-data">
                         <div class="row mb-4">
+                            <h4 class="">Daftar sebagai <span class="text-primary">*</span></h4>
                             <div class="col-md-12 col-12">
-                                <h4 class="">Daftar sebagai <span class="text-primary">*</span></h4>
-                                <div class="radio-container">
-                                    <label class="radio-card">
-                                        <input type="radio" name="jenis_pengajuan" value="perorangan">
-                                        <div class="card-content">
-                                            <i>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                                                    <path d="M16 19h6" />
-                                                    <path d="M19 16v6" />
-                                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-                                                </svg>
-                                            </i>
-                                            <div class="card-text ms-3">
-                                                <h4>Perorangan</h4>
-                                                <p>Formulir pendaftaran perorangan.</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <label class="radio-card">
-                                        <input type="radio" name="jenis_pengajuan" value="perusahaan">
-                                        <div class="card-content">
-                                            <i>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-buildings">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" />
-                                                    <path d="M16 8h2c1 0 2 1 2 2v11" />
-                                                    <path d="M3 21h18" />
-                                                    <path d="M10 12v0" />
-                                                    <path d="M10 16v0" />
-                                                    <path d="M10 8v0" />
-                                                    <path d="M7 12v0" />
-                                                    <path d="M7 16v0" />
-                                                    <path d="M7 8v0" />
-                                                    <path d="M17 12v0" />
-                                                    <path d="M17 16v0" />
-                                                </svg>
-                                            </i>
-                                            <div class="card-text ms-3">
-                                                <h4>Perusahaan</h4>
-                                                <p>Formulir pendaftaran perusahaan.</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div>
 
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label class="radio-card mb-3">
+                                    <input type="radio" name="jenis_pengajuan" value="perorangan">
+                                    <div class="card-content">
+                                        <i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                                <path d="M16 19h6" />
+                                                <path d="M19 16v6" />
+                                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+                                            </svg>
+                                        </i>
+                                        <div class="card-text ms-3">
+                                            <h4>Perorangan</h4>
+                                            <p>Formulir pendaftaran perorangan.</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-6 col-12 mb-3">
+                                <label class="radio-card">
+                                    <input type="radio" name="jenis_pengajuan" value="perusahaan">
+                                    <div class="card-content">
+                                        <i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-buildings">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" />
+                                                <path d="M16 8h2c1 0 2 1 2 2v11" />
+                                                <path d="M3 21h18" />
+                                                <path d="M10 12v0" />
+                                                <path d="M10 16v0" />
+                                                <path d="M10 8v0" />
+                                                <path d="M7 12v0" />
+                                                <path d="M7 16v0" />
+                                                <path d="M7 8v0" />
+                                                <path d="M17 12v0" />
+                                                <path d="M17 16v0" />
+                                            </svg>
+                                        </i>
+                                        <div class="card-text ms-3">
+                                            <h4>Perusahaan</h4>
+                                            <p>Formulir pendaftaran perusahaan.</p>
+                                        </div>
+                                    </div>
+                                </label>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -346,7 +352,7 @@
                         <div class="row mb-4">
                             <div class="d-flex align-items-center">
                                 <i class="flex-shrink-0 bg-primary p-3 text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-number-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-number-3">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M12 2l.642 .005l.616 .017l.299 .013l.579 .034l.553 .046c4.687 .455 6.65 2.333 7.166 6.906l.03 .29l.046 .553l.041 .727l.006 .15l.017 .617l.005 .642l-.005 .642l-.017 .616l-.013 .299l-.034 .579l-.046 .553c-.455 4.687 -2.333 6.65 -6.906 7.166l-.29 .03l-.553 .046l-.727 .041l-.15 .006l-.617 .017l-.642 .005l-.642 -.005l-.616 -.017l-.299 -.013l-.579 -.034l-.553 -.046c-4.687 -.455 -6.65 -2.333 -7.166 -6.906l-.03 -.29l-.046 -.553l-.041 -.727l-.006 -.15l-.017 -.617l-.004 -.318v-.648l.004 -.318l.017 -.616l.013 -.299l.034 -.579l.046 -.553c.455 -4.687 2.333 -6.65 6.906 -7.166l.29 -.03l.553 -.046l.727 -.041l.15 -.006l.617 -.017c.21 -.003 .424 -.005 .642 -.005zm1 5h-2l-.15 .005a2 2 0 0 0 -1.85 1.995a1 1 0 0 0 1.974 .23l.02 -.113l.006 -.117h2v2h-2l-.133 .007c-1.111 .12 -1.154 1.73 -.128 1.965l.128 .021l.133 .007h2v2h-2l-.007 -.117a1 1 0 0 0 -1.993 .117a2 2 0 0 0 1.85 1.995l.15 .005h2l.15 -.005a2 2 0 0 0 1.844 -1.838l.006 -.157v-2l-.005 -.15a1.988 1.988 0 0 0 -.17 -.667l-.075 -.152l-.019 -.032l.02 -.03a2.01 2.01 0 0 0 .242 -.795l.007 -.174v-2l-.005 -.15a2 2 0 0 0 -1.838 -1.844l-.157 -.006z" />
                                     </svg>
@@ -371,25 +377,32 @@
                                     </h1>
                                     <hr>
                                     <p>Pastikan foto KTP, lokasi tampak depan dan belakang terlihat dengan jelas!</p>
-                                    <div class="row">
-                                        <div class="col-md-4 col-12">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3 col-12">
                                             <img src="<?= base_url('assets/front/img/foto-ktp.png') ?>" alt="<a href='https://id.pngtree.com/freepng/ktp-residents-identity-card-id-card-free-vector_8928715.html'>Gambar PNG berasal dari id.pngtree.com/</a>" class="img-fluid">
                                         </div>
-                                        <div class="col-md-4 col-12">
+                                        <div class="col-md-3 col-12">
+                                            <img src="<?= base_url('assets/front/img/foto-npwp.png') ?>" alt="" class="img-fluid">
+                                        </div>
+                                        <div class="col-md-3 col-12">
                                             <img src="<?= base_url('assets/front/img/foto-depan.jpg') ?>" alt="" class="img-fluid">
                                         </div>
-                                        <div class="col-md-4 col-12">
+                                        <div class="col-md-3 col-12">
                                             <img src="<?= base_url('assets/front/img/foto-dalam.jpg') ?>" alt="" class="img-fluid">
                                         </div>
-                                        <div class="col-12 col-sm-4">
+                                        <div class="col-12 col-sm-3">
                                             <label for="ktp" class="form-label text-bold">KTP <span class="text-white">*</span></label>
                                             <input class="form-control border-0" name="ktp" id="ktp" type="file" required>
                                         </div>
-                                        <div class="col-12 col-sm-4">
+                                        <div class="col-12 col-sm-3">
+                                            <label for="npwp" class="form-label text-bold">NPWP <span class="text-white">*</span></label>
+                                            <input class="form-control border-0" name="npwp" id="npwp" type="file" required>
+                                        </div>
+                                        <div class="col-12 col-sm-3">
                                             <label for="foto_depan" class="form-label text-bold">Lokasi tampak depan <span class="text-white">*</span></label>
                                             <input class="form-control border-0" name="foto_depan" id="foto_depan" type="file" required>
                                         </div>
-                                        <div class="col-12 col-sm-4">
+                                        <div class="col-12 col-sm-3">
                                             <label for="foto_dalam" class="form-label text-bold">Lokasi tampak dalam <span class="text-white">*</span></label>
                                             <input class="form-control border-0" name="foto_dalam" id="foto_dalam" type="file" required>
                                         </div>

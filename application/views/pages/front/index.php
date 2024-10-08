@@ -27,6 +27,9 @@
 	<link href="<?= base_url() ?>assets/front/css/bootstrap.min.css" rel="stylesheet">
 
 	<!-- Template Stylesheet -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 	<link href="<?= base_url() ?>assets/front/css/style.css" rel="stylesheet">
 	<style>
 		.bs4-order-tracking-2 {
@@ -108,14 +111,14 @@
 		}
 
 		.radio-container {
-			display: flex;
+			display: grid;
 			gap: 20px;
 		}
 
 		.radio-card {
 			display: inline-block;
 			width: 100%;
-			padding: 15px;
+			padding: 25px;
 			border: 1px solid #e0e0e0;
 			border-radius: 10px;
 			cursor: pointer;
@@ -155,6 +158,7 @@
 
 		.radio-card input[type="radio"]:checked+.card-content {
 			border: 2px solid #ff0000;
+			border-radius: 10px;
 		}
 
 		.radio-card input[type="radio"]:checked+.card-content .card-icon {
@@ -164,6 +168,61 @@
 
 		.radio-card input[type="radio"]:checked+.card-content h4 {
 			color: #000;
+		}
+
+		.homepage-slider {
+			height: 100%;
+		}
+
+		.homepage-slider div {
+			height: 100%;
+		}
+
+		.homepage-slider div.hero-text {
+			display: table;
+			width: 100%;
+		}
+
+		.homepage-slider div.hero-text-tablecell {
+			height: auto;
+			vertical-align: middle;
+			display: table-cell;
+		}
+
+		.homepage-slider div.hero-text-tablecell div {
+			height: auto;
+		}
+
+		.single-homepage-slider {
+			background-size: cover;
+			background-position: center;
+			background-color: #020C0E;
+			position: relative;
+			z-index: 1;
+		}
+
+		.single-homepage-slider:after {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #051922;
+			content: "";
+			z-index: -1;
+			opacity: 0.7;
+		}
+
+		div.owl-controls,
+		.owl-controls div {
+			height: auto;
+			top: 50%;
+			color: #F28123;
+			font-size: 48px;
+		}
+
+		.homepage-slider {
+			position: relative;
 		}
 	</style>
 </head>
@@ -192,7 +251,7 @@
 				<a href="<?= base_url() ?>" class="nav-item nav-link <?= ($segment == 'home') ? 'active' : '' ?>">Beranda</a>
 				<a href="<?= base_url('home/about') ?>" class="nav-item nav-link <?= ($segment == 'about') ? 'active' : '' ?>">Tentang</a>
 				<a href="<?= base_url('home/service') ?>" class="nav-item nav-link <?= ($segment == 'service') ? 'active' : '' ?>">Layanan</a>
-				<a href="<?= base_url('home/track') ?>" class="nav-item nav-link <?= ($segment == 'track') ? 'active' : '' ?>">Cek&nbsp;Resi</a>
+				<a href="<?= base_url('home/track') ?>" class="nav-item nav-link <?= ($segment == 'track') ? 'active' : '' ?>">Tracking</a>
 				<a href="<?= base_url('home/agent') ?>" class="nav-item nav-link <?= ($segment == 'agent') ? 'active' : '' ?>">Kemitraan</a>
 				<a href="<?= base_url('auth') ?>" class="nav-item nav-link"><?= ($this->session->userdata('user_id')) ? 'Dashboard' : 'Login' ?></a>
 			</div>
@@ -273,6 +332,32 @@
 	<script type="text/javascript" src="<?= base_url(); ?>assets/vendor/select2/js/select2.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
+		$(".homepage-slider").owlCarousel({
+			items: 1,
+			loop: true,
+			autoplay: true,
+			nav: true,
+			dots: false,
+			navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+			responsive: {
+				0: {
+					items: 1,
+					nav: false,
+					loop: true
+				},
+				600: {
+					items: 1,
+					nav: true,
+					loop: true
+				},
+				1000: {
+					items: 1,
+					nav: true,
+					loop: true
+				}
+			}
+		});
+
 		$(document).ready(function() {
 			$('.select2').select2();
 
