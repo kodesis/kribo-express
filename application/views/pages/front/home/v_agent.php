@@ -1,7 +1,16 @@
 <div class="container-fluid p-0 pb-5">
     <div class="owl-carousel header-carousel position-relative mb-2">
         <div class="owl-carousel-item position-relative">
-            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/mitra-01.png" alt="">
+            <img class="img-fluid w-100" src="<?= base_url() ?>assets/front/img/mitra-01.png" alt="">
+            <!-- <div class="position-absolute top-0 start-0 w-100 h-100 d-flex" style="margin-top:550px">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-10 col-lg-8">
+                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated ">Dapatkan Penawaran</a>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
         </div>
         <div class="owl-carousel-item position-relative">
             <img class="img-fluid" src="<?= base_url() ?>assets/front/img/mitra-02.png" alt="">
@@ -15,24 +24,18 @@
         <div class="owl-carousel-item position-relative">
             <img class="img-fluid" src="<?= base_url() ?>assets/front/img/mitra-05.png" alt="">
         </div>
-        <div class="owl-carousel-item position-relative">
-            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/mitra-06.png" alt="">
-        </div>
-        <div class="owl-carousel-item position-relative">
-            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/mitra-07.png" alt="">
-        </div>
     </div>
 </div>
 <div class="container-fluid overflow-hidden py-5 px-lg-0">
-    <div class="container about py-5 px-lg-0">
+    <div class="container py-5 px-lg-0">
         <div class="row g-5 mx-lg-0">
             <div class="col-lg-12 about-text wow fadeInUp" data-wow-delay="0.3s">
                 <h1 class="mb-5 text-center">Keuntungan jadi Agen Kribo Express</h1>
                 <div class="row justify-content-center g-4 mb-5">
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.5s">
                         <i class="fa fa-globe fa-3x text-primary mb-3"></i>
-                        <h5>Syarat gampang, tanpa royalti</h5>
-                        <p class="m-0">*Cuma butuh foto KTP, lokasi calon agen depan, belakang dan tanpa biaya royalti.</p>
+                        <h5>Syarat gampang</h5>
+                        <p class="m-0">*Cuma butuh foto KTP, NPWP (lihat S&K untuk lebih jelas).</p>
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.7s">
                         <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
@@ -47,12 +50,12 @@
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="1.1s">
                         <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
                         <h5>Bisa kirim kemana aja </h5>
-                        <p class="m-0">*Menjangkau 98% wilayah/area di indonesia dan nega internasional.</p>
+                        <p class="m-0">*Menjangkau 98% wilayah/area di indonesia dan negara internasional, meliputi Malaysia, Singapura, Thailand, Guangzhou, Taipei.</p>
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="1.3s">
                         <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
                         <h5>Respon Layanan Service </h5>
-                        <p class="m-0">*Respon layanan kami cepat dan ramah, siap melayani Anda 24/7. Apapun kebutuhan Anda, kami hadir memberikan solusi terbaik dengan pelayanan maksimal.</p>
+                        <p class="m-0">*Respon layanan kami cepat dan ramah, siap melayani Anda 24/7.</p>
                     </div>
                 </div>
             </div>
@@ -60,7 +63,7 @@
     </div>
 </div>
 <div class="container-fluid overflow-hidden px-lg-0">
-    <div class="container about py-5 px-lg-0">
+    <div class="container py-5 px-lg-0">
         <div class="row g-5 mx-lg-0">
             <div class="col-lg-12 about-text wow fadeInUp" data-wow-delay="0.3s">
                 <h1 class="mb-5">Syarat dan ketentuan menjadi agen Kribo Express</h1>
@@ -76,7 +79,7 @@
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <ul>
-                                        <li>Syarat utamanya adalah kamu harus memiliki lokasi usaha yang permanen dan terjangkau.</li>
+                                        <li>Syarat utamanya adalah Anda harus memiliki lokasi usaha yang permanen dan terjangkau.</li>
                                         <li>Mengajukan pendaftaran dengan mengisi form daftar Agen Kribo Express.</li>
                                         <li>Pengajuan berbentuk Badan Usaha melampirkan:
                                             <ul>
@@ -140,7 +143,7 @@
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>FRANCHISE KRIBO Express hanya dengan biaya Rp5.000.000! Biaya ini akan dikembalikan oleh KRIBO pusat setelah masa kontrak kerja berakhir atau jika salah satu pihak mengakhiri kontrak. Dengan minimum kontrak selama 2 tahun, kesempatan ini pas banget buat kamu yang ingin memulai bisnis dengan modal terjangkau dan jaminan keamanan investasi!</p>
+                                    <p>FRANCHISE KRIBO Express hanya dengan biaya Rp5.000.000! Dengan minimum kontrak selama 2 tahun, kesempatan ini pas banget buat Anda yang ingin memulai bisnis dengan modal terjangkau dan jaminan keamanan investasi!</p>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +167,7 @@
                                 <h4 class="">Daftar sebagai <span class="text-primary">*</span></h4>
                                 <div class="radio-container">
                                     <label class="radio-card">
-                                        <input type="radio" name="jenis" value="perorangan">
+                                        <input type="radio" name="jenis_pengajuan" value="perorangan">
                                         <div class="card-content">
                                             <i>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus">
@@ -182,7 +185,7 @@
                                         </div>
                                     </label>
                                     <label class="radio-card">
-                                        <input type="radio" name="jenis" value="perusahaan">
+                                        <input type="radio" name="jenis_pengajuan" value="perusahaan">
                                         <div class="card-content">
                                             <i>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-buildings">
@@ -295,7 +298,7 @@
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <label for="usaha_lain" class="form-label text-bold">Apakah kamu punya usaha lain? <span class="text-primary">*</span></label>
+                                <label for="usaha_lain" class="form-label text-bold">Apakah Anda punya usaha lain? <span class="text-primary">*</span></label>
                                 <select name="usaha_lain" id="usaha_lain" class="form-select border-0" style="height: 55px;" required>
                                     <option selected>:: Pilih usaha lain</option>
                                     <option value="1">Online</option>
@@ -373,10 +376,10 @@
                                             <img src="<?= base_url('assets/front/img/foto-ktp.png') ?>" alt="<a href='https://id.pngtree.com/freepng/ktp-residents-identity-card-id-card-free-vector_8928715.html'>Gambar PNG berasal dari id.pngtree.com/</a>" class="img-fluid">
                                         </div>
                                         <div class="col-md-4 col-12">
-                                            <img src="<?= base_url('assets/front/img/foto-ktp.png') ?>" alt="<a href='https://id.pngtree.com/freepng/ktp-residents-identity-card-id-card-free-vector_8928715.html'>Gambar PNG berasal dari id.pngtree.com/</a>" class="img-fluid">
+                                            <img src="<?= base_url('assets/front/img/foto-depan.jpg') ?>" alt="" class="img-fluid">
                                         </div>
                                         <div class="col-md-4 col-12">
-                                            <img src="<?= base_url('assets/front/img/foto-ktp.png') ?>" alt="<a href='https://id.pngtree.com/freepng/ktp-residents-identity-card-id-card-free-vector_8928715.html'>Gambar PNG berasal dari id.pngtree.com/</a>" class="img-fluid">
+                                            <img src="<?= base_url('assets/front/img/foto-dalam.jpg') ?>" alt="" class="img-fluid">
                                         </div>
                                         <div class="col-12 col-sm-4">
                                             <label for="ktp" class="form-label text-bold">KTP <span class="text-white">*</span></label>

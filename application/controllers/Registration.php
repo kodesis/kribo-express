@@ -121,71 +121,84 @@ class Registration extends CI_Controller
 
     public function submitRegistrasi()
     {
-        echo '<pre>';
-        print_r($_POST);
-        print_r($_FILES);
-        echo '</pre>';
-        exit;
+        // Debugging input POST dan FILES
+        // echo '<pre>';
+        // print_r($_POST);
+        // print_r($_FILES);
+        // echo '</pre>';
+        // exit;
 
-        $ktp = $_FILES['ktp']['name']; // Nama file 
-        $ktp = $_FILES['ktp']['name']; // Nama file 
-        $ktp = $_FILES['ktp']['name']; // Nama file 
+        // Load library upload
+        $this->load->library('upload');
 
-        // Ambil extension
-        $pathInfo = pathinfo($ktp);
-        $extension = $pathInfo['extension']; // Extension file
-        $newPhotoFileName = $ktp . '.' . $extension;
+        $config['upload_path'] = FCPATH . 'assets/photo-delivered/';
+        $config['allowed_types'] = 'jpg|jpeg';
+        $config['overwrite'] = TRUE;
+        $config['max_size'] = '1200';
 
-        $config = [
-            'upload_path' => FCPATH . 'assets/photo-delivered/',
-            'allowed_types' => 'JPG|jpg|JPEG|jpeg',
-            'overwrite' => TRUE,
-            'max_size' => '1200',
-            'file_name' => $newPhotoFileName,
+        // File yang di-upload
+        $files = ['ktp', 'foto_depan', 'foto_dalam'];
+        $gambar = [];
+
+        foreach ($files as $file) {
+            // Ambil extension file
+            $pathInfo = pathinfo($_FILES[$file]['name']);
+            $extension = $pathInfo['extension'];
+            $newFileName = $file . '_' . time() . '.' . $extension;
+
+            $config['file_name'] = $newFileName;
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload($file)) {
+                $gambar[$file] = $this->upload->data('file_name');
+            } else {
+                $error = $this->upload->display_errors();
+                echo "Upload gagal untuk $file: $error";
+                return;
+            }
+        }
+
+        $data = [
+            'jenis_pengajuan' => trim($this->input->post('jenis_pengajuan')),
+            'nama_pendaftar' => trim($this->input->post('nama_pendaftar')),
+            'no_handphone' => trim($this->input->post('no_handphone')),
+            'no_handphone_alternatif' => trim($this->input->post('no_handphone_alternatif')),
+            'alamat_email' => trim($this->input->post('alamat_email')),
+            'sumber_info' => $this->input->post('sumber_info'),
+            'lokasi' => $this->input->post('lokasi'),
+            'jenis_bangunan' => $this->input->post('jenis_bangunan'),
+            'status_bangunan' => $this->input->post('status_bangunan'),
+            'usaha_lain' => $this->input->post('usaha_lain'),
+            'provinsi' => $this->input->post('provinsi'),
+            'kota' => $this->input->post('kota'),
+            'kecamatan' => $this->input->post('kecamatan'),
+            'kelurahan' => $this->input->post('kelurahan'),
+            'alamat_lengkap' => trim($this->input->post('alamat_lengkap')),
+            'google_maps' => trim($this->input->post('google_maps')),
+            'kode_referal' => trim($this->input->post('kode_referal')),
+            'ktp' => $gambar['ktp'],
+            'foto_depan' => $gambar['foto_depan'],
+            'foto_dalam' => $gambar['foto_dalam'],
         ];
 
-        $this->load->library('upload', $config);
+        $this->db->trans_begin();
 
-        if (!$this->upload->do_upload('file_upload')) {
+        if ($this->M_Agent->insertMitra($data)) {
+            $this->db->trans_commit();
+
+            $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Registrasi berhasil. Terima kasih atas ketertarikan Anda untuk bergabung dengan kami.
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            </div>');
+            redirect('home/agent');
+        } else {
+            $this->db->trans_rollback();
 
             $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Gagal konfirmasi pickup. Silahkan coba lagi! ' . $this->upload->display_errors() . ' <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-                        </div>');
-
-            redirect('confirm/failed');
-        } else {
-            $data_resi = [
-                'status_tracking' => '4',
-                'confirm_arrival' => '1',
-            ];
-
-            $this->db->trans_begin();
-
-            if ($this->M_Booking->updateResi($ktp, $data_resi)) {
-                $this->db->trans_commit();
-
-                // $pesan_pengirim = $this->messageToCustomer($detailResi);
-                // $pesan_penerima = $this->messageToCustomer($detailResi);
-
-                // $this->api_whatsapp->wa_notif($pesan_pengirim, $detailResi['telepon_pengirim']);
-                // $this->api_whatsapp->wa_notif($pesan_penerima, $detailResi['telepon_penerima']);
-
-                $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                        Resi dengan nomor ' . $ktp . ' telah dikonfirmasi tiba di kota tujuan.
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-                        </div>');
-
-                redirect('confirm/success');
-            } else {
-                $this->db->trans_rollback();
-
-                $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Gagal konfirmasi resi tiba di tujuan. Silahkan coba lagi!
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-                        </div>');
-
-                redirect('confirm/failed');
-            }
+            Gagal input data registrasi. Silahkan coba lagi!
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            </div>');
+            redirect('home/agent');
         }
     }
 }
