@@ -280,37 +280,37 @@
                                 <label for="lokasi" class="form-label text-bold">Lokasi <span class="text-primary">*</span></label>
                                 <select name="lokasi" id="lokasi" class="form-select border-0" style="height: 55px;" required>
                                     <option selected>:: Pilih lokasi</option>
-                                    <option value="1">Mall / Pusat perbelanjaan</option>
-                                    <option value="2">Perkantoran</option>
-                                    <option value="3">Perumahan</option>
-                                    <option value="4">Jalan utama</option>
+                                    <option value="Mall / Pusat perbelanjaan">Mall / Pusat perbelanjaan</option>
+                                    <option value="Perkantoran">Perkantoran</option>
+                                    <option value="Perumahan">Perumahan</option>
+                                    <option value="Jalan utama">Jalan utama</option>
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label for="jenis_bangunan" class="form-label text-bold">Jenis bangunan <span class="text-primary">*</span></label>
                                 <select name="jenis_bangunan" id="jenis_bangunan" class="form-select border-0" style="height: 55px;" required>
                                     <option selected>:: Pilih jenis bangunan</option>
-                                    <option value="1">Ruko</option>
-                                    <option value="2">Kios</option>
-                                    <option value="3">Rumah</option>
+                                    <option value="Ruko">Ruko</option>
+                                    <option value="Kios">Kios</option>
+                                    <option value="Rumah">Rumah</option>
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label for="status_bangunan" class="form-label text-bold">Status bangunan <span class="text-primary">*</span></label>
                                 <select name="status_bangunan" id="status_bangunan" class="form-select border-0" style="height: 55px;" required>
                                     <option selected>:: Pilih status bangunan</option>
-                                    <option value="1">Milik sendiri</option>
-                                    <option value="2">Sewa</option>
+                                    <option value="Milik sendiri">Milik sendiri</option>
+                                    <option value="Sewa">Sewa</option>
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label for="usaha_lain" class="form-label text-bold">Apakah Anda punya usaha lain? <span class="text-primary">*</span></label>
                                 <select name="usaha_lain" id="usaha_lain" class="form-select border-0" style="height: 55px;" required>
                                     <option selected>:: Pilih usaha lain</option>
-                                    <option value="1">Online</option>
-                                    <option value="2">Offline</option>
-                                    <option value="3">Online dan Offline</option>
-                                    <option value="4">Tidak ada</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Offline">Offline</option>
+                                    <option value="Online dan Offline">Online dan Offline</option>
+                                    <option value="Tidak ada">Tidak ada</option>
                                 </select>
                             </div>
                             <div class="col-md-6 col-12">
@@ -358,7 +358,7 @@
                                     </svg>
                                 </i>
                                 <div class="ps-4">
-                                    <h3 class="text-primary m-0">Data lokasi agen</h3>
+                                    <h3 class="text-primary m-0">Dokumen pendukung</h3>
                                 </div>
                             </div>
                         </div>

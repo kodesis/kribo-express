@@ -81,7 +81,7 @@
             <div class="col-lg-6 about-text wow fadeInUp" data-wow-delay="0.3s">
                 <h6 class="text-secondary text-uppercase mb-3">Tentang Kami</h6>
                 <h1 class="mb-5">Solusi Transportasi dan Logistik Cepat</h1>
-                <p class="mb-5">Perusahaan ekspedisi KRIBO Express berdiri sejak NOVEMBER 2023 yang mulanya bernama PT. INDONESIA KRIBO NUSANTARA (IKN). Usaha kami tidak hanya jasa kurir paket DOMESTIK, tetapi juga pada kegiatan PENGIRIMAN barang dan pengiriman dokumen ke luar negeri.</p>
+                <p class="mb-5">Perusahaan ekspedisi KRIBO Express berdiri sejak NOVEMBER 2023. Usaha kami tidak hanya jasa kurir paket DOMESTIK, tetapi juga pada kegiatan PENGIRIMAN barang dan pengiriman dokumen ke luar negeri.</p>
                 <div class="row g-4 mb-5">
                     <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
                         <i class="fa fa-globe fa-3x text-primary mb-3"></i>

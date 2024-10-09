@@ -48,7 +48,7 @@
 
                 foreach ($menu as $m) :
                     $submenus = $this->M_Setting->get_submenus($m->Id);
-                    $isActive = ($this->uri->segment(1) == $m->controller) ? 'active' : '';
+                    $isActive = ($this->uri->segment(1) == $m->segment) ? 'active' : '';
                     $hasChildClass = ($m->has_child == '1') ? 'dropdown' : '';
 
                     // Check if the user has access to this menu
