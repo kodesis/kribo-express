@@ -417,10 +417,10 @@
                             <div class="col-sm-6 col-12">
                                 <!-- Google reCAPTCHA v2 widget -->
                                 <!-- Local -->
-                                <div class="g-recaptcha mt-2" data-sitekey="6Le8ZkcqAAAAAMaPLJPvTfEmiAJxPdh-wBXJmoma"></div>
+                                <!-- <div class="g-recaptcha mt-2" data-sitekey="6Le8ZkcqAAAAAMaPLJPvTfEmiAJxPdh-wBXJmoma"></div> -->
 
                                 <!-- Hosting -->
-                                <!-- <div class="g-recaptcha" data-sitekey="6LcrQFQqAAAAAEa0DkcI1dUU0mxEt48SZ6LXMiic"></div> -->
+                                <div class="g-recaptcha mt-2" data-sitekey="6LcrQFQqAAAAAEa0DkcI1dUU0mxEt48SZ6LXMiic"></div>
                             </div>
                         </div>
                         <div class="row">
