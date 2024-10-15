@@ -141,6 +141,7 @@
                                 <hr>
                                 <div class="col-md-3 col-12">
                                     <div class="mb-3">
+                                        <input type="hidden" name="harga_jual" id="harga_jual" class="form-control" value="0" readonly>
                                         <label for="origin" class="form-label">Origin</label>
                                         <input type="text" name="origin" id="origin" class="form-control" placeholder="Masukkan origin" oninput="this.value = this.value.toUpperCase()">
                                     </div>
@@ -183,9 +184,55 @@
 </div>
 <script src="<?= base_url(); ?>assets/dashboard/js/jquery.mask.js"></script>
 <script type="text/javascript" src="<?= base_url(); ?>assets/vendor/select2/js/select2.min.js"></script>
+<!-- jQuery UI (required for autocomplete) -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<!-- jQuery UI CSS (for autocomplete styling) -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <script>
     $(document).ready(function() {
+        $("#nama_pengirim").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "<?php echo site_url('booking/autocompleteCustomer'); ?>",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $("#nama_pengirim").val(ui.item.nama_customer);
+                $("#telepon_pengirim").val(ui.item.telepon_customer);
+                $("#alamat_pengirim").val(ui.item.alamat_customer);
+            }
+        });
+
+        $("#nama_penerima").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "<?php echo site_url('booking/autocompleteCustomer'); ?>",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $("#nama_penerima").val(ui.item.nama_customer);
+                $("#telepon_penerima").val(ui.item.telepon_customer);
+                $("#alamat_penerima").val(ui.item.alamat_customer);
+            }
+        });
 
         $('.select2').select2();
 
@@ -261,38 +308,95 @@
             return parts.join(",");
         }
 
-        $('#origin, #destination').on('input', function() {
-            var origin = $('#origin').val();
-            var destination = $('#destination').val();
-            if (origin && destination) {
+
+
+        $("#origin").autocomplete({
+            source: function(request, response) {
                 $.ajax({
-                    type: 'POST',
-                    url: '<?= base_url('booking/getPrice'); ?>',
+                    url: "<?php echo site_url('booking/autocompleteOrigin'); ?>",
+                    dataType: "json",
                     data: {
-                        origin: origin,
-                        destination: destination,
+                        term: request.term
                     },
-                    cache: false,
-                    success: function(response) {
-                        var harga = parseFloat(response);
-                        console.log(harga)
-
-                        if (!isNaN(harga) && harga > 0) {
-                            $('#harga').removeClass('is-invalid').addClass('is-valid');
-                        } else {
-                            $('#harga').removeClass('is-valid').addClass('is-invalid');
-                        }
-
-                        $('#harga').val((harga));
-                        hitungNominal();
-                    },
-                    error: function() {
-                        console.log('Price not found');
-                        $('#harga').removeClass('is-valid').addClass('is-invalid');
+                    success: function(data) {
+                        response(data);
                     }
-                })
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $("#origin").val(ui.item.value);
+
+                // Cek jika kedua inputan origin dan destination sudah diisi
+                var origin = $("#origin").val();
+                var destination = $("#destination").val();
+                if (origin && destination) {
+                    fetchPrice(origin, destination);
+                }
             }
         });
+
+        $("#destination").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "<?php echo site_url('booking/autocompleteDestination'); ?>",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $("#destination").val(ui.item.value);
+
+                // Cek jika kedua inputan origin dan destination sudah diisi
+                var origin = $("#origin").val();
+                var destination = $("#destination").val();
+                if (origin && destination) {
+                    fetchPrice(origin, destination);
+                }
+            }
+        });
+
+        // Fungsi untuk melakukan AJAX request dan mendapatkan harga
+        function fetchPrice(origin, destination) {
+            $.ajax({
+                type: 'POST',
+                url: '<?= base_url('booking/getPrice'); ?>',
+                data: {
+                    origin: origin,
+                    destination: destination,
+                },
+                cache: false,
+                success: function(response) {
+                    var data = JSON.parse(response);
+
+                    var harga_up = parseFloat(data.harga_up) || 0; // Handle null or NaN
+                    var harga_jual = parseFloat(data.harga_jual) || 0; // Handle null or NaN
+
+                    if (!isNaN(harga_up) && harga_up > 0) {
+                        $('#harga').removeClass('is-invalid').addClass('is-valid');
+                    } else {
+                        $('#harga').removeClass('is-valid').addClass('is-invalid');
+                    }
+
+                    $('#harga').val(harga_up);
+                    $('#harga_jual').val(harga_jual);
+                    hitungNominal();
+                },
+                error: function() {
+                    console.log('Price not found');
+                    $('#harga').removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+        }
+
+
+
 
         function hitungNominal() {
             var chargeable = parseFloat($('#chargeable').val().replace(/\./g, '')) || 0;

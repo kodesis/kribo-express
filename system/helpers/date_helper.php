@@ -690,6 +690,22 @@ if (!function_exists('format_indo')) {
 	}
 }
 
+if (!function_exists('format_indo_non_hari')) {
+	function format_indo_non_hari($date)
+	{
+		date_default_timezone_set('Asia/Jakarta');
+		$Bulan = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
+
+		// pemisahan tahun, bulan, hari, dan waktu
+		$tahun = substr($date, 0, 4);
+		$bulan = substr($date, 5, 2);
+		$tgl = substr($date, 8, 2);
+		$result = $tgl . " " . $Bulan[(int)$bulan - 1] . " " . $tahun;
+
+		return $result;
+	}
+}
+
 if (!function_exists('format_english')) {
 	function format_english($date)
 	{

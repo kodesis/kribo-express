@@ -12,17 +12,7 @@
                 <div class="btn-list">
                     <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 d-none d-sm-inline-block">
                         <form action="<?= base_url('setting/user') ?>" method="post" autocomplete="off" novalidate>
-                            <div class="input-icon">
-                                <span class="input-icon-addon">
-                                    <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                        <path d="M21 21l-6 -6" />
-                                    </svg>
-                                </span>
-                                <input type="text" value="<?= $keyword ?>" class="form-control" name="keyword" placeholder="Search…" aria-label="Search in website">
-                            </div>
+                            <?php $this->load->view('pages/layouts/_search') ?>
                         </form>
                     </div>
                     <!-- Tombol Search untuk mobile -->
@@ -50,7 +40,7 @@
                             <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
                         </svg>
                     </a>
-                    <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
+                    <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-add">
                         <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -59,7 +49,7 @@
                         </svg>
                         Add new
                     </a>
-                    <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
+                    <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-add" aria-label="Create new report">
                         <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -155,6 +145,99 @@
         </div>
     </div>
 </div>
+<div class="modal modal-blur fade" id="modal-add" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?= base_url() ?>" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <label for="role" class="form-label">User role</label>
+                            <select name="role" id="role" class="form-select" onchange="showFormAdd()">
+                                <option value="">:: Pilih user role</option>
+                                <option value="2">Staf Kribo Express</option>
+                                <option value="3">Mitra</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="staff" style="display: none">
+                        <div class="row">
+                            <div class="col-md-6 col-12 mb-2">
+                                <label for="nama_user" class="form-label">Nama user</label>
+                                <input type="text" name="nama_user" id="nama_user" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="partner" style="display: none">
+                        <div class="row">
+                            <div class="col-md-6 col-12 mb-2">
+                                <label for="mitra" class="form-label">Mitra</label>
+                                <select name="mitra" id="mitra" class="form-select">
+                                    <option value="">:: Pilih mitra</option>
+                                    <?php
+                                    foreach ($partners as $p) : ?>
+                                        <option value="<?= $p->Id ?>"><?= $p->nama_pendaftar ?></option>
+                                    <?php
+                                    endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 mb-2">
+                                <label for="username" class="form-label">Username</label>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"> @ </span>
+                                    <input type="text" class="form-control" placeholder="username" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <label for="yourPassword" class="form-label">Password</label>
+                                <div class="input-group input-group-flat">
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Your password" autocomplete="off">
+                                    <span class="input-group-text">
+                                        <a href="#" id="toggle-password" class="link-secondary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                            </svg>
+                                        </a>
+                                    </span>
+                                </div>
+                                <small id="password-error" class="text-danger" style="display:none;">Password must be at least 8 characters long, contain a number, and an uppercase letter.</small>
+                            </div>
+
+                            <div class="col-12 mb-2">
+                                <label for="yourPassword2" class="form-label">Confirmation Password</label>
+                                <div class="input-group input-group-flat">
+                                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm password" autocomplete="off">
+                                    <span class="input-group-text">
+                                        <a href="#" id="toggle-password-2" class="link-secondary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                            </svg>
+                                        </a>
+                                    </span>
+                                </div>
+                                <small id="confirm-password-error" class="text-danger" style="display:none;">Passwords do not match.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="modal modal-blur fade" id="editData" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -168,6 +251,78 @@
     </div>
 </div>
 <script>
+    function showFormAdd() {
+        var role = document.getElementById('role').value;
+        var staffSection = document.getElementById('staff');
+        var partnerSection = document.getElementById('partner');
+
+        if (role === '2') {
+            staffSection.style.display = 'block';
+            partnerSection.style.display = 'none';
+        } else if (role === '3') {
+            staffSection.style.display = 'none';
+            partnerSection.style.display = 'block';
+        } else {
+            staffSection.style.display = 'none';
+            partnerSection.style.display = 'none';
+        }
+    }
+
+    // Toggle password visibility for first password field
+    document.getElementById('toggle-password').addEventListener('click', function(e) {
+        e.preventDefault();
+        const passwordField = document.getElementById('password');
+        const passwordFieldType = passwordField.getAttribute('type');
+        passwordField.setAttribute('type', passwordFieldType === 'password' ? 'text' : 'password');
+    });
+
+    // Toggle password visibility for confirmation password field
+    document.getElementById('toggle-password-2').addEventListener('click', function(e) {
+        e.preventDefault();
+        const passwordField2 = document.getElementById('password2');
+        const passwordFieldType2 = passwordField2.getAttribute('type');
+        passwordField2.setAttribute('type', passwordFieldType2 === 'password' ? 'text' : 'password');
+    });
+
+    // Password validation function
+    function validatePassword() {
+        const password = document.getElementById('password').value;
+        const passwordError = document.getElementById('password-error');
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/; // At least 1 uppercase, 1 number, 8 characters
+
+        if (passwordRegex.test(password)) {
+            passwordError.style.display = 'none';
+            return true;
+        } else {
+            passwordError.style.display = 'block';
+            return false;
+        }
+    }
+
+    // Check if passwords match
+    function validatePasswordMatch() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('password2').value;
+        const confirmPasswordError = document.getElementById('confirm-password-error');
+
+        if (password === confirmPassword) {
+            confirmPasswordError.style.display = 'none';
+            return true;
+        } else {
+            confirmPasswordError.style.display = 'block';
+            return false;
+        }
+    }
+
+    // Attach input event listeners for real-time validation
+    document.getElementById('password').addEventListener('input', function() {
+        validatePassword();
+        validatePasswordMatch();
+    });
+
+    document.getElementById('password2').addEventListener('input', validatePasswordMatch);
+
+
     $(document).ready(function() {
         $(document).on('click', '.editData', function() {
             var id = $(this).data('id');

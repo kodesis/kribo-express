@@ -221,7 +221,22 @@
 }
 
 .page-header {
-    background: linear-gradient(rgba(6, 3, 21, .5), rgba(6, 3, 21, .5)), url(../img/carousel-2.jpg) center center no-repeat;
+    background: linear-gradient(rgba(6, 3, 21, .5), rgba(6, 3, 21, .5)), url(../img/kribo-02.png) center center no-repeat;
+    background-size: cover;
+}
+
+.page-about {
+    background: linear-gradient(rgba(6, 3, 21, .5), rgba(6, 3, 21, .5)), url(../img/about-us.png) center center no-repeat;
+    background-size: cover;
+}
+
+.page-service {
+    background: linear-gradient(rgba(6, 3, 21, .5), rgba(6, 3, 21, .5)), url(../img/our-service.png) center center no-repeat;
+    background-size: cover;
+}
+
+.page-tracking {
+    background: linear-gradient(rgba(6, 3, 21, .5), rgba(6, 3, 21, .5)), url(../img/tracking.png) center center no-repeat;
     background-size: cover;
 }
 

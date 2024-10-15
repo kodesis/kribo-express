@@ -11,18 +11,8 @@
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                     <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 d-none d-sm-inline-block">
-                        <form action="<?= base_url('agent') ?>" method="post" autocomplete="off" novalidate>
-                            <div class="input-icon">
-                                <span class="input-icon-addon">
-                                    <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                        <path d="M21 21l-6 -6" />
-                                    </svg>
-                                </span>
-                                <input type="text" value="<?= $keyword ?>" class="form-control" name="keyword" placeholder="Search…" aria-label="Search in website">
-                            </div>
+                        <form action="<?= base_url('partner') ?>" method="post" autocomplete="off" novalidate>
+                            <?php $this->load->view('pages/layouts/_search') ?>
                         </form>
                     </div>
                     <!-- Tombol Search untuk mobile -->
@@ -74,32 +64,65 @@
                             <thead>
                                 <tr>
                                     <th class="w-1">#</th>
-                                    <th class="w-25">Nama</th>
+                                    <th class="">Nama</th>
                                     <th class="w-1">Jenis pengajuan</th>
                                     <th>No. Telp</th>
                                     <th>Email</th>
                                     <th>Alamat</th>
-                                    <th class="w-1"></th>
+                                    <th>Status</th>
+                                    <th class=""></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
+                                if ($registrations) {
+                                    $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
 
-                                foreach ($registrations as $c) : ?>
+                                    foreach ($registrations as $c) : ?>
+                                        <tr>
+                                            <td class="text-end"><?= $no++; ?>.</td>
+                                            <td><?= $c->nama_pendaftar ?></td>
+                                            <td><?= ucfirst($c->jenis_pengajuan) ?></td>
+                                            <td><?= ($c->no_handphone) ?></td>
+                                            <td><?= ($c->alamat_email) ?></td>
+                                            <td><?= $c->alamat_lengkap ?></td>
+                                            <td>
+                                                <?php
+                                                $status_badges = [
+                                                    'belum di-review' => ['text' => 'Belum di review', 'color' => 'bg-warning'],
+                                                    'ditolak' => ['text' => 'Ditolak', 'color' => 'bg-danger'],
+                                                    'diterima' => ['text' => 'Diterima', 'color' => 'bg-success'],
+                                                ];
+
+                                                if (isset($status_badges[$c->hasil_review])) {
+                                                    $status = $status_badges[$c->hasil_review];
+                                                ?>
+                                                    <span class="badge <?= $status['color']; ?> w-100"><?= $status['text']; ?></span>
+                                                <?php
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-ghost-primary btn-sm review-pengajuan" data-id="<?= $c->Id ?>" data-nama="<?= $c->nama_pendaftar ?>">Review</button>
+                                                <?php
+                                                if ($c->hasil_review == 'diterima' && $c->has_account == '0') {
+                                                ?>
+                                                    <!-- <a href="<?= base_url('partner/createUser/' . $c->Id) ?>" class="btn btn-ghost-success btn-sm btn-confirm">Create account</a> -->
+                                                    <button type="button" class="btn btn-ghost-success btn-sm btn-confirm" onclick="document.location='<?= base_url('partner/createUser/' . $c->Id) ?>'">Create account</button>
+                                                <?php
+                                                }  ?>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    endforeach;
+                                } else {
+                                    ?>
                                     <tr>
-                                        <td class="text-end"><?= $no++; ?>.</td>
-                                        <td><?= $c->nama_pendaftar ?></td>
-                                        <td><?= ucfirst($c->jenis_pengajuan) ?></td>
-                                        <td><?= ($c->no_handphone) ?></td>
-                                        <td><?= ($c->alamat_email) ?></td>
-                                        <td><?= $c->alamat_lengkap ?></td>
-                                        <td>
-                                            <button type="button" class="btn btn-ghost-primary btn-sm review-pengajuan" data-id="<?= $c->Id ?>" data-nama="<?= $c->nama_pendaftar ?>">Review</button>
-                                        </td>
+                                        <td colspan="8">Tidak ada data yang ditampilkan</td>
                                     </tr>
                                 <?php
-                                endforeach; ?>
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -194,6 +217,34 @@
 
             $.ajax({
                 url: "<?= site_url('partner/review') ?>",
+                type: "POST",
+                data: {
+                    id: id,
+                    nama: nama,
+                },
+                success: function(data) {
+                    $('#review-pengajuan .modal-body').html(data);
+                    $('#review-pengajuan').modal('show');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: "Error!! ",
+                        text: 'Gagal mengambil data',
+                        type: "error",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.create-user', function() {
+            var id = $(this).data('id');
+            var nama = $(this).data('nama');
+
+            $('#review-pengajuan .modal-title').text('Buat akun user ' + nama);
+
+            $.ajax({
+                url: "<?= site_url('partner/getPartnerById') ?>",
                 type: "POST",
                 data: {
                     id: id,

@@ -37,7 +37,6 @@ class Auth extends CI_Controller
         $username = $this->input->post('username');
         $password = $this->input->post('password');
 
-
         $user = $this->db->get_where('user', ['username' => $username])->row_array();
 
         if ($user) {
@@ -50,7 +49,7 @@ class Auth extends CI_Controller
                         'username' => $user['username'],
                         'email' => $user['email'],
                         'role_id' => $user['role_id'],
-                        'customer_id' => $user['customer_id'],
+                        'partner_id' => $user['partner_id'],
                         'is_logged_in' => true,
                     ];
                     $this->session->set_userdata($data);
@@ -62,26 +61,32 @@ class Auth extends CI_Controller
                         redirect($last_page);
                     } else {
                         // Arahkan ke halaman default (misalnya dashboard)
+                        if ($password == strtoupper($username)) {
+                            $this->session->set_flashdata('message_warning', '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            Anda masih menggunakan password bawaan. Silahkan perbarui password!.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>');
+                        }
                         redirect('dashboard');
                     }
                 } else {
                     $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 					Wrong password.
-					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>');
                     redirect('auth');
                 }
             } else {
                 $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 				Username has not been activated.
-				<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>');
                 redirect('auth');
             }
         } else {
             $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			Username has not been registered.
-			<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>');
 
             redirect('auth');
@@ -157,7 +162,7 @@ class Auth extends CI_Controller
 
         $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
 		You have been logout.
-		<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>');
         redirect('auth');
     }

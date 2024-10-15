@@ -236,6 +236,8 @@
 	</div>
 	<!-- Spinner End -->
 
+	<div class="flash-data" data-flashdata="<?= $this->session->flashdata('message_name') ?>"></div>
+	<div class="flash-data-error" data-flashdata="<?= $this->session->flashdata('message_error') ?>"></div>
 
 	<!-- Navbar Start -->
 	<nav class="navbar navbar-expand-lg bg-white navbar-light shadow border-top border-5 border-primary sticky-top p-0">
@@ -332,35 +334,7 @@
 	<script type="text/javascript" src="<?= base_url(); ?>assets/vendor/select2/js/select2.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
-		$(".homepage-slider").owlCarousel({
-			items: 1,
-			loop: true,
-			autoplay: true,
-			nav: true,
-			dots: false,
-			navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
-			responsive: {
-				0: {
-					items: 1,
-					nav: false,
-					loop: true
-				},
-				600: {
-					items: 1,
-					nav: true,
-					loop: true
-				},
-				1000: {
-					items: 1,
-					nav: true,
-					loop: true
-				}
-			}
-		});
-
 		$(document).ready(function() {
-			$('.select2').select2();
-
 			$.ajax({
 				type: 'POST',
 				url: '<?= base_url('registration/getProvinsi') ?>',
@@ -498,6 +472,24 @@
 				}
 			});
 		});
+
+		const flashdata = $(".flash-data").data("flashdata");
+		if (flashdata) {
+			Swal.fire({
+				title: "Success!! ",
+				text: flashdata,
+				icon: "success",
+			});
+		}
+
+		const flashdata_error = $(".flash-data-error").data("flashdata");
+		if (flashdata_error) {
+			Swal.fire({
+				title: "Error!! ",
+				text: flashdata_error,
+				icon: "error",
+			});
+		}
 	</script>
 </body>
 

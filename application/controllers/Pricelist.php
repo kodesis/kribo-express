@@ -1,11 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-date_default_timezone_set('Asia/Jakarta');
-
-class Pricelist extends CI_Controller
+class pricelist extends CI_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -24,7 +21,7 @@ class Pricelist extends CI_Controller
 
             redirect('auth');
         } else {
-            $url = "customer/index";
+            $url = "pricelist";
             $this->checkAccess($url);
         }
     }
@@ -49,17 +46,20 @@ class Pricelist extends CI_Controller
 
     public function index()
     {
-        // $url = "customer/index";
-        // $this->checkAccess($url);
+        $per_page = ($this->input->post('show_per_page')) ? trim($this->input->post('show_per_page')) : (($this->session->userdata('show_per_page')) ? $this->session->userdata('show_per_page') : '10');
+        if ($per_page === null) $per_page = $this->session->userdata('show_per_page');
+        else $this->session->set_userdata('show_per_page', $per_page);
+
+        // print_r($per_page)
 
         $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search_pricelist')) ? $this->session->userdata('search_pricelist') : '');
         if ($keyword === null) $keyword = $this->session->userdata('search_pricelist');
         else $this->session->set_userdata('search_pricelist', $keyword);
 
         $config = [
-            'base_url' => site_url('customer/index'),
+            'base_url' => site_url('pricelist/index'),
             'total_rows' => $this->M_Pricelist->count($keyword),
-            'per_page' => 10,
+            'per_page' => $per_page,
             'uri_segment' => 3,
             'num_links' => 1,
             'full_tag_open' => '<ul class="pagination m-0 ms-auto">',
@@ -106,7 +106,7 @@ class Pricelist extends CI_Controller
             "keyword" => $keyword,
             "segment" => "pricelist",
             "pages" => "pages/pricelist/v_pricelist",
-            "pricelists" => $this->M_Pricelist->listPricelistPaginate($config["per_page"], $page, $keyword),
+            "pricelists" => $this->M_Pricelist->listpricelistPaginate($config["per_page"], $page, $keyword),
             "total_rows" => $config['total_rows'],
             "per_page" => $config['per_page'],
         ];
@@ -114,19 +114,85 @@ class Pricelist extends CI_Controller
         $this->load->view('pages/index', $data);
     }
 
-    public function getPrice()
+    public function store()
     {
-        // $origin = $this->input->post('origin');
-        $origin = 'CGK';
-        $destination = $this->input->post('destination');
+        $url = "pricelist/index";
+        $this->checkAccess($url);
 
-        $slug = $origin . '-' . $destination;
-        $price = $this->db->where('slug', $slug)->get('mt_pricelist')->row_array();
+        $nama_pricelist = $this->input->post('nama_pricelist');
+        $slug = url_title($nama_pricelist, 'dash', true);
 
-        if (isset($price['total'])) {
-            echo ($price['total']);
+        $data = [
+            'nama_pricelist' => $nama_pricelist,
+            'alamat_pricelist' => $this->input->post('alamat_pricelist'),
+            'telepon_pricelist' => $this->input->post('telepon_pricelist'),
+            'status_pricelist' => $this->input->post('status_pricelist'),
+            'slug' => $slug,
+        ];
+
+        $old_slug = $this->uri->segment(4);
+        if ($old_slug) {
+            $this->M_Pricelist->update($data, $old_slug);
+
+            $this->session->set_flashdata('message_name', 'The pricelist has been successfully updated.');
         } else {
-            echo '0';
+            if ($this->M_Pricelist->is_available($slug)) {
+                $this->session->set_flashdata('message_error', 'pricelist ' . $nama_pricelist . ' sudah ada.');
+            } else {
+                $this->M_Pricelist->insert($data);
+
+                $this->session->set_flashdata('message_name', 'The pricelist has been successfully added.');
+            }
         }
+
+        redirect("pricelist");
+    }
+
+    public function formEdit()
+    {
+        $id = $this->input->post('id');
+
+        $data = $this->M_Pricelist->show($id);
+
+        $url_form = base_url('pricelist/updateData/' . $id);
+
+        $city_origin = $data['city_origin'];
+        $city = $data['city'];
+        $total = $data['total'];
+
+        $output = "<form method='POST' action='$url_form'>";
+        $output .= "<div class='row'>
+                        <div class='col-md-12 col-12'>
+                            <div class='mb-3'>
+                                <label class='form-label'>Nama</label>
+                                <input type='text' name='city_origin' class='form-control' value='$city_origin'>
+                            </div>
+                        </div>";
+
+        $output .= "
+                <div class='col-md-12 col-12'>
+                    <div class='mb-3'>
+                        <label class='form-label'>No. HP</label>
+                        <input type='text' class='form-control' name='city' value='$city'>
+                    </div>
+                </div>";
+
+        $output .= "
+                <div class='col-md-12 col-12'>
+                    <div class='mb-3'>
+                        <label class='form-label'>Alamat</label>
+                        <textarea class='form-control' name='total'>$total</textarea>
+                    </div>
+                </div>
+            </div>";
+
+        $output .= "<div class='row mt-2'><div class='col-12 text-end'><button type='submit' class='btn btn-primary btn-submit'>Perbarui</button></div></div>";
+        $output .= "</form>";
+
+        echo $output;
+    }
+
+    public function updateData($id)
+    {
     }
 }

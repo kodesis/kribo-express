@@ -15,35 +15,41 @@ class M_Booking extends CI_Model
         $role_id = $this->session->userdata('role_id');
 
         if ($role_id == '3') {
-            $this->db->where('customer_id', $role_id);
+            $this->db->where('partner_id', $role_id);
         }
 
         if ($keyword) {
             $this->db->like('b.no_resi', $keyword);
             $this->db->or_like('b.origin', $keyword);
             $this->db->or_like('b.destination', $keyword);
-            $this->db->or_like('nama_customer', $keyword);
+            // $this->db->or_like('nama_customer', $keyword);
         }
 
-        return $this->db->from('resi b')->join('customer c', 'b.customer_id = c.id', 'left')->count_all_results();
+        return $this->db->from('resi b')->count_all_results();
     }
 
     public function listBookingPaginate($limit, $from, $keyword)
     {
         $role_id = $this->session->userdata('role_id');
 
+        // print_r($this->session->userdata('partner_id'));
+        // exit;
+
         if ($role_id == '3') {
-            $this->db->where('customer_id', $this->session->userdata('customer_id'));
+            $this->db->where('partner_id', $this->session->userdata('partner_id'));
         }
 
         if ($keyword) {
             $this->db->like('b.no_resi', $keyword);
             $this->db->or_like('b.origin', $keyword);
             $this->db->or_like('b.destination', $keyword);
-            $this->db->or_like('nama_customer', $keyword);
         }
 
-        return $this->db->from('resi b')->join('customer c', 'b.customer_id = c.id', 'left')->order_by('b.no_resi', 'DESC')->limit($limit, $from)->get()->result();
+        $this->db->from('resi b');
+        if ($role_id != '3') {
+            $this->db->join('partner p', 'b.partner_id = p.id');
+        }
+        return $this->db->order_by('b.no_resi', 'DESC')->limit($limit, $from)->get()->result();
     }
 
     public function list_booking()
@@ -223,5 +229,14 @@ class M_Booking extends CI_Model
     public function cekResi($slug)
     {
         return $this->db->where('no_resi', $slug)->get('resi')->num_rows();
+    }
+
+    public function getRevenueSummary($partner_id, $from, $to)
+    {
+        $this->db->where('partner_id', $partner_id);
+        $this->db->where('DATE(created_at) >=', $from);
+        $this->db->where('DATE(created_at) <=', $to);
+
+        return $this->db->get('resi')->result();
     }
 }

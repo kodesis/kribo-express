@@ -29,7 +29,7 @@
             width: 100%;
             height: 100%;
             border: 1px solid #000;
-            padding: 10px;
+            padding: 5px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -41,7 +41,7 @@
         }
 
         .logo {
-            max-width: 170px;
+            max-width: 150px;
         }
 
         .barcode {
@@ -50,24 +50,24 @@
         }
 
         .barcode img {
-            max-width: 120px;
+            max-width: 110px;
             height: auto;
         }
 
         table.detail {
             width: 100%;
-            font-size: 12px;
-            margin-top: 10px;
+            font-size: 10px;
+            margin-top: 7px;
             border-collapse: collapse;
         }
 
         table.detail h3 {
-            font-size: 14px;
-            margin-bottom: 5px;
+            font-size: 12px;
+            margin-bottom: 3px;
         }
 
         table.detail p {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         table.detail tr td {
@@ -78,29 +78,33 @@
         table.detail tr td:first-child {
             width: 50%;
         }
+
+        .text-center {
+            text-align: center;
+            vertical-align: middle;
+        }
     </style>
 </head>
 
 <body>
     <div class="resi-container">
-        <div class="header">
+        <!-- <div class="header">
             <img src="<?= base_url('assets/logo/logo-03.png') ?>" alt="Logo Perusahaan" class="logo">
         </div>
 
         <div class="barcode">
             <img src="<?= $qr_code ?>" alt="Barcode Resi">
             <p><?= $resi['no_resi'] ?></p>
-        </div>
+        </div> -->
 
         <table class="detail">
             <tr>
-                <td>
-                    <h3>Pengirim:</h3>
-                    <p><?= $pengirim ?></p>
+                <td class="text-center">
+                    <img src="<?= base_url('assets/logo/logo-01.png') ?>" alt="Logo Perusahaan" class="logo" style="width: 80px; margin-bottom: 40px;">
                 </td>
-                <td>
-                    <h3>Penerima:</h3>
-                    <p><?= $penerima ?></p>
+                <td class="text-center">
+                    <img src="<?= $qr_code ?>" alt="Barcode Resi" style="width: 110px">
+                    <p><?= $resi['no_resi'] ?></p>
                 </td>
             </tr>
             <tr>
@@ -124,13 +128,17 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    <h3>Kota Asal:</h3>
-                    <p><?= $resi['origin'] ?></p>
+                <td colspan="2">
+                    <h3>Pengirim:</h3>
+                    <p><?= $pengirim ?></p>
+                    <p><?= $resi['alamat_pengirim'] ?></p>
                 </td>
-                <td>
-                    <h3>Kota Tujuan:</h3>
-                    <p><?= $resi['destination'] ?></p>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h3>Penerima:</h3>
+                    <p><?= $penerima ?></p>
+                    <p><?= $resi['alamat_penerima'] ?></p>
                 </td>
             </tr>
         </table>

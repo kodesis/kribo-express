@@ -12,20 +12,19 @@
                 <div class="btn-list">
                     <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 d-none d-sm-inline-block">
                         <form action="<?= base_url('booking') ?>" method="post" autocomplete="off" novalidate>
-                            <div class="input-icon">
-                                <span class="input-icon-addon">
-                                    <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                        <path d="M21 21l-6 -6" />
-                                    </svg>
-                                </span>
-                                <input type="text" value="<?= $keyword ?>" class="form-control" name="keyword" placeholder="Search…" aria-label="Search in website">
-                            </div>
+                            <?php $this->load->view('pages/layouts/_search') ?>
                         </form>
                     </div>
-                    <a href="<?= base_url('dashboard/reset/customer') ?>" class="btn btn-warning d-none d-sm-inline-block" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
+                    <!-- Tombol Search untuk mobile -->
+                    <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#searchModal" aria-label="Search">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                            <path d="M21 21l-6 -6" />
+                        </svg>
+                    </a>
+                    <a href="<?= base_url('dashboard/reset/booking') ?>" class="btn btn-warning d-none d-sm-inline-block" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
                         <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -33,12 +32,33 @@
                             <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
                         </svg>
                         Reset</a>
-                    <a href="<?= base_url('dashboard/reset/customer') ?>" class="btn btn-warning d-sm-none btn-icon" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
+                    <a href="<?= base_url('dashboard/reset/booking') ?>" class="btn btn-warning d-sm-none btn-icon" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
                         <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
                             <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                        </svg>
+                    </a>
+                    <a href="#" class="btn btn-green d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#download-excel">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-excel">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
+                            <path d="M10 12l4 5" />
+                            <path d="M10 17l4 -5" />
+                        </svg>
+                        Download excel
+                    </a>
+                    <a href="#" class="btn btn-green d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#download-excel" aria-label="Create new report">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-excel">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
+                            <path d="M10 12l4 5" />
+                            <path d="M10 17l4 -5" />
                         </svg>
                     </a>
                     <a href="<?= base_url('booking/create_booking') ?>" class="btn btn-primary d-none d-sm-inline-block" aria-label="Create new report">
@@ -65,6 +85,7 @@
 <!-- Page body -->
 <div class="page-body">
     <div class="container-xl">
+        <?= $this->session->flashdata('message_warning'); ?>
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card">
@@ -91,7 +112,6 @@
                                     } ?>
                                     <th class="w-1">Origin</th>
                                     <th class="w-1">Dest</th>
-                                    <!-- <th class="">Commodity</th> -->
                                     <th class="w-1">Qty</th>
                                     <th class="w-1">Chwt</th>
                                     <th class="w-1">Total</th>
@@ -118,7 +138,8 @@
                                         $checked = ($b->status_bayar == '1') ? 'checked' : '';
                                         $checked_warehouse = ($b->confirm_arr_warehouse == '1') ? 'checked' : '';
                                         $checked_destination = ($b->confirm_arrival == '1') ? 'checked' : '';
-                                        $checked_pickup = ($b->confirm_pickup == '1') ? 'checked' : ''; ?>
+                                        $checked_pickup = ($b->confirm_pickup == '1') ? 'checked' : '';
+                                        $disabled_check_payment = ($this->session->userdata('partner_id') == $b->partner_id) ? '' : 'disabled'; ?>
 
                                         <tr>
                                             <td class="text-end"><?= $no++; ?>.</td>
@@ -127,7 +148,7 @@
                                             if ($this->session->userdata('role_id') != '3') {
                                             ?>
                                                 <td><?= ($b->awb) ? $b->awb : "-" ?></td>
-                                                <td><?= $b->nama_customer ?></td>
+                                                <td><?= $b->nama_mitra ?></td>
                                             <?php
                                             } ?>
                                             <td><?= $b->origin ?></td>
@@ -138,7 +159,7 @@
                                             <td class="text-end"><?= number_format($b->nominal) ?></td>
                                             <td>
                                                 <label class="form-check form-switch">
-                                                    <input class="form-check-input check_payment" type="checkbox" id='checkbox_<?= $b->no_resi ?>' <?= $checked ?> />
+                                                    <input class="form-check-input check_payment" type="checkbox" id='checkbox_<?= $b->no_resi ?>' <?= $checked . ' ' . $disabled_check_payment ?> />
                                                     <span class="form-check-label"><?= ($b->status_bayar == '1') ? 'Paid' : 'Unpaid' ?></span>
                                                 </label>
                                             </td>
@@ -151,36 +172,34 @@
 
                                             <td class="text-center">
                                                 <?php
-                                                if ($b->status_tracking == '4') {
+                                                $status_badges = [
+                                                    '4' => ['text' => 'Sudah tiba di tujuan', 'color' => 'bg-lime'],
+                                                    '3' => ['text' => 'Menuju tujuan pengiriman', 'color' => 'bg-orange'],
+                                                    '2' => ['text' => 'Pengantaran ke gudang', 'color' => 'bg-cyan'],
+                                                    '0' => ['text' => 'Dalam proses', 'color' => 'bg-yellow'],
+                                                ];
+
+                                                if (isset($status_badges[$b->status_tracking])) {
+                                                    $status = $status_badges[$b->status_tracking];
                                                 ?>
-                                                    <span class="badge bg-lime w-100">Sudah tiba di tujuan</span>
+                                                    <span class="badge <?= $status['color']; ?> w-100"><?= $status['text']; ?></span>
                                                 <?php
-                                                } else  if ($b->status_tracking == '3') {
+                                                }
                                                 ?>
-                                                    <span class="badge bg-orange w-100">Menuju tujuan pengiriman</span>
-                                                <?php
-                                                } else  if ($b->status_tracking == '2') {
-                                                ?>
-                                                    <span class="badge bg-cyan w-100">Pengantaran ke gudang</span>
-                                                <?php
-                                                } else  if ($b->status_tracking == '0') {
-                                                ?>
-                                                    <span class="badge bg-yellow w-100">Dalam proses</span>
-                                                <?php
-                                                } ?>
                                             </td>
+
                                             <?php
                                             if ($this->session->userdata('role_id') != '3') {
                                             ?>
                                                 <td>
                                                     <label class="form-check form-switch">
-                                                        <input class="form-check-input check_warehouse" type="checkbox" id='arrWarehouse_<?= $b->no_resi ?>' <?= $checked_warehouse ?> />
+                                                        <input class="form-check-input check_warehouse" data-agent_id="<?= $b->agent_id ?>" type="checkbox" id='arrWarehouse_<?= $b->no_resi ?>' <?= $checked_warehouse ?> />
                                                         <span class="form-check-label"><?= ($b->confirm_arr_warehouse == '1') ? 'Sudah' : 'Belum' ?></span>
                                                     </label>
                                                 </td>
                                                 <td>
                                                     <label class="form-check form-switch">
-                                                        <input class="form-check-input check_destination" type="checkbox" id='arrDestination_<?= $b->no_resi ?>' <?= $checked_destination ?> />
+                                                        <input class="form-check-input check_destination" data-arr_warehouse="<?= $b->confirm_arr_warehouse ?>" type="checkbox" id='arrDestination_<?= $b->no_resi ?>' <?= $checked_destination ?> />
                                                         <span class="form-check-label"><?= ($b->confirm_arrival == '1') ? 'Sudah' : 'Belum' ?></span>
                                                     </label>
                                                 </td>
@@ -209,7 +228,7 @@
                                 } else {
                                     ?>
                                     <tr>
-                                        <td colspan="<?= ($this->session->userdata('role_id') == '3') ? '10' : '12' ?>">Tidak ada data yang ditampilkan.</td>
+                                        <td colspan="<?= ($this->session->userdata('role_id') == '3') ? '11' : '13' ?>">Tidak ada data yang ditampilkan.</td>
                                     </tr>
                                 <?php
                                 } ?>
@@ -222,6 +241,78 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Pencarian -->
+<div class="modal modal-blur fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="<?= base_url('booking') ?>" method="post" autocomplete="off" novalidate>
+                    <div class="input-group">
+                        <input type="text" value="<?= $keyword ?>" class="form-control" name="keyword" placeholder="Search…" aria-label="Search">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="download-excel" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Unduh excel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="<?= base_url('booking/downloadRekapExcel') ?>" autocomplete="off" novalidate>
+                    <div class="row">
+                        <?php
+                        if ($this->session->userdata('role_id') == '2') {
+                        ?>
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="date_from" class="form-label">Mitra</label>
+                                    <select name="partner_id" id="partner_id" class="form-control select2">
+                                        <option value="">:: Pilih mitra</option>
+                                        <?php
+                                        foreach ($partners as $p) :
+                                        ?>
+                                            <option value="<?= $p->Id ?>"><?= $p->nama_mitra . ' - ' . $p->kode_gerai ?></option>
+                                        <?php
+                                        endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        <?php
+                        } ?>
+                        <div class="col-md-6 col-12">
+                            <div class="mb-3">
+                                <label for="date_from" class="form-label">Dari</label>
+                                <input type="date" name="date_from" id="date_from" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="mb-3">
+                                <label for="date_to" class="form-label">Sampai</label>
+                                <input type="date" name="date_to" id="date_to" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-footer text-end">
+                        <button type="submit" class="btn btn-primary ms-auto">Unduh</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         $(document).on('change', '.check_payment', function() {
@@ -426,6 +517,19 @@
             let checkbox = $(this);
             let id = checkbox.attr('id').replace('arrWarehouse_', '');
             let status = checkbox.is(':checked') ? '1' : '0';
+            let agent_id = checkbox.data('agent_id');
+
+            // Validasi agent_id sebelum melanjutkan
+            if (!agent_id || agent_id === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Agent tujuan belum dipilih!',
+                });
+                // Batalkan perubahan checkbox
+                checkbox.prop('checked', !checkbox.is(':checked'));
+                return; // Berhenti jika agent_id tidak valid
+            }
 
             // Fungsi untuk generate kode acak
             function generateRandomCode(length) {
@@ -525,6 +629,19 @@
             let checkbox = $(this);
             let id = checkbox.attr('id').replace('arrDestination_', '');
             let status = checkbox.is(':checked') ? '1' : '0';
+            let arr_warehouse = checkbox.data('arr_warehouse');
+
+            // Validasi arr_warehouse sebelum melanjutkan
+            if (!arr_warehouse || arr_warehouse === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Resi belum dikonfirmasi tiba di gudang!',
+                });
+                // Batalkan perubahan checkbox
+                checkbox.prop('checked', !checkbox.is(':checked'));
+                return; // Berhenti jika arr_warehouse tidak valid
+            }
 
             // Fungsi untuk generate kode acak
             function generateRandomCode(length) {

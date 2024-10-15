@@ -37,27 +37,27 @@
                 <h1 class="mb-5 text-center">Keuntungan jadi Agen Kribo Express</h1>
                 <div class="row justify-content-center g-4 mb-5">
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.5s">
-                        <i class="fa fa-globe fa-3x text-primary mb-3"></i>
+                        <img src="<?= base_url('assets/front/img/icon/syarat.png') ?>" alt="" class="img-fluid w-25 mb-1">
                         <h5>Syarat gampang</h5>
                         <p class="m-0">*Cuma butuh foto KTP, NPWP (lihat S&K untuk lebih jelas).</p>
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.7s">
-                        <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
+                        <img src="<?= base_url('assets/front/img/icon/diskon.png') ?>" alt="" class="img-fluid w-25 mb-1">
                         <h5>Diskon sampai 20%</h5>
                         <p class="m-0">*Dapatkan diskon penjualan 20% untuk setiap jasa pengiriman barang.</p>
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="0.9s">
-                        <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
+                        <img src="<?= base_url('assets/front/img/icon/pelatihan.png') ?>" alt="" class="img-fluid w-25 mb-1">
                         <h5>Pelatihan gratis</h5>
                         <p class="m-0">*Ikuti Pelatihan Bisnis Gratis dari Kribo Express! Dapatkan pengetahuan penting untuk kesuksesan bisnis Anda.</p>
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="1.1s">
-                        <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
+                        <i class="fa fa-shipping-fast fa-5x mb-3" style="color: #e20606;"></i>
                         <h5>Bisa kirim kemana aja </h5>
                         <p class="m-0">*Menjangkau 98% wilayah/area di indonesia dan negara internasional, meliputi Malaysia, Singapura, Thailand, Guangzhou, Taipei.</p>
                     </div>
                     <div class="col-sm-4 col-12 wow fadeIn" data-wow-delay="1.3s">
-                        <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
+                        <img src="<?= base_url('assets/front/img/icon/respon.png') ?>" alt="" class="img-fluid w-25 mb-1">
                         <h5>Respon Layanan Service </h5>
                         <p class="m-0">*Respon layanan kami cepat dan ramah, siap melayani Anda 24/7.</p>
                     </div>
@@ -255,10 +255,10 @@
                                 <label for="sumber_info" class="form-label text-bold">Dari mana info pendaftaran ini? <span class="text-primary">*</span></label>
                                 <select name="sumber_info" id="sumber_info" class="form-select border-0" style="height: 55px;" required>
                                     <option selected>:: Pilih sumber informasi</option>
-                                    <option value="1">Rekomendasi dari konsolidator</option>
-                                    <option value="2">Rekomendasi dari Agen POS lain</option>
-                                    <option value="3">Sosial media</option>
-                                    <option value="4">Website Kribo Express</option>
+                                    <option value="Rekomendasi dari konsolidator">Rekomendasi dari konsolidator</option>
+                                    <option value="Rekomendasi dari Agen POS lain">Rekomendasi dari Agen POS lain</option>
+                                    <option value="Sosial media">Sosial media</option>
+                                    <option value="Website Kribo Express">Website Kribo Express</option>
                                 </select>
                             </div>
                         </div>

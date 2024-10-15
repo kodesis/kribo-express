@@ -6,9 +6,9 @@ class Partner extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library(['session', 'pagination', 'form_validation']);
+        $this->load->library(['session', 'pagination', 'form_validation', 'PHPExcel']);
         $this->load->helper(['string', 'url', 'date']);
-        $this->load->model('M_Partner');
+        $this->load->model(['M_Partner', 'M_Agent']);
 
         if (!$this->session->userdata('is_logged_in')) {
 
@@ -20,10 +20,11 @@ class Partner extends CI_Controller
 			</div>');
 
             redirect('auth');
-        } else {
-            $url = "agent/index";
-            $this->checkAccess($url);
         }
+        // else {
+        //     $url = "agent/index";
+        //     $this->checkAccess($url);
+        // }
     }
 
     private function checkAccess($url)
@@ -49,19 +50,25 @@ class Partner extends CI_Controller
         // $url = "agent/index";
         // $this->checkAccess($url);
 
-        $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search_agent')) ? $this->session->userdata('search_agent') : '');
-        if ($keyword === null) $keyword = $this->session->userdata('search_agent');
-        else $this->session->set_userdata('search_agent', $keyword);
+        $per_page = ($this->input->post('show_per_page')) ? trim($this->input->post('show_per_page')) : (($this->session->userdata('show_per_page')) ? $this->session->userdata('show_per_page') : '10');
+        if ($per_page === null) $per_page = $this->session->userdata('show_per_page');
+        else $this->session->set_userdata('show_per_page', $per_page);
+
+        $url = "partner/index";
+        $this->checkAccess($url);
+
+        $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search_partner')) ? $this->session->userdata('search_partner') : '');
+        if ($keyword === null) $keyword = $this->session->userdata('search_partner');
+        else $this->session->set_userdata('search_partner', $keyword);
 
         $config = [
-            'base_url' => site_url('agent/index'),
-            'total_rows' => $this->M_Agent->count($keyword),
-            'per_page' => 10,
+            'base_url' => site_url('partner/pendaftaran'),
+            'total_rows' => $this->M_Partner->countPartner($keyword),
+            'per_page' => $per_page,
             'uri_segment' => 3,
             'num_links' => 1,
             'full_tag_open' => '<ul class="pagination m-0 ms-auto">',
             'full_tag_close' => '</ul>',
-
             'prev_link' => '<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg> prev',
             'prev_tag_open' => '<li class="page-item">',
             'prev_tag_close' => '</li>',
@@ -98,12 +105,12 @@ class Partner extends CI_Controller
         $page = $this->uri->segment(3) ? ($this->uri->segment(3) - 1) * $config['per_page'] : 0;
 
         $data = [
-            "title" => "Agent",
+            "title" => "Partner",
             "page" => $page,
             "keyword" => $keyword,
-            "segment" => "agent",
-            "pages" => "pages/agent/v_agent",
-            "agents" => $this->M_Agent->listCustomerPaginate($config["per_page"], $page, $keyword),
+            "segment" => "partner",
+            "pages" => "pages/partner/v_partner",
+            "registrations" => $this->M_Partner->listPartnerPaginate($config["per_page"], $page, $keyword),
             "total_rows" => $config['total_rows'],
             "per_page" => $config['per_page'],
         ];
@@ -203,7 +210,6 @@ class Partner extends CI_Controller
         echo $output;
     }
 
-
     public function pendaftaran()
     {
         $url = "partner/index";
@@ -281,5 +287,176 @@ class Partner extends CI_Controller
 
         // echo $nama;
         $this->load->view('pages/partner/v_review', $data);
+    }
+
+    public function processReview($id)
+    {
+        $hasil_review = ucfirst($this->input->post('hasil_review'));
+
+        if ($this->input->post('hasil_review') == 'diterima') {
+            // $pendaftar = $this->M_Partner->getPartnerById($id);
+
+            $max_num = $this->M_Partner->selectMaxGerai();
+
+            // $kode = "KRX" . $pendaftar['id_kelurahan'];
+            $kode = "KRX";
+
+            if (!$max_num['max']) {
+                $bilangan = 1;
+            } else {
+                $bilangan = $max_num['max'] + 1;
+            }
+
+            $no_urut = sprintf("%04d", $bilangan);
+            $no_gerai = $kode . $no_urut;
+        } else {
+            $no_urut = NULL;
+            $no_gerai = NULL;
+        }
+
+        $data = [
+            'hasil_review' => $this->input->post('hasil_review'),
+            'no_urut' => $no_urut,
+            'kode_gerai' => $no_gerai,
+            'has_account' => '1'
+        ];
+
+        $this->db->trans_begin();
+
+        if ($this->M_Partner->updatePartner($id, $data)) {
+            $this->db->trans_commit();
+            $this->session->set_flashdata("message_name", "Pengajuan keagenan telah $hasil_review .");
+        } else {
+            $this->db->trans_rollback();
+            $this->session->set_flashdata("message_error", "Pengajuan keagenan telah $hasil_review.");
+        }
+
+        redirect('partner/pendaftaran');
+    }
+
+    public function topupSaldo()
+    {
+        $id = $this->input->post('id');
+
+        $partner = $this->M_Partner->getPartnerById($id);
+
+        $data = [
+            'partner' => $partner
+        ];
+
+        $this->load->view('pages/partner/v_topup_saldo', $data);
+    }
+
+    public function createUser($id)
+    {
+        $partner = $this->M_Partner->getPartnerById($id);
+
+        $data = [
+            'name' => htmlspecialchars($partner['nama_pendaftar']),
+            'email' => htmlspecialchars($partner['alamat_email']),
+            'username' => strtolower($partner['kode_gerai']),
+            'phone_number' => strtolower($partner['no_handphone']),
+            'image' => 'default.jpg',
+            'password' => password_hash(strtolower($partner['kode_gerai']), PASSWORD_DEFAULT),
+            'role_id' => '3',
+            'is_active' => '1',
+            'date_created' => time(),
+            'access_menu' => '[2]',
+            'customer_id' => $partner['Id']
+        ];
+
+        $this->db->trans_begin();
+
+        if ($this->M_Partner->createAccount($data)) {
+            $this->db->trans_commit();
+            $this->session->set_flashdata('message_name', 'Akun sudah berhasil dibuat.');
+        } else {
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('message_error', 'Gagal membuat akun. Silahkan coba lagi');
+        }
+
+        redirect('partner/pendaftaran');
+    }
+
+    public function processTopUpSaldo($id)
+    {
+        $max_num = $this->M_Partner->selectMaxDepositCode();
+
+        $kode = "KRXDPS";
+
+        if (!$max_num['max']) {
+            $bilangan = 1;
+        } else {
+            $bilangan = $max_num['max'] + 1;
+        }
+
+        $no_urut_topup = sprintf("%06d", $bilangan);
+        $kode_topup = $kode . $no_urut_topup;
+
+        $nominal_topup = $this->convertToNumber($this->input->post('nominal'));
+
+        $saldo = $this->M_Partner->getSaldoAkhirPartner($id)['saldo_akhir'];
+
+        $saldo_baru = $saldo + $nominal_topup;
+
+
+        $photo = $_FILES['bukti_transfer']['name']; // Nama file 
+
+        // Ambil extension
+        $pathInfo = pathinfo($photo);
+        $extension = $pathInfo['extension']; // Extension file
+        $newPhotoFileName = $kode_topup . '.' . $extension;
+
+        $data = [
+            'kode_topup' => $kode_topup,
+            'no_urut_topup' => $no_urut_topup,
+            'partner_id' => $id,
+            'nominal_topup' => $nominal_topup,
+            'topup_date' => $this->input->post('tanggal'),
+            'saldo' => $saldo_baru,
+            'user_topup' => $this->session->userdata('user_id'),
+            'bukti_transfer' => $newPhotoFileName,
+        ];
+
+        $this->db->trans_begin();
+
+        if ($this->db->insert('deposit', $data)) {
+
+            $config = [
+                'upload_path' => FCPATH . 'assets/files/bukti-topup/',
+                'allowed_types' => 'JPG|jpg|JPEG|jpeg',
+                'overwrite' => TRUE,
+                'max_size' => '1200',
+                'file_name' => $newPhotoFileName,
+            ];
+
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload('bukti_transfer')) {
+                $this->db->trans_rollback();
+
+                $this->session->set_flashdata('message_error', 'Gagal upload bukti, topup saldo tidak diproses. Silahkan coba lagi! ' . $this->upload->display_errors());
+            } else {
+                $this->db->trans_commit();
+
+                $this->session->set_flashdata('message_name', 'Topup saldo berhasil!');
+            }
+        } else {
+            $this->db->trans_rollback();
+
+            $this->session->set_flashdata('message_error', 'Gagal topup saldo. Silahkan coba lagi! ' . $this->upload->display_errors());
+        }
+
+        redirect('partner');
+    }
+
+    private function convertToNumber($formattedNumber)
+    {
+        $numberWithoutThousandsSeparator = str_replace('.', '', $formattedNumber);
+
+        // $standardNumber = str_replace(',', '.', $numberWithoutThousandsSeparator);
+
+        // Mengonversi string ke float
+        return (float) $numberWithoutThousandsSeparator;
     }
 }

@@ -46,8 +46,12 @@ class Customer extends CI_Controller
 
     public function index()
     {
-        // $url = "customer/index";
-        // $this->checkAccess($url);
+
+        $per_page = ($this->input->post('show_per_page')) ? trim($this->input->post('show_per_page')) : (($this->session->userdata('show_per_page')) ? $this->session->userdata('show_per_page') : '10');
+        if ($per_page === null) $per_page = $this->session->userdata('show_per_page');
+        else $this->session->set_userdata('show_per_page', $per_page);
+
+        // print_r($per_page)
 
         $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search_customer')) ? $this->session->userdata('search_customer') : '');
         if ($keyword === null) $keyword = $this->session->userdata('search_customer');
@@ -56,7 +60,7 @@ class Customer extends CI_Controller
         $config = [
             'base_url' => site_url('customer/index'),
             'total_rows' => $this->M_Customer->count($keyword),
-            'per_page' => 10,
+            'per_page' => $per_page,
             'uri_segment' => 3,
             'num_links' => 1,
             'full_tag_open' => '<ul class="pagination m-0 ms-auto">',

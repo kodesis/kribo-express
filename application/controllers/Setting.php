@@ -6,8 +6,8 @@ class Setting extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['M_Setting']);
-        $this->load->library(['session', 'pagination']);
+        $this->load->model(['M_Setting', 'M_Partner']);
+        $this->load->library(['session', 'pagination', 'form_validation']);
         $this->load->helper(['string', 'url', 'date']);
 
         if (!$this->session->userdata('is_logged_in')) {
@@ -67,11 +67,11 @@ class Setting extends CI_Controller
             "users" => $this->M_Setting->listUserPaginate($config["per_page"], $page, $keyword),
             "total_rows" => $total_rows,
             "per_page" => $config['per_page'],
+            "partners" => $this->M_Partner->list_active_partner(),
         ];
 
         $this->load->view('pages/index', $data);
     }
-
 
     public function getDataUser()
     {
@@ -123,14 +123,23 @@ class Setting extends CI_Controller
         $this->load->view('pages/index', $data);
     }
 
+    public function addUser()
+    {
+        $data = [
+            "title" => "Create User",
+            "segment" => "setting",
+            "pages" => "pages/setting/v_add_user",
+            "partners" => $this->M_Partner->list_partner(),
+        ];
+
+        $this->load->view('pages/index', $data);
+    }
+
     public function update_access($id)
     {
         $access_menu = $this->input->post('input_menu');
         $access_submenu = $this->input->post('input_submenu');
 
-        // print_r($_POST);
-        // exit;
-        // Ensure they are arrays
         $access_menu = is_array($access_menu) ? $access_menu : [];
         $access_submenu = is_array($access_submenu) ? $access_submenu : [];
 

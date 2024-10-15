@@ -43,7 +43,7 @@ $(document).ready(function () {
 	// jquery tolong carikan btn-process yang ketika diklik jalankan fungsi berikut ini
 	$(".btn-process").on("click", function (e) {
 		e.preventDefault();
-		const href = $(this).attr("href");
+		const href = ($(this).attr("href")) ? $(this).attr("href") : $(this).data("href");
 
 		Swal.fire({
 			title: "Are you sure?",
@@ -85,6 +85,15 @@ $(document).ready(function () {
 			confirmButtonText: "Yes, sign me out!",
 		}).then((result) => {
 			if (result.isConfirmed) {
+
+				Swal.fire({
+					title: "Loading...",
+					timerProgressBar: true,
+					allowOutsideClick: false,
+					didOpen: () => {
+						Swal.showLoading();
+					},
+				});
 				document.location.href = href;
 			}
 		});

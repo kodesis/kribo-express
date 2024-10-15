@@ -189,7 +189,7 @@
                             </div>
                             <div class="col-md-3 col-12">
                                 <div class="mb-3">
-                                    <label for="jadwal_pickup" class="form-label">Jadwal pickup</label>
+                                    <label for="jadwal_pickup" class="form-label">Jadwal pengantaran</label>
                                     <input type="date" name="jadwal_pickup" id="jadwal_pickup" class="form-control" value="<?= $resi['jadwal_pickup'] ?>">
                                 </div>
                             </div>
@@ -219,35 +219,35 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div id="newAgent" style="display: none;">
+                        <div id="newAgent" style="display: none;">
                             <div class="row">
                                 <hr>
                                 <h4>New Agent</h4>
                                 <div class="col-md-4 col-12">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Name</label>
-                                        <input type="text" name="nama_agent" id=" nama_agent" class="form-control is-valid" placeholder=" Enter customer's name..." oninput="this.value = this.value.toUpperCase()">
+                                        <input type="text" name="nama_agent" id="nama_agent" class="form-control" placeholder="Enter customer's name..." oninput="this.value = this.value.toUpperCase()">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Phone</label>
-                                        <input type="text" name="telepon_agent" id=" telepon_agent" class="form-control is-valid" placeholder=" Enter customer's whatsapp number...">
+                                        <input type="text" name="telepon_agent" id="telepon_agent" class="form-control" placeholder="Enter customer's whatsapp number...">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Address</label>
-                                        <input type="text" name="alamat_agent" id=" alamat_agent" class="form-control is-valid" placeholder=" Enter customer's address..." oninput="this.value = this.value.toUpperCase()">
+                                        <input type="text" name="alamat_agent" id="alamat_agent" class="form-control" placeholder="Enter customer's address..." oninput="this.value = this.value.toUpperCase()">
                                     </div>
                                 </div>
                                 <hr>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="card-footer text-end">
                         <div class="d-flex">
-                            <button type="submit" class="btn btn-primary ms-auto btn-submit">
+                            <button type="submit" class="btn btn-primary ms-auto btn-submit-resi">
                                 Simpan
                             </button>
                         </div>
@@ -391,21 +391,38 @@
             $('#nominal').val(formatNumber(nominal));
         }
 
-        $(document).on("click", ".btn-submit", function(e) {
+        $(document).on("click", ".btn-submit-resi", function(e) {
             e.preventDefault();
             const form = $(this).parents("form");
-
 
             // Validasi semua input form
             let inputs = form.find('input, select, textarea');
             let valid = true;
 
+            let agent_id = $('#agent_id').val();
+
+            // Reset semua status validasi terlebih dahulu
             inputs.each(function() {
-                if (!$(this).val()) {
-                    $(this).addClass('is-invalid');
-                    valid = false;
+                $(this).removeClass('is-invalid').removeClass('is-valid');
+            });
+
+            inputs.each(function() {
+                if (agent_id === '__tambah__') {
+                    // Validasi hanya untuk input di dalam #newAgent jika agent_id adalah '__tambah__'
+                    if ($(this).closest('#newAgent').length > 0 && !$(this).val()) {
+                        $(this).addClass('is-invalid');
+                        valid = false;
+                    } else if ($(this).closest('#newAgent').length > 0) {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    }
                 } else {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
+                    // Validasi input lainnya (selain yang ada di #newAgent)
+                    if (!$(this).closest('#newAgent').length && !$(this).val()) {
+                        $(this).addClass('is-invalid');
+                        valid = false;
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    }
                 }
             });
 
@@ -430,7 +447,7 @@
                 if (result.isConfirmed) {
 
                     form.on("submit", function() {
-                        $(".btn-submit").prop('disabled', true);
+                        $(".btn-submit-resi").prop('disabled', true);
                         Swal.fire({
                             title: "Loading...",
                             timerProgressBar: true,
@@ -445,5 +462,6 @@
                 }
             });
         });
+
     });
 </script>

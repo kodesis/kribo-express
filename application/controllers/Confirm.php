@@ -30,20 +30,20 @@ class Confirm extends CI_Controller
             if ($booking['confirm_pickup'] == '1') {
                 $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 					Link expired.
-					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>');
                 $status = '0';
             } else {
                 if ($token === $valid_token) {
                     $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Link valid.
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
                     $status = '1';
                 } else {
                     $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Invalid token.
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
                     $status = '0';
                 }
@@ -51,7 +51,7 @@ class Confirm extends CI_Controller
         } else {
             $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 					No. Booking tidak ditemukan.
-					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>');
             $status = '0';
         }
@@ -93,7 +93,7 @@ class Confirm extends CI_Controller
         if (!$this->upload->do_upload('file_upload')) {
 
             $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Gagal konfirmasi pickup. Silahkan coba lagi! ' . $this->upload->display_errors() . ' <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        Gagal konfirmasi pickup. Silahkan coba lagi! ' . $this->upload->display_errors() . ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
 
             redirect('confirm/failed');
@@ -117,14 +117,14 @@ class Confirm extends CI_Controller
                 $this->db->trans_commit();
                 $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Barang sudah di-pickup. Menuju gudang.
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
             } else {
                 $this->db->trans_rollback();
 
                 $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Gagal konfirmasi pickup. Silahkan coba lagi!
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
             }
 
@@ -172,27 +172,27 @@ class Confirm extends CI_Controller
                 if ($token === $valid_token) {
                     $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Valid link.
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
                     $status = '1';
                 } else {
                     $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Invalid link.
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
                     $status = '0';
                 }
             } else {
                 $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 					Link expired.
-					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>');
                 $status = '0';
             }
         } else {
             $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 					Resi not found.
-					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>');
             $status = '0';
         }
@@ -242,7 +242,7 @@ class Confirm extends CI_Controller
         if (!$this->upload->do_upload('file_upload')) {
 
             $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Gagal konfirmasi pickup. Silahkan coba lagi! ' . $this->upload->display_errors() . ' <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        Gagal konfirmasi pickup. Silahkan coba lagi! ' . $this->upload->display_errors() . ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
 
             redirect('confirm/failed');
@@ -265,7 +265,7 @@ class Confirm extends CI_Controller
 
                 $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Resi dengan nomor ' . $resi . ' telah dikonfirmasi tiba di kota tujuan.
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
 
                 redirect('confirm/success');
@@ -274,7 +274,7 @@ class Confirm extends CI_Controller
 
                 $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Gagal konfirmasi resi tiba di tujuan. Silahkan coba lagi!
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>');
 
                 redirect('confirm/failed');

@@ -3231,7 +3231,7 @@ progress {
   opacity: 1
 }
 
-input[readonly] {
+input[readonly], textarea[readonly] {
   background-color: var(--tblr-bg-surface-secondary);
   opacity: 1
 }

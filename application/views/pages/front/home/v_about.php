@@ -1,4 +1,4 @@
-<div class="container-fluid page-header py-5">
+<div class="container-fluid page-about py-5">
     <div class="container py-5">
         <h1 class="display-3 text-white mb-3 animated slideInDown">Tentang kami</h1>
         <nav aria-label="breadcrumb animated slideInDown">
@@ -16,7 +16,7 @@
         <div class="row g-5 mx-lg-0">
             <div class="col-lg-6 ps-lg-0 wow fadeInLeft" data-wow-delay="0.1s" style="min-height: 400px;">
                 <div class="position-relative h-100">
-                    <img class="position-absolute img-fluid w-100 h-100" src="<?= base_url() ?>assets/front/img/kribo-06.png" style="object-fit: cover;" alt="">
+                    <img class="position-absolute img-fluid w-100 h-100" src="<?= base_url() ?>assets/front/img/about-us-02.png" style="object-fit: ;" alt="">
                 </div>
             </div>
             <div class="col-lg-6 about-text wow fadeInUp" data-wow-delay="0.3s">

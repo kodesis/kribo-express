@@ -8,7 +8,7 @@ class Registration extends CI_Controller
         parent::__construct();
         $this->load->library(['session', 'form_validation']);
         $this->load->helper(['string', 'date']);
-        $this->load->model(['M_Setting', 'M_Agent']);
+        $this->load->model(['M_Setting', 'M_Agent', 'M_Partner']);
     }
 
     public function index()
@@ -121,42 +121,79 @@ class Registration extends CI_Controller
 
     public function submitRegistrasi()
     {
-        // Debugging input POST dan FILES
-        // echo '<pre>';
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo '</pre>';
-        // exit;
-
-        // Load library upload
+        // Load library upload dan image_lib
         $this->load->library('upload');
+        $this->load->library('image_lib');
 
-        $config['upload_path'] = FCPATH . 'assets/photo-delivered/';
-        $config['allowed_types'] = 'jpg|jpeg';
+        $config['upload_path'] = FCPATH . 'assets/files/data-mitra/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
         $config['overwrite'] = TRUE;
-        $config['max_size'] = '1200';
+        $config['max_size'] = '2048';
 
         // File yang di-upload
-        $files = ['ktp', 'foto_depan', 'foto_dalam'];
+        $files = ['ktp', 'foto_depan', 'foto_dalam', 'npwp'];
         $gambar = [];
+        $uploadedFiles = [];
+
+        $time = time();
 
         foreach ($files as $file) {
-            // Ambil extension file
+
             $pathInfo = pathinfo($_FILES[$file]['name']);
             $extension = $pathInfo['extension'];
-            $newFileName = $file . '_' . time() . '.' . $extension;
+            $newFileName = $file . '_' . $time . '.' . $extension;
 
             $config['file_name'] = $newFileName;
             $this->upload->initialize($config);
 
             if ($this->upload->do_upload($file)) {
-                $gambar[$file] = $this->upload->data('file_name');
+
+                $uploadData = $this->upload->data();
+                $fileSize = $uploadData['file_size']; // dalam KB
+                $gambar[$file] = $uploadData['file_name'];
+
+                $uploadedFiles[] = $uploadData['full_path'];
+
+                // Cek ukuran file
+                if ($fileSize > 200) {
+                    $resizeConfig['image_library'] = 'gd2';
+                    $resizeConfig['source_image'] = $uploadData['full_path'];
+                    $resizeConfig['maintain_ratio'] = TRUE;
+                    $resizeConfig['width'] = 800;  // ukuran maksimal lebar gambar
+                    $resizeConfig['height'] = 800; // ukuran maksimal tinggi gambar
+                    $resizeConfig['quality'] = '70%'; // kualitas gambar jadi 70%
+
+                    $this->image_lib->initialize($resizeConfig);
+
+                    if (!$this->image_lib->resize()) {
+                        echo $this->image_lib->display_errors();
+                    }
+
+                    clearstatcache(); // Bersihkan cache file size
+                    $resizedFileSize = filesize($uploadData['full_path']) / 1024; // Convert ke KB
+
+
+                    if ($resizedFileSize > 200) {
+                        $resizeConfig['quality'] = '50%';
+                        $this->image_lib->initialize($resizeConfig);
+
+                        if (!$this->image_lib->resize()) {
+                            echo $this->image_lib->display_errors();
+                        }
+                    }
+                }
             } else {
                 $error = $this->upload->display_errors();
                 echo "Upload gagal untuk $file: $error";
                 return;
             }
         }
+
+        // Proses penyimpanan data ke database
+        $provinsi = $this->M_Setting->getProvinsiById($this->input->post('provinsi'))['nama_provinsi'];
+        $kota = $this->M_Setting->getKotaById($this->input->post('kota'))['nama_kota'];
+        $kecamatan = $this->M_Setting->getKecamatanById($this->input->post('kecamatan'))['nama_kecamatan'];
+        $kelurahan = $this->M_Setting->getKelurahanById($this->input->post('kelurahan'))['nama_kelurahan'];
 
         $data = [
             'jenis_pengajuan' => trim($this->input->post('jenis_pengajuan')),
@@ -169,35 +206,38 @@ class Registration extends CI_Controller
             'jenis_bangunan' => $this->input->post('jenis_bangunan'),
             'status_bangunan' => $this->input->post('status_bangunan'),
             'usaha_lain' => $this->input->post('usaha_lain'),
-            'provinsi' => $this->input->post('provinsi'),
-            'kota' => $this->input->post('kota'),
-            'kecamatan' => $this->input->post('kecamatan'),
-            'kelurahan' => $this->input->post('kelurahan'),
+            'provinsi' => $provinsi,
+            'kota' => $kota,
+            'kecamatan' => $kecamatan,
+            'kelurahan' => $kelurahan,
+            'id_kelurahan' => $this->input->post('kelurahan'),
             'alamat_lengkap' => trim($this->input->post('alamat_lengkap')),
             'google_maps' => trim($this->input->post('google_maps')),
             'kode_referal' => trim($this->input->post('kode_referal')),
             'ktp' => $gambar['ktp'],
             'foto_depan' => $gambar['foto_depan'],
             'foto_dalam' => $gambar['foto_dalam'],
+            'foto_npwp' => $gambar['npwp'],
         ];
 
         $this->db->trans_begin();
 
-        if ($this->M_Agent->insertMitra($data)) {
+        if ($this->M_Partner->insertMitra($data)) {
             $this->db->trans_commit();
 
-            $this->session->set_flashdata('message_name', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            Registrasi berhasil. Terima kasih atas ketertarikan Anda untuk bergabung dengan kami.
-            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-            </div>');
+            $this->session->set_flashdata('message_name', 'Registrasi berhasil. Terima kasih atas ketertarikan Anda untuk bergabung dengan kami.');
             redirect('home/agent');
         } else {
             $this->db->trans_rollback();
 
-            $this->session->set_flashdata('message_name', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Gagal input data registrasi. Silahkan coba lagi!
-            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-            </div>');
+            // Jika query gagal, hapus file yang telah diupload
+            foreach ($uploadedFiles as $filePath) {
+                if (file_exists($filePath)) {
+                    unlink($filePath);  // Hapus file
+                }
+            }
+
+            $this->session->set_flashdata('message_name', 'Gagal input data registrasi. Silahkan coba lagi!');
             redirect('home/agent');
         }
     }
