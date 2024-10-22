@@ -141,7 +141,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kereta.jpeg" alt="Train Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kereta.png" alt="Train Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Kereta</h4>
                     <p>Layanan pengiriman kereta kami memberikan efisiensi biaya dan jaminan pengiriman yang tepat waktu.</p>
@@ -161,7 +161,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/gudang.jpeg" alt="Warehouse Solutions">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/gudang.png" alt="Warehouse Solutions">
                     </div>
                     <h4 class="mb-3">Solusi Pergudangan</h4>
                     <p>Kami menyediakan layanan pergudangan yang aman dan terintegrasi untuk kebutuhan bisnis Anda.</p>
@@ -178,18 +178,6 @@
             <h6 class="text-secondary text-uppercase">Jangkauan kami</h6>
             <h1 class="mb-5">Lihat jangkauan kami</h1>
         </div>
-        <!-- <div class="row g-4">
-            <div class="col-12 wow fadeInUp" data-wow-delay="0.3s">
-                <img class="img-fluid" src="<?= base_url() ?>assets/front/img/map-1.png" alt="Air Freight">
-                <h5 class="text-center mb-5">Domestik</h5>
-            </div>
-        </div>
-        <div class="row g-4">
-            <div class="col-12 wow fadeInUp" data-wow-delay="0.5s">
-                <img class="img-fluid" src="<?= base_url() ?>assets/front/img/map-2.png" alt="Air Freight">
-                <h5 class="text-center mb-5">Internasional</h5>
-            </div>
-        </div> -->
         <div class="row g-4">
             <div class="col-md-6 col-12 wow fadeInUp" data-wow-delay="0.3s">
                 <h5 class="text-center mb-3">Domestik</h5>

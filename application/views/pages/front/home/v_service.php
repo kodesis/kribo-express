@@ -21,7 +21,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-1.jpg" alt="Air Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/udara.png" alt="Air Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Udara</h4>
                     <p>Kami menawarkan layanan pengiriman udara yang cepat dan aman, memastikan barang Anda sampai tepat waktu.</p>
@@ -31,7 +31,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-2.jpg" alt="Ocean Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/laut.png" alt="Ocean Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Laut</h4>
                     <p>Layanan pengiriman laut kami menyediakan solusi efisien untuk volume pengiriman besar dan jarak jauh.</p>
@@ -41,7 +41,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-3.jpg" alt="Road Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/darat.png" alt="Road Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Darat</h4>
                     <p>Kami menawarkan solusi pengiriman darat yang handal dengan jaringan transportasi yang luas.</p>
@@ -51,7 +51,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-4.jpg" alt="Train Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kereta.png" alt="Train Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Kereta</h4>
                     <p>Layanan pengiriman kereta kami memberikan efisiensi biaya dan jaminan pengiriman yang tepat waktu.</p>
@@ -61,7 +61,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-5.jpg" alt="Customs Clearance">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/bc.png" alt="Customs Clearance">
                     </div>
                     <h4 class="mb-3">Layanan Bea Cukai</h4>
                     <p>Kami menangani proses bea cukai dengan cepat dan efisien untuk memastikan kelancaran pengiriman internasional.</p>
@@ -71,7 +71,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-6.jpg" alt="Warehouse Solutions">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/gudang.png" alt="Warehouse Solutions">
                     </div>
                     <h4 class="mb-3">Solusi Pergudangan</h4>
                     <p>Kami menyediakan layanan pergudangan yang aman dan terintegrasi untuk kebutuhan bisnis Anda.</p>
@@ -81,7 +81,7 @@
         </div>
     </div>
 </div>
-<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+<!-- <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
     <div class="container py-5">
         <div class="text-center">
             <h6 class="text-secondary text-uppercase">Testimoni</h6>
@@ -134,4 +134,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

@@ -52,7 +52,17 @@
                             $id_customer = $this->session->userdata('customer_id');
                             // $id_customer = $this->M_Auth->getUserById($user_id)['customer_id']; 
                         ?>
-
+                            <!-- <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="mb-3">
+                                        <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
+                                        <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
+                                            <option value="domestik">Domestik</option>
+                                            <option value="internasional">Internasional</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-3 col-12">
                                     <div class="mb-3">
