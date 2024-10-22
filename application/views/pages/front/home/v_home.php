@@ -70,7 +70,7 @@
 <!-- Carousel Selesai -->
 
 <!-- Tentang Kami Mulai -->
-<div class="container-fluid overflow-hidden py-5 px-lg-0">
+<div class="container-xxl py-5">
     <div class="container about py-5 px-lg-0">
         <div class="row g-5 mx-lg-0">
             <div class="col-lg-6 ps-lg-0 wow fadeInLeft" data-wow-delay="0.1s" style="min-height: 400px;">
@@ -86,7 +86,7 @@
                     <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
                         <i class="fa fa-globe fa-3x text-primary mb-3"></i>
                         <h5>Cakupan Global</h5>
-                        <p class="m-0">Ke mana pun tujuan Anda, kami pastikan paket Anda tiba tepat waktu, setiap saat.</p>
+                        <p class="m-0">Kemana pun tujuan Anda, kami pastikan paket Anda tiba tepat waktu, setiap saat.</p>
                     </div>
                     <div class="col-sm-6 wow fadeIn" data-wow-delay="0.7s">
                         <i class="fa fa-shipping-fast fa-3x text-primary mb-3"></i>
@@ -94,7 +94,7 @@
                         <p class="m-0">Janji kami sederhana: pengiriman cepat, layanan andal, dan kepuasan pelanggan.</p>
                     </div>
                 </div>
-                <a href="" class="btn btn-primary py-3 px-5">Jelajahi Lebih Lanjut</a>
+                <a href="#jangkauan" class="btn btn-primary py-3 px-5">Jelajahi Lebih Lanjut</a>
             </div>
         </div>
     </div>
@@ -111,7 +111,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-1.jpg" alt="Air Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/udara.png" alt="Air Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Udara</h4>
                     <p>Kami menawarkan layanan pengiriman udara yang cepat dan aman, memastikan barang Anda sampai tepat waktu.</p>
@@ -121,7 +121,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-2.jpg" alt="Ocean Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/laut.png" alt="Ocean Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Laut</h4>
                     <p>Layanan pengiriman laut kami menyediakan solusi efisien untuk volume pengiriman besar dan jarak jauh.</p>
@@ -131,7 +131,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-3.jpg" alt="Road Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/darat.png" alt="Road Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Darat</h4>
                     <p>Kami menawarkan solusi pengiriman darat yang handal dengan jaringan transportasi yang luas.</p>
@@ -141,7 +141,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-4.jpg" alt="Train Freight">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kereta.jpeg" alt="Train Freight">
                     </div>
                     <h4 class="mb-3">Pengiriman Kereta</h4>
                     <p>Layanan pengiriman kereta kami memberikan efisiensi biaya dan jaminan pengiriman yang tepat waktu.</p>
@@ -151,7 +151,7 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-5.jpg" alt="Customs Clearance">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/bc.png" alt="Customs Clearance">
                     </div>
                     <h4 class="mb-3">Layanan Bea Cukai</h4>
                     <p>Kami menangani proses bea cukai dengan cepat dan efisien untuk memastikan kelancaran pengiriman internasional.</p>
@@ -161,12 +161,45 @@
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
                 <div class="service-item p-4">
                     <div class="overflow-hidden mb-4">
-                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/service-6.jpg" alt="Warehouse Solutions">
+                        <img class="img-fluid" src="<?= base_url() ?>assets/front/img/gudang.jpeg" alt="Warehouse Solutions">
                     </div>
                     <h4 class="mb-3">Solusi Pergudangan</h4>
                     <p>Kami menyediakan layanan pergudangan yang aman dan terintegrasi untuk kebutuhan bisnis Anda.</p>
                     <a class="btn-slide mt-2" href=""><i class="fa fa-arrow-right"></i><span>Baca Selengkapnya</span></a>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-xxl py-5" id="jangkauan">
+    <div class="container py-5">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="text-secondary text-uppercase">Jangkauan kami</h6>
+            <h1 class="mb-5">Lihat jangkauan kami</h1>
+        </div>
+        <!-- <div class="row g-4">
+            <div class="col-12 wow fadeInUp" data-wow-delay="0.3s">
+                <img class="img-fluid" src="<?= base_url() ?>assets/front/img/map-1.png" alt="Air Freight">
+                <h5 class="text-center mb-5">Domestik</h5>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-12 wow fadeInUp" data-wow-delay="0.5s">
+                <img class="img-fluid" src="<?= base_url() ?>assets/front/img/map-2.png" alt="Air Freight">
+                <h5 class="text-center mb-5">Internasional</h5>
+            </div>
+        </div> -->
+        <div class="row g-4">
+            <div class="col-md-6 col-12 wow fadeInUp" data-wow-delay="0.3s">
+                <h5 class="text-center mb-3">Domestik</h5>
+                <img class="img-fluid" src="<?= base_url() ?>assets/front/img/map-1.png" alt="Air Freight">
+                <h6 class="text-center mb-5">Menjangkau 98% area di Indonesia</h6>
+            </div>
+            <div class="col-md-6 col-12 wow fadeInUp" data-wow-delay="0.5s">
+                <h5 class="text-center mb-3">Internasional</h5>
+                <img class="img-fluid" src="<?= base_url() ?>assets/front/img/map-2.png" alt="Air Freight">
+                <h6 class="text-center mb-5">Singapura, Thailand, Malaysia, Guangzhou, Taipei</h6>
             </div>
         </div>
     </div>

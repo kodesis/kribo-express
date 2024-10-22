@@ -276,25 +276,22 @@
 					<p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
 					<p class="mb-2"><i class="fa fa-envelope me-3"></i>admin@kriboexpress.com</p>
 					<div class="d-flex pt-2">
-						<a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-						<a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-						<a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-						<a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+						<a class="btn btn-outline-light btn-social" href="https://www.instagram.com/kribo.express" target="_blank"><i class="fab fa-instagram"></i></a>
 					</div>
 				</div>
 				<div class="col-lg-4 col-md-6">
 					<h4 class="text-light mb-4">Services</h4>
-					<a class="btn btn-link" href="">Air Freight</a>
-					<a class="btn btn-link" href="">Sea Freight</a>
-					<a class="btn btn-link" href="">Road Freight</a>
-					<a class="btn btn-link" href="">Logistic Solutions</a>
-					<a class="btn btn-link" href="">Industry solutions</a>
+					<a class="btn btn-link" href="#">Air Freight</a>
+					<a class="btn btn-link" href="#">Sea Freight</a>
+					<a class="btn btn-link" href="#">Road Freight</a>
+					<a class="btn btn-link" href="#">Logistic Solutions</a>
+					<a class="btn btn-link" href="#">Industry solutions</a>
 				</div>
 				<div class="col-lg-4 col-md-6">
 					<h4 class="text-light mb-4">Quick Links</h4>
-					<a class="btn btn-link" href="">Tentang</a>
-					<a class="btn btn-link" href="">Layanan</a>
-					<a class="btn btn-link" href="">Cek Resi</a>
+					<a class="btn btn-link" href="<?= base_url('home/about') ?>">Tentang</a>
+					<a class="btn btn-link" href="<?= base_url('home/service') ?>">Layanan</a>
+					<a class="btn btn-link" href="<?= base_url('home/track') ?>">Cek Resi</a>
 				</div>
 			</div>
 		</div>

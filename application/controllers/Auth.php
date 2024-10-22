@@ -61,12 +61,12 @@ class Auth extends CI_Controller
                         redirect($last_page);
                     } else {
                         // Arahkan ke halaman default (misalnya dashboard)
-                        if ($password == strtoupper($username)) {
-                            $this->session->set_flashdata('message_warning', '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            Anda masih menggunakan password bawaan. Silahkan perbarui password!.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>');
-                        }
+                        // if ($password == strtoupper($username)) {
+                        //     $this->session->set_flashdata('message_warning', '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        //     Anda masih menggunakan password bawaan. Silahkan perbarui password!.
+                        //     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        //     </div>');
+                        // }
                         redirect('dashboard');
                     }
                 } else {

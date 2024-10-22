@@ -292,6 +292,8 @@
                 chargeable = volume;
             }
 
+            chargeable = (chargeable < 10) ? 10 : chargeable;
+
             $('#chargeable').val(formatNumber(chargeable));
 
             hitungNominal();
