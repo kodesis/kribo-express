@@ -76,7 +76,7 @@ class Registration extends CI_Controller
 
         $show = '<option value="">:: Pilih kota/kabupaten</option>';
         foreach ($kota as $p) :
-            $show .= "<option value='$p->id'>$p->nama_kota</option>";
+            $show .= "<option value='$p->id' data-nama='$p->nama_kota'>$p->nama_kota</option>";
         endforeach;
 
         echo $show;
@@ -104,7 +104,7 @@ class Registration extends CI_Controller
 
         $show = '<option value="">:: Pilih kelurahan</option>';
         foreach ($kelurahan as $p) :
-            $show .= "<option value='$p->id'>$p->nama_kelurahan</option>";
+            $show .= "<option value='$p->nama_kelurahan'>$p->nama_kelurahan</option>";
         endforeach;
 
         echo $show;
@@ -219,6 +219,11 @@ class Registration extends CI_Controller
             'foto_dalam' => $gambar['foto_dalam'],
             'foto_npwp' => $gambar['npwp'],
         ];
+
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        exit;
 
         $this->db->trans_begin();
 

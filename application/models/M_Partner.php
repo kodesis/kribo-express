@@ -12,12 +12,12 @@ class M_Partner extends CI_Model
 
     public function list_partner()
     {
-        return $this->db->order_by('nama_mitra', 'ASC')->get('partner')->result();
+        return $this->db->order_by('nama_pendaftar', 'ASC')->get('partner')->result();
     }
 
     public function list_active_partner()
     {
-        return $this->db->where('has_account', '0')->where('hasil_review', 'diterima')->order_by('nama_mitra', 'ASC')->get('partner')->result();
+        return $this->db->where('has_account', '1')->where('hasil_review', 'diterima')->order_by('nama_pendaftar', 'ASC')->get('partner')->result();
     }
 
     public function insert($data)
@@ -58,7 +58,7 @@ class M_Partner extends CI_Model
     {
         if ($keyword) {
             $this->db->group_start(); // Mulai grup kondisi
-            $this->db->like('nama_mitra', $keyword);
+            $this->db->like('nama_pendaftar', $keyword);
             $this->db->or_like('alamat_lengkap', $keyword);
             $this->db->or_like('kode_gerai', $keyword);
             $this->db->group_end(); // Akhiri grup kondisi
@@ -71,20 +71,20 @@ class M_Partner extends CI_Model
     {
         if ($keyword) {
             $this->db->group_start(); // Mulai grup kondisi
-            $this->db->like('nama_mitra', $keyword);
+            $this->db->like('nama_pendaftar', $keyword);
             $this->db->or_like('alamat_lengkap', $keyword);
             $this->db->or_like('kode_gerai', $keyword);
             $this->db->group_end(); // Akhiri grup kondisi
         }
 
-        return $this->db->where('hasil_review =', 'diterima')->from('partner')->order_by('nama_mitra', 'ASC')->limit($limit, $from)->get()->result();
+        return $this->db->where('hasil_review =', 'diterima')->from('partner')->order_by('nama_pendaftar', 'ASC')->limit($limit, $from)->get()->result();
     }
 
     public function countPendaftaran($keyword)
     {
         if ($keyword) {
             $this->db->group_start(); // Mulai grup kondisi
-            $this->db->like('nama_mitra', $keyword);
+            $this->db->like('nama_pendaftar', $keyword);
             $this->db->or_like('alamat_pendaftar', $keyword);
             $this->db->group_end(); // Akhiri grup kondisi
         }
@@ -96,12 +96,12 @@ class M_Partner extends CI_Model
     {
         if ($keyword) {
             $this->db->group_start(); // Mulai grup kondisi
-            $this->db->like('nama_mitra', $keyword);
+            $this->db->like('nama_pendaftar', $keyword);
             $this->db->or_like('alamat_pendaftar', $keyword);
             $this->db->group_end(); // Akhiri grup kondisi
         }
 
-        return $this->db->where('hasil_review !=', 'diterima')->from('partner')->order_by('nama_mitra', 'ASC')->limit($limit, $from)->get()->result();
+        return $this->db->where('hasil_review', 'belum di-review')->from('partner')->order_by('nama_pendaftar', 'ASC')->limit($limit, $from)->get()->result();
     }
 
     public function getAgentById($id)
@@ -199,5 +199,10 @@ class M_Partner extends CI_Model
 
         // Menambahkan kondisi WHERE
         $this->db->where('t.partner_id', $partner_id);
+    }
+
+    public function createAccount($data)
+    {
+        return $this->db->insert('user', $data);
     }
 }

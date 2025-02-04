@@ -6,7 +6,7 @@
         <div class="row g-2 align-items-center">
             <div class="col">
                 <h2 class="page-title">
-                    <?= $title ?>s
+                    <?= $title ?>
                 </h2>
             </div>
             <!-- Page title actions -->
@@ -42,12 +42,16 @@
             <div class="col-12">
                 <form action="<?= base_url('booking/store_booking') ?>" method="post" class="card" id="formBooking">
                     <div class="card-body">
+                        <h5></h5>
                         <?php
                         $role_id = $this->session->userdata('role_id');
 
+
                         if ($role_id == '3') {
                             $user_id = $this->session->userdata('user_id');
-                            $id_customer = $this->session->userdata('customer_id'); ?>
+                            $id_customer = $this->session->userdata('customer_id');
+                            // $id_customer = $this->M_Auth->getUserById($user_id)['customer_id']; 
+                        ?>
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="mb-3">
@@ -62,13 +66,6 @@
                                     <div class="mb-3">
                                         <label class="form-label">Jenis barang</label>
                                         <input type="text" name="jenis_barang" id="jenis_barang" class="form-control" placeholder="Masukkan jenis barang" oninput="this.value = this.value.toUpperCase()">
-                                        <input type="hidden" name="saldo_mitra" id="saldo_mitra" class="form-control" value="<?= number_format($saldo_mitra) ?>">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-12 d-none">
-                                    <div class="mb-3">
-                                        <label class="form-label">Saldo</label>
-                                        <input type="text" name="saldo_mitra" id="saldo_mitra" class="form-control" value="<?= number_format($saldo_mitra) ?>">
                                     </div>
                                 </div>
                             </div>
@@ -150,19 +147,19 @@
                                 <div class="col-md-3 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Total Koli</label>
-                                        <input type="text" name="total_qty" id="total_qty" class="form-control" placeholder="Masukkan jumlah barang" value="1" readonly>
+                                        <input type="text" name="total_qty" id="total_qty" class="form-control angka" placeholder="Masukkan jumlah barang" value="1" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Total Volume</label>
-                                        <input type="text" name="total_volume" id="total_volume" class="form-control" value="0" readonly>
+                                        <input type="text" name="total_volume" id="total_volume" class="form-control angka" value="0" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Chargeable</label>
-                                        <input type="text" name="chargeable" id="chargeable" class="form-control" value="0" readonly>
+                                        <input type="text" name="chargeable" id="chargeable" class="form-control angka" value="0" readonly>
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-3 col-12">
@@ -211,7 +208,7 @@
                                 <div class="col-md-3 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Nominal</label>
-                                        <input type="text" name="nominal" id="nominal" class="form-control" value="0" readonly>
+                                        <input type="text" name="nominal" id="nominal" class="form-control angka" value="0" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -546,8 +543,8 @@
         }
 
         function hitungNominal() {
-            var chargeable = parseFloat($('#chargeable').val().replace(/\,/g, '')) || 0;
-            // var harga = parseFloat($('#harga').val().replace(/\,/g, '')) || 0;
+            var chargeable = parseFloat($('#chargeable').val().replace(/\./g, '')) || 0;
+            // var harga = parseFloat($('#harga').val().replace(/\./g, '')) || 0;
             var harga = parseFloat($('#harga').val()) || 0;
 
             var nominal;
@@ -583,17 +580,6 @@
                 return;
             }
 
-            // let saldo_mitra = parseFloat($('#saldo_mitra').val().replace(/\,/g, '')) || 0;
-            // let nominal = parseFloat($('#nominal').val().replace(/\,/g, '')) || 0;
-
-            // if (Number(nominal) > Number(saldo_mitra)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         text: 'Saldo tidak cukup! Silahkan lakukan top up deposit terlebih dulu!'
-            //     });
-            //     return false; // Menghentikan eksekusi jika saldo tidak cukup
-            // }
-            // console.log(false);
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -620,7 +606,6 @@
                     form.submit();
                 }
             });
-
         });
 
         var rowCount = 1; // Inisialisasi row

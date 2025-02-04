@@ -35,6 +35,7 @@ class Dashboard extends CI_Controller
 			'segment' => 'dashboard',
 			'pages' => 'pages/dashboard/v_dashboard',
 			'booking' => $this->M_Booking->dashboard(),
+			'drivers' => $this->M_Booking->list_driver(),
 			'saldo' => ($role_id == '3') ? $saldo : 0,
 		];
 

@@ -126,6 +126,7 @@ class Booking extends CI_Controller
             "bookings" => $this->M_Booking->list_booking(),
             "customers" => $this->M_Customer->list_customer(),
             "drivers" => $this->M_Booking->list_driver(),
+            "saldo_mitra" => $saldo
         ];
 
         $this->load->view('pages/index', $data);
@@ -197,14 +198,14 @@ class Booking extends CI_Controller
         $no_resi = $kode . $no_urut;
 
         // nominal
-        $nominal = $this->convertToNumber($this->input->post('nominal'));
+        $nominal = $this->convertToNumberWithComma($this->input->post('nominal'));
         $harga_jual = $this->input->post('harga_jual');
-        $chargeable = $this->convertToNumber($this->input->post('chargeable'));
+        $chargeable = $this->convertToNumberWithComma($this->input->post('chargeable'));
         $partner_fee = ceil($nominal * (0.2));
         $ppm = $nominal - $partner_fee;
         $cost_ppm = $harga_jual * $chargeable;
         $benefit_ppm = $ppm - $cost_ppm;
-
+        $dom_int = $this->input->post('jenis_pengiriman');
         $data = [
             'no_resi' => $no_resi,
             'no_urut' => $no_urut,
@@ -215,13 +216,10 @@ class Booking extends CI_Controller
             'telepon_penerima' => trim($this->input->post('telepon_penerima')),
             'alamat_penerima' => trim($this->input->post('alamat_penerima')),
             'commodity' => trim($this->input->post('jenis_barang')),
-            'qty' => $this->convertToNumber($this->input->post('qty')),
-            'berat_timbang' => $this->convertToNumber($this->input->post('berat_timbang')),
+            'qty' => $this->convertToNumberWithComma($this->input->post('total_qty')),
+            'berat_timbang' => $this->convertToNumberWithComma($this->input->post('berat_timbang')),
             'chargeable' => $chargeable,
-            'panjang' => $this->convertToNumber($this->input->post('panjang')),
-            'lebar' => $this->convertToNumber($this->input->post('lebar')),
-            'tinggi' => $this->convertToNumber($this->input->post('tinggi')),
-            'volume' => $this->convertToNumber($this->input->post('volume')),
+            'volume' => $this->convertToNumberWithComma($this->input->post('total_volume')),
             'origin' => trim($this->input->post('origin')),
             'destination' => trim($this->input->post('destination')),
             'price_per_kg' => ($this->input->post('harga')),
@@ -233,18 +231,82 @@ class Booking extends CI_Controller
             'cost_ppm' => $cost_ppm,
             'benefit_ppm' => $benefit_ppm,
             'partner_fee' => $partner_fee,
+            'jenis_pengiriman' => $dom_int,
         ];
 
-        if (!empty($data)) {
-            if ($this->M_Booking->insertResi($data)) {
-                $this->db->trans_commit();
-                $this->session->set_flashdata('message_name', 'Booking berhasil ditambahkan.!');
+        $id_resi = $this->M_Booking->insertResi($data);
+
+        if (!$id_resi) {
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('message_error', 'Gagal menyimpan resi. Silakan coba lagi.');
+            redirect('booking');
+        }
+
+        $panjangs = $this->input->post('panjang');
+        $lebars = $this->input->post('lebar');
+        $tinggis = $this->input->post('tinggi');
+        $jumlahs = $this->input->post('jumlah');
+        $volumes = $this->input->post('volume');
+
+        $dimensi = [];
+
+        if (is_array($panjangs)) {
+            for ($i = 0; $i < count($panjangs); $i++) {
+                $panjang = $this->convertToNumberWithComma($panjangs[$i]);
+                $lebar = $this->convertToNumberWithComma($lebars[$i]);
+                $tinggi = $this->convertToNumberWithComma($tinggis[$i]);
+                $jumlah = $this->convertToNumberWithComma($jumlahs[$i]);
+                $volume = $this->convertToNumberWithComma($volumes[$i]);
+
+                $dimensi[] = [
+                    'panjang' => $panjang,
+                    'lebar' => $lebar,
+                    'tinggi' => $tinggi,
+                    'jumlah' => $jumlah,
+                    'volume' => $volume,
+                    'id_resi' => $id_resi,
+                    'created_by' => $this->session->userdata('user_id'),
+                ];
+            }
+
+            if (!empty($dimensi)) {
+                $insert = $this->M_Booking->insert_dimensi($dimensi);
+                if ($insert) {
+                    $this->db->trans_commit();
+                    $this->session->set_flashdata('message_name', 'Booking berhasil diinput!');
+                } else {
+                    $this->db->trans_rollback();
+                    $this->session->set_flashdata('message_error', 'Gagal input. Silahkan ulangi lagi!');
+                }
             } else {
-                $this->db->trans_rollback();
-                $this->session->set_flashdata('message_error', 'Gagal input. Silahkan ulangi lagi!');
+                $this->session->set_flashdata('message_name', 'Booking berhasil diinput!');
+                $this->db->trans_commit(); // Tambahkan ini jika tidak ada dimensi
             }
             redirect('booking');
         }
+    }
+
+    public function editResi($no_resi)
+    {
+        if ($this->session->userdata('role_id') == '3') {
+            $saldo = $this->checkSaldo(($this->session->userdata('partner_id')));
+
+            if ($saldo < 500000) {
+                $this->session->set_flashdata('message_error', 'Saldo kurang dari Rp500.000. Booking tidak dapat diproses');
+                redirect('booking');
+            }
+        }
+
+        $pages_booking = 'v_edit_booking';
+
+        $data = [
+            "title" => "Edit Booking",
+            "segment" => "booking",
+            "pages" => "pages/booking/" . $pages_booking,
+            "booking" => $this->M_Booking->detailBooking($no_resi),
+        ];
+
+        $this->load->view('pages/index', $data);
     }
 
 
@@ -482,6 +544,17 @@ class Booking extends CI_Controller
 
         // Mengonversi string ke float
         return (float) $numberWithoutThousandsSeparator;
+    }
+
+    function convertToNumberWithComma($formattedNumber)
+    {
+        // Mengganti titik sebagai pemisah ribuan dengan string kosong
+        $numberWithoutThousandsSeparator = str_replace(',', '', $formattedNumber);
+
+        $standardNumber = $numberWithoutThousandsSeparator;
+
+        // Mengonversi string ke float
+        return (float) $standardNumber;
     }
 
     public function list_detail()
@@ -1016,17 +1089,17 @@ class Booking extends CI_Controller
             'telepon_penerima' => trim($this->input->post('telepon_penerima')),
             'alamat_penerima' => trim($this->input->post('alamat_penerima')),
             'commodity' => trim($this->input->post('jenis_barang')),
-            'qty' => $this->convertToNumber($this->input->post('qty')),
-            'berat_timbang' => $this->convertToNumber($this->input->post('berat_timbang')),
-            'chargeable' => $this->convertToNumber($this->input->post('chargeable')),
-            'panjang' => $this->convertToNumber($this->input->post('panjang')),
-            'lebar' => $this->convertToNumber($this->input->post('lebar')),
-            'tinggi' => $this->convertToNumber($this->input->post('tinggi')),
-            'volume' => $this->convertToNumber($this->input->post('volume')),
+            'qty' => $this->convertToNumberWithComma($this->input->post('total_qty')),
+            'berat_timbang' => $this->convertToNumberWithComma($this->input->post('berat_timbang')),
+            'chargeable' => $this->convertToNumberWithComma($this->input->post('chargeable')),
+            // 'panjang' => $this->convertToNumberWithComma($this->input->post('panjang')),
+            // 'lebar' => $this->convertToNumberWithComma($this->input->post('lebar')),
+            // 'tinggi' => $this->convertToNumberWithComma($this->input->post('tinggi')),
+            'volume' => $this->convertToNumberWithComma($this->input->post('total_volume')),
             'origin' => trim($this->input->post('origin')),
             'destination' => trim($this->input->post('destination')),
             'price_per_kg' => ($this->input->post('harga')),
-            'nominal' => $this->convertToNumber($this->input->post('nominal')),
+            'nominal' => $this->convertToNumberWithComma($this->input->post('nominal')),
             'gudang_tujuan' => trim($this->input->post('gudang_tujuan')),
             'agent_id' => $id_agent,
             'awb' => trim($this->input->post('awb')),
@@ -1155,8 +1228,20 @@ class Booking extends CI_Controller
     {
         $origin = $this->input->post('origin');
         $destination = $this->input->post('destination');
+        $dom_int = $this->input->post('jenis_pengiriman');
+        $chargeable = $this->input->post('chargeable');
 
-        $price = $this->db->where('city_origin', $origin)->where('city', $destination)->get('mt_pricelist')->row_array();
+        $this->db->where('city_origin', $origin);
+        $this->db->where('city', $destination);
+
+        if ($dom_int == 'I') {
+            $this->db->where($chargeable . ' >= min_chargeable');
+            if ($chargeable < 10) {
+                $this->db->where($chargeable . ' <= max_chargeable');
+            }
+        }
+
+        $price = $this->db->get('mt_pricelist')->row_array();
 
         $data = [
             'harga_up' => $price['total'],
@@ -1333,5 +1418,142 @@ class Booking extends CI_Controller
             ];
         }
         echo json_encode($items);
+    }
+
+
+
+    public function downloadManifestPickup()
+    {
+        $tanggal_pickup = $this->input->post('tanggal_pickup');
+        $driver_id = $this->input->post('driver_id');
+
+        $partners = $this->M_Partner->list_active_partner();
+
+        if (empty($partners)) {
+            $this->session->set_flashdata('message_error', 'Tidak ada partner aktif.');
+            redirect('dashboard');
+        }
+
+        require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
+
+        $excel = new PHPExcel();
+
+        $excel->getProperties()->setCreator('Kribo Express')
+            ->setLastModifiedBy('Kribo Express')
+            ->setTitle("Manifest Pickup")
+            ->setSubject("Manifest Pickup")
+            ->setDescription("Manifest Pickup pada tanggal " . $tanggal_pickup)
+            ->setKeywords("Manifest Pickup");
+
+        // Header tabel
+        $headers = [
+            'A' => "No.",
+            'B' => "Nama Partner",
+            'C' => "Alamat Partner",
+            'D' => "No. HP",
+            'E' => "No. Urut",
+            'F' => "No. Resi",
+            'G' => "Tanggal",
+            'H' => "Asal",
+            'I' => "Tujuan",
+            'J' => "Komoditi",
+            'K' => "Koli",
+            'L' => "Berat timbang",
+            'M' => "Volume",
+            'N' => "Chargeable",
+        ];
+
+        $sheet = $excel->setActiveSheetIndex(0);
+        foreach ($headers as $columnID => $header) {
+            $sheet->setCellValue($columnID . '1', $header);
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        $no = 1;
+        $numrow = 2;
+
+        foreach ($partners as $p) {
+            // Ambil booking berdasarkan partner
+            $manifests = $this->M_Booking->getManifestPickup($p->Id, $driver_id, $tanggal_pickup);
+            $countManifests = count($manifests); // Hitung jumlah booking
+
+            if ($countManifests > 0) {
+                // Merge cell untuk partner dari baris awal ke akhir booking
+                $startRow = $numrow;
+                $endRow = $numrow + $countManifests - 1;
+                $excel->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $no);
+                $excel->setActiveSheetIndex(0)->setCellValue("B{$startRow}", $p->nama_pendaftar);
+                $excel->setActiveSheetIndex(0)->setCellValue("C{$startRow}", $p->alamat_lengkap);
+                $excel->setActiveSheetIndex(0)->setCellValue("D{$startRow}", $p->no_handphone . ' / ' . $p->no_handphone_alternatif);
+                $excel->getActiveSheet()->mergeCells("A{$startRow}:A{$endRow}");
+                $excel->getActiveSheet()->mergeCells("B{$startRow}:B{$endRow}");
+                $excel->getActiveSheet()->mergeCells("C{$startRow}:C{$endRow}");
+                $excel->getActiveSheet()->mergeCells("D{$startRow}:D{$endRow}");
+
+                $nomor = 1;
+
+                foreach ($manifests as $t) {
+                    $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $nomor++);
+                    $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $t->no_resi);
+                    $excel->setActiveSheetIndex(0)->setCellValue('G' . $numrow, format_indo_non_hari($t->created_at));
+                    $excel->setActiveSheetIndex(0)->setCellValue('H' . $numrow, $t->origin);
+                    $excel->setActiveSheetIndex(0)->setCellValue('I' . $numrow, $t->destination);
+                    $excel->setActiveSheetIndex(0)->setCellValue('J' . $numrow, $t->commodity);
+                    $excel->setActiveSheetIndex(0)->setCellValue('K' . $numrow, $t->qty);
+                    $excel->setActiveSheetIndex(0)->setCellValue('L' . $numrow, $t->berat_timbang);
+                    $excel->setActiveSheetIndex(0)->setCellValue('M' . $numrow, $t->volume);
+                    $excel->setActiveSheetIndex(0)->setCellValue('N' . $numrow, $t->chargeable);
+                    $numrow++;
+                }
+            } else {
+                // Jika tidak ada booking, tetap tampilkan nama partner dengan "Tidak ada bookingan"
+                $excel->getActiveSheet()->mergeCells("E{$numrow}:N{$numrow}");
+                $excel->setActiveSheetIndex(0)->setCellValue("B{$numrow}", $p->nama_pendaftar);
+                $excel->setActiveSheetIndex(0)->setCellValue("C{$numrow}", $p->alamat_lengkap);
+                $excel->setActiveSheetIndex(0)->setCellValue("D{$startRow}", $p->no_handphone . ' / ' . $p->no_handphone_alternatif);
+                $excel->setActiveSheetIndex(0)->setCellValue("E{$numrow}", "Tidak ada bookingan");
+                $numrow++;
+            }
+            $no++;
+        }
+
+
+        // Styling header
+        $excel->getActiveSheet()->getStyle('A1:N1')->applyFromArray([
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER, 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER],
+            'borders' => [
+                'top' => ['style'  => PHPExcel_Style_Border::BORDER_THIN],
+                'right' => ['style'  => PHPExcel_Style_Border::BORDER_THIN],
+                'bottom' => ['style'  => PHPExcel_Style_Border::BORDER_THIN],
+                'left' => ['style'  => PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+
+
+        $styleArray = [
+            'borders' => [
+                'allborders' => [
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                ]
+            ]
+        ];
+
+        // Terapkan border ke seluruh tabel dari A1 hingga kolom terakhir dan baris terakhir
+        $lastRow = $numrow - 1; // Baris terakhir yang berisi data
+        $excel->getActiveSheet()->getStyle("A1:N{$lastRow}")->applyFromArray($styleArray);
+
+        // Export ke Excel
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Manifest_Pickup_' . format_indo($tanggal_pickup) . '.xls"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
     }
 }

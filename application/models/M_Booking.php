@@ -62,6 +62,11 @@ class M_Booking extends CI_Model
         return $this->db->insert_batch('booking', $data);
     }
 
+    public function insert_dimensi($data)
+    {
+        return $this->db->insert_batch('dimensi', $data);
+    }
+
     public function updateBooking($id, $data)
     {
         return $this->db->where('Id', $id)->update('booking', $data);
@@ -236,6 +241,15 @@ class M_Booking extends CI_Model
         $this->db->where('partner_id', $partner_id);
         $this->db->where('DATE(created_at) >=', $from);
         $this->db->where('DATE(created_at) <=', $to);
+
+        return $this->db->get('resi')->result();
+    }
+
+    public function getManifestPickup($partner_id, $driver_pickup_id, $jadwal_pickup)
+    {
+        $this->db->where('partner_id', $partner_id);
+        $this->db->where('driver_pickup_id', $driver_pickup_id);
+        $this->db->where('jadwal_pickup', $jadwal_pickup);
 
         return $this->db->get('resi')->result();
     }

@@ -24,22 +24,27 @@
                             <path d="M21 21l-6 -6" />
                         </svg>
                     </a>
-                    <a href="<?= base_url('dashboard/reset/booking') ?>" class="btn btn-warning d-none d-sm-inline-block" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-                            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-                        </svg>
-                        Reset</a>
-                    <a href="<?= base_url('dashboard/reset/booking') ?>" class="btn btn-warning d-sm-none btn-icon" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-                            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-                        </svg>
-                    </a>
+                    <?php
+                    if ($keyword) {
+                    ?>
+                        <a href="<?= base_url('dashboard/reset/booking') ?>" class="btn btn-warning d-none d-sm-inline-block" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                            </svg>
+                            Reset</a>
+                        <a href="<?= base_url('dashboard/reset/booking') ?>" class="btn btn-warning d-sm-none btn-icon" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                            </svg>
+                        </a>
+                    <?php
+                    } ?>
                     <a href="#" class="btn btn-green d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#download-excel">
                         <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-excel">
@@ -49,9 +54,9 @@
                             <path d="M10 12l4 5" />
                             <path d="M10 17l4 -5" />
                         </svg>
-                        Download excel
+                        Rekap booking
                     </a>
-                    <a href="#" class="btn btn-green d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#download-excel" aria-label="Create new report">
+                    <a href="#" class="btn btn-green d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#download-excel" aria-label="Rekap booking" title="Rekap booking">
                         <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-excel">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -61,22 +66,27 @@
                             <path d="M10 17l4 -5" />
                         </svg>
                     </a>
-                    <a href="<?= base_url('booking/create_booking') ?>" class="btn btn-primary d-none d-sm-inline-block" aria-label="Create new report">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M12 5l0 14" />
-                            <path d="M5 12l14 0" />
-                        </svg>
-                        Add new</a>
-                    <a href="<?= base_url('booking/create_booking') ?>" class="btn btn-primary d-sm-none btn-icon" aria-label="Create new report">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M12 5l0 14" />
-                            <path d="M5 12l14 0" />
-                        </svg>
-                    </a>
+                    <?php
+                    if ($this->session->userdata('role_id') == '3') {
+                    ?>
+                        <a href="<?= base_url('booking/create_booking') ?>" class="btn btn-primary d-none d-sm-inline-block" aria-label="Create new booking" title="Create new booking">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                            Create new</a>
+                        <a href="<?= base_url('booking/create_booking') ?>" class="btn btn-primary d-sm-none btn-icon" aria-label="Create new booking" title="Create new booking">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                        </a>
+                    <?php
+                    } ?>
                 </div>
             </div>
         </div>
@@ -148,7 +158,7 @@
                                             if ($this->session->userdata('role_id') != '3') {
                                             ?>
                                                 <td><?= ($b->awb) ? $b->awb : "-" ?></td>
-                                                <td><?= $b->nama_mitra ?></td>
+                                                <td><?= $b->nama_pendaftar ?></td>
                                             <?php
                                             } ?>
                                             <td><?= $b->origin ?></td>
@@ -217,6 +227,7 @@
                                                 } else {
                                                     if ($b->status_bayar == '0') {
                                                     ?>
+                                                        <a href="<?= base_url('booking/editResi/' . $b->no_resi) ?>" class="btn btn-warning btn-sm ms-auto mb-1">Edit</a>
                                                         <button href="#" class="btn btn-danger btn-sm ms-auto mb-1">Void</button>
                                                 <?php
                                                     }
@@ -283,7 +294,7 @@
                                         <?php
                                         foreach ($partners as $p) :
                                         ?>
-                                            <option value="<?= $p->Id ?>"><?= $p->nama_mitra . ' - ' . $p->kode_gerai ?></option>
+                                            <option value="<?= $p->Id ?>"><?= $p->nama_pendaftar . ' - ' . $p->kode_gerai ?></option>
                                         <?php
                                         endforeach; ?>
                                     </select>

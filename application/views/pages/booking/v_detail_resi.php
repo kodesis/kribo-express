@@ -6,7 +6,7 @@
         <div class="row g-2 align-items-center">
             <div class="col">
                 <h2 class="page-title">
-                    <?= $title ?>s
+                    <?= $title ?>
                 </h2>
             </div>
             <!-- Page title actions -->
@@ -42,6 +42,23 @@
             <div class="col-12">
                 <form action="<?= base_url('booking/updateResi/' . $resi['no_resi']) ?>" method="post" class="card" id="formBooking">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="mb-3">
+                                    <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
+                                    <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
+                                        <option value="D">Domestik</option>
+                                        <option value="I">Internasional</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Jenis barang</label>
+                                    <input type="text" name="jenis_barang" id="jenis_barang" class="form-control" placeholder="Masukkan jenis barang" oninput="this.value = this.value.toUpperCase()" value="<?= $resi['commodity'] ?>">
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-3 col-12">
                                 <div class="mb-3">
@@ -81,29 +98,29 @@
                             </div>
                             <div class="col-md-3 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Jenis barang</label>
-                                    <input type="text" name="jenis_barang" id="jenis_barang" class="form-control" placeholder="Masukkan jenis barang" oninput="this.value = this.value.toUpperCase()" value="<?= $resi['commodity'] ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Koli</label>
-                                    <input type="text" name="qty" id="qty" class="form-control angka" placeholder="Masukkan jumlah barang" value="<?= $resi['qty'] ?>">
+                                    <label class="form-label">Total koli</label>
+                                    <input type="text" name="total_qty" id="total_qty" class="form-control" placeholder="Masukkan jumlah barang" value="<?= $resi['qty'] ?>" readonly>
                                 </div>
                             </div>
                             <div class="col-md-3 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Berat timbang</label>
-                                    <input type="text" name="berat_timbang" id="berat_timbang" class="form-control angka" placeholder="Masukkan berat timbang" value="<?= number_format($resi['berat_timbang']) ?>">
+                                    <input type="text" name="berat_timbang" id="berat_timbang" class="form-control" placeholder="Masukkan berat timbang" value="<?= number_format($resi['berat_timbang']) ?>" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Total volume</label>
+                                    <input type="text" name="total_volume" id="total_volume" class="form-control" value="<?= number_format($resi['volume']) ?>" readonly>
                                 </div>
                             </div>
                             <div class="col-md-3 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Chargeable</label>
-                                    <input type="text" name="chargeable" id="chargeable" class="form-control angka" value="<?= number_format($resi['chargeable']) ?>" readonly>
+                                    <input type="text" name="chargeable" id="chargeable" class="form-control" value="<?= number_format($resi['chargeable']) ?>" readonly>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-12">
+                            <!-- <div class="col-md-3 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Panjang</label>
                                     <input type="text" name="panjang" id="panjang" class="form-control angka" placeholder="Masukkan panjang" value="<?= number_format($resi['panjang']) ?>">
@@ -120,13 +137,7 @@
                                     <label class="form-label">Tinggi</label>
                                     <input type="text" name="tinggi" id="tinggi" class="form-control angka" placeholder="Masukkan tinggi" value="<?= number_format($resi['tinggi']) ?>">
                                 </div>
-                            </div>
-                            <div class="col-md-3 col-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Volume</label>
-                                    <input type="text" name="volume" id="volume" class="form-control angka" value="<?= number_format($resi['volume']) ?>" readonly>
-                                </div>
-                            </div>
+                            </div> -->
                             <hr>
                             <div class="col-md-3 col-12">
                                 <div class="mb-3">
@@ -151,7 +162,7 @@
                             <div class="col-md-3 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Nominal</label>
-                                    <input type="text" name="nominal" id="nominal" class="form-control angka" value="<?= number_format($resi['nominal']) ?>" readonly>
+                                    <input type="text" name="nominal" id="nominal" class="form-control" value="<?= number_format($resi['nominal']) ?>" readonly>
                                 </div>
                             </div>
                             <hr>

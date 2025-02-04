@@ -273,6 +273,11 @@ class Partner extends CI_Controller
             "per_page" => $config['per_page'],
         ];
 
+        // echo '<pre>';
+        // print_r($data['registrations']);
+        // echo '</pre>';
+        // exit;
+
         $this->load->view('pages/index', $data);
     }
 
@@ -318,7 +323,7 @@ class Partner extends CI_Controller
             'hasil_review' => $this->input->post('hasil_review'),
             'no_urut' => $no_urut,
             'kode_gerai' => $no_gerai,
-            'has_account' => '1'
+            'has_account' => '0'
         ];
 
         $this->db->trans_begin();
@@ -362,12 +367,17 @@ class Partner extends CI_Controller
             'is_active' => '1',
             'date_created' => time(),
             'access_menu' => '[2]',
-            'customer_id' => $partner['Id']
+            'partner_id' => $partner['Id']
         ];
 
         $this->db->trans_begin();
 
         if ($this->M_Partner->createAccount($data)) {
+            $data_update = [
+                'has_account' => '1'
+            ];
+
+            $this->M_Partner->updatePartner($id, $data_update);
             $this->db->trans_commit();
             $this->session->set_flashdata('message_name', 'Akun sudah berhasil dibuat.');
         } else {
@@ -375,7 +385,7 @@ class Partner extends CI_Controller
             $this->session->set_flashdata('message_error', 'Gagal membuat akun. Silahkan coba lagi');
         }
 
-        redirect('partner/pendaftaran');
+        redirect('partner');
     }
 
     public function processTopUpSaldo($id)

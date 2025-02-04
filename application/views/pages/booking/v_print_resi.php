@@ -128,13 +128,23 @@
                 </td>
             </tr>
             <tr>
+                <td>
+                    <h3>Asal:</h3>
+                    <p><?= $resi['origin'] ?></p>
+                </td>
+                <td>
+                    <h3>Tujuan:</h3>
+                    <p><?= $resi['destination'] ?></p>
+                </td>
+            </tr>
+            <tr style="border: 1px #000 solid;">
                 <td colspan="2">
                     <h3>Pengirim:</h3>
                     <p><?= $pengirim ?></p>
                     <p><?= $resi['alamat_pengirim'] ?></p>
                 </td>
             </tr>
-            <tr>
+            <tr style="border: 1px #000 solid;">
                 <td colspan="2">
                     <h3>Penerima:</h3>
                     <p><?= $penerima ?></p>

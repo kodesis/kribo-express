@@ -60,7 +60,7 @@
                     <?php
                     } ?>
                     <div class="table-responsive">
-                        <table class="table table-vcenter card-table table-striped">
+                        <table class="table table-vcenter card-table">
                             <thead>
                                 <tr>
                                     <th class="w-1">#</th>
@@ -79,24 +79,28 @@
                                     $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
 
                                     foreach ($registrations as $c) :
-                                        $saldo = $this->M_Partner->getSaldoAkhirPartner($c->Id); ?>
+                                        $saldo = $this->M_Partner->getSaldoAkhirPartner($c->Id);
+                                        $saldo_akhir = isset($saldo['saldo_akhir']) ? $saldo['saldo_akhir'] : 0; ?>
                                         <tr>
                                             <td class="text-end"><?= $no++; ?>.</td>
                                             <td><?= ($c->kode_gerai) ? $c->kode_gerai : '-' ?></td>
-                                            <td><?= $c->nama_mitra ?></td>
+                                            <td><?= $c->nama_pendaftar ?></td>
                                             <td><?= ucfirst($c->jenis_pengajuan) ?></td>
                                             <td><?= ($c->no_handphone) ?></td>
                                             <td><?= $c->alamat_lengkap ?></td>
-                                            <td class="text-end <?= ($saldo['saldo_akhir'] < 500000) ? 'bg-yellow text-white' : 'bg-azure text-white' ?>">Rp <?= number_format($saldo['saldo_akhir']) ?></td>
+                                            <td class="text-end <?= ($saldo_akhir < 500000) ? 'bg-yellow text-white' : 'bg-azure text-white' ?>">
+                                                Rp <?= number_format($saldo_akhir) ?>
+                                            </td>
+
                                             <td>
                                                 <?php if ($c->hasil_review == 'diterima') : ?>
                                                     <?php if ($c->has_account == '0') : ?>
-                                                        <button type="button" class="btn btn-ghost-success btn-sm btn-process" data-href="<?= base_url('partner/createUser/' . $c->Id) ?>">Create account</button>
+                                                        <button type="button" class="btn btn-ghost-primary btn-sm btn-process" data-href="<?= base_url('partner/createUser/' . $c->Id) ?>">Create account</button>
                                                     <?php else : ?>
-                                                        <button type="button" class="btn btn-ghost-success btn-sm top-up-saldo" data-id="<?= $c->Id ?>" data-nama="<?= $c->nama_mitra ?>" data-gerai="<?= $c->kode_gerai ?>">Top up saldo</button>
+                                                        <button type="button" class="btn btn-ghost-success btn-sm top-up-saldo" data-id="<?= $c->Id ?>" data-nama="<?= $c->nama_pendaftar ?>" data-gerai="<?= $c->kode_gerai ?>">Top up saldo</button>
                                                     <?php endif; ?>
                                                 <?php else : ?>
-                                                    <button type="button" class="btn btn-ghost-primary btn-sm review-pengajuan" data-id="<?= $c->Id ?>" data-nama="<?= $c->nama_mitra ?>">Review</button>
+                                                    <button type="button" class="btn btn-ghost-primary btn-sm review-pengajuan" data-id="<?= $c->Id ?>" data-nama="<?= $c->nama_pendaftar ?>">Review</button>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
@@ -164,8 +168,8 @@
                     <div class="row">
                         <div class="col-md-12 col-12">
                             <div class="mb-3">
-                                <label for="nama_mitra" class="form-label">Nama agent</label>
-                                <input type="text" name="nama_mitra" id="nama_mitra" class="form-control" placeholder="Masukkan nama agent...">
+                                <label for="nama_pendaftar" class="form-label">Nama agent</label>
+                                <input type="text" name="nama_pendaftar" id="nama_pendaftar" class="form-control" placeholder="Masukkan nama agent...">
                             </div>
                         </div>
                         <div class="col-md-6 col-12">
