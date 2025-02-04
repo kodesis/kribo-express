@@ -42,7 +42,7 @@
                                                     Deposit
                                                 </div>
                                                 <div class="text-muted">
-                                                    <?= number_format($saldo) ?>
+                                                    <?= ($saldo) ? number_format($saldo) : 0 ?>
                                                 </div>
                                             </a>
                                         </div>
