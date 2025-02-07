@@ -114,7 +114,7 @@
                                     <th class="w-1">#</th>
                                     <th class="">No. Resi</th>
                                     <?php
-                                    if ($this->session->userdata('role_id') != '3') {
+                                    if ($this->session->userdata('role_id') == '2' or $this->session->userdata('username') == 'krx0005') {
                                     ?>
                                         <th class="w-1">AWB</th>
                                         <th class="">Customer</th>
@@ -129,7 +129,7 @@
                                     <th class="w-1">Pickup</th>
                                     <th>Status</th>
                                     <?php
-                                    if ($this->session->userdata('role_id') != '3') {
+                                    if ($this->session->userdata('role_id') == '2' or $this->session->userdata('username') == 'krx0005') {
                                     ?>
                                         <th class="w-1">Warehouse</th>
                                         <th class="w-1">Arr.</th>
@@ -155,7 +155,7 @@
                                             <td class="text-end"><?= $no++; ?>.</td>
                                             <td><?= $b->no_resi ?></td>
                                             <?php
-                                            if ($this->session->userdata('role_id') != '3') {
+                                            if ($this->session->userdata('role_id') == '2' or $this->session->userdata('username') == 'krx0005') {
                                             ?>
                                                 <td><?= ($b->awb) ? $b->awb : "-" ?></td>
                                                 <td><?= $b->nama_pendaftar ?></td>
@@ -199,7 +199,7 @@
                                             </td>
 
                                             <?php
-                                            if ($this->session->userdata('role_id') != '3') {
+                                            if ($this->session->userdata('role_id') == '2' or $this->session->userdata('username') == 'krx0005') {
                                             ?>
                                                 <td>
                                                     <label class="form-check form-switch">
@@ -219,7 +219,7 @@
                                             <td class="">
                                                 <a href="<?= base_url('booking/print_resi/' . $b->no_resi) ?>" target="_blank" class="btn btn-primary btn-sm ms-auto mb-1">Print</a>
                                                 <?php
-                                                if ($this->session->userdata('role_id') != '3') {
+                                                if ($this->session->userdata('role_id') == '2' or $this->session->userdata('username') == 'krx0005') {
                                                 ?>
                                                     <a href="<?= base_url('booking/detailResi/') . $b->no_resi ?>" class="btn btn-primary btn-sm ms-auto mb-1">Detail</a>
                                                     <button href="#" class="btn btn-danger btn-sm ms-auto mb-1">Void</button>

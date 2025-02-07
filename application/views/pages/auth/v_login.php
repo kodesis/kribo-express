@@ -7,7 +7,7 @@
     <form method="POST" action="<?= base_url('auth') ?>" autocomplete="off" novalidate>
         <div class="mb-3">
             <label class="form-label">Username</label>
-            <input type="text" name="username" id="username" class="form-control" placeholder="Your username" autocomplete="off" value="<?= set_value('username') ?>">
+            <input type="text" name="username" id="username" class="form-control" placeholder="Your username" autocomplete="off" value="<?= set_value('username') ?>" autofocus>
             <?= form_error('username', '<small class="text-danger">', '</small>'); ?>
         </div>
         <div class="mb-2">

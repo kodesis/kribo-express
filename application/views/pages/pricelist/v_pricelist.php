@@ -24,23 +24,29 @@
                             <path d="M21 21l-6 -6" />
                         </svg>
                     </a>
-                    <a href="<?= base_url('dashboard/reset/pricelist') ?>" class="btn btn-warning d-none d-sm-inline-block" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-                            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-                        </svg>
-                        Reset</a>
-                    <a href="<?= base_url('dashboard/reset/pricelist') ?>" class="btn btn-warning d-sm-none btn-icon" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-                            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-                        </svg>
-                    </a>
-                    <!-- <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
+
+                    <?php
+                    if ($keyword) {
+                    ?>
+                        <a href="<?= base_url('dashboard/reset/pricelist') ?>" class="btn btn-warning d-none d-sm-inline-block" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                            </svg>
+                            Reset</a>
+                        <a href="<?= base_url('dashboard/reset/pricelist') ?>" class="btn btn-warning d-sm-none btn-icon" aria-label="Reset search keyword" title="Reset search" data-bs-toggle="tooltip" data-bs-placement="top">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                            </svg>
+                        </a>
+                    <?php
+                    } ?>
+                    <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M12 5l0 14" />
@@ -54,7 +60,7 @@
                             <path d="M12 5l0 14" />
                             <path d="M5 12l14 0" />
                         </svg>
-                    </a> -->
+                    </a>
                 </div>
             </div>
         </div>
@@ -75,15 +81,16 @@
                     <?php
                     } ?>
                     <div class="table-responsive">
-                        <table class="table table-vcenter card-table table-striped">
+                        <table class="table table-vcenter card-table">
                             <thead>
                                 <tr>
                                     <th class="w-1">#</th>
                                     <th class="">Route</th>
                                     <th class="">Origin</th>
                                     <th class="">City</th>
-                                    <th class="w-1">Harga jual</th>
-                                    <th class="w-1">Harga up</th>
+                                    <th class="">Harga jual</th>
+                                    <th class="">Harga up</th>
+                                    <th class="w-10">Status</th>
                                     <th class="w-1"></th>
                                 </tr>
                             </thead>
@@ -97,11 +104,13 @@
                                         <td><?= $c->origin . '-' . $c->destination ?></td>
                                         <td><?= ($c->city_origin) ?></td>
                                         <td><?= ($c->city) ?></td>
-                                        <td class="text-end"><?= number_format($c->all_in_smu) ?></td>
-                                        <td class="text-end"><?= number_format($c->total) ?></td>
+                                        <td class="text-end"><?= number_format($c->all_in_smu, 2) ?></td>
+                                        <td class="text-end"><?= number_format($c->total, 2) ?></td>
                                         <td>
                                             <button type="button" class="btn btn-ghost-primary btn-sm editData" data-id="<?= $c->slug ?>">Edit</button>
+                                            <a href='<?= base_url('pricelist/' . ($c->is_active == "1" ? "hold" : "activate") . '/' . $c->slug) ?>' class='btn btn-ghost-<?= $c->is_active == "1" ? "danger" : "secondary" ?> btn-sm btn-process'><?= $c->is_active == "1" ? "Hold" : "Activate" ?></a>
                                         </td>
+                                        <td class="<?= ($c->is_active == "1") ? "bg-success" : "bg-danger" ?> text-white"><?= ($c->is_active == "1") ? "Active" : "Hold" ?></td>
                                     </tr>
                                 <?php
                                 endforeach; ?>

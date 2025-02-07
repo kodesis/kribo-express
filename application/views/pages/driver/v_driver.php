@@ -90,26 +90,23 @@
                                     <th class="w-25">Name</th>
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th>Role</th>
                                     <th class=""></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                if ($users) {
+                                if ($drivers) {
                                     $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * $per_page) + 1) : '1';
 
-                                    foreach ($users as $c) : ?>
+                                    foreach ($drivers as $c) : ?>
                                         <tr>
                                             <td class="text-end"><?= $no++; ?>.</td>
                                             <td><?= $c->name ?></td>
                                             <td><?= ($c->username) ?></td>
                                             <td><?= $c->email ?></td>
-                                            <td><?= $c->role ?></td>
                                             <td>
-                                                <button type="button" class="btn btn-ghost-primary btn-sm editData" data-id="<?= $c->username ?>" data-nama="<?= $c->name ?>">Edit</button>
-                                                <a href="<?= base_url('setting/user_access/') . $c->username ?>" class="btn btn-ghost-success btn-sm">User Access</a>
-                                                <a href='<?= base_url('setting/' . ($c->is_active == "1" ? "hold" : "activate") . '/' . $c->username) ?>' class='btn btn-ghost-<?= $c->is_active == "1" ? "danger" : "secondary" ?> btn-sm btn-process'><?= $c->is_active == "1" ? "Hold" : "Activate" ?></a>
+                                                <!-- <button type="button" class="btn btn-ghost-primary btn-sm editData" data-id="<?= $c->username ?>" data-nama="<?= $c->name ?>">Edit</button> -->
+                                                <a href='<?= base_url('driver/' . ($c->is_active == "1" ? "hold" : "activate") . '/' . $c->username) ?>' class='btn btn-ghost-<?= $c->is_active == "1" ? "danger" : "secondary" ?> btn-sm btn-process'><?= $c->is_active == "1" ? "Hold" : "Activate" ?></a>
                                             </td>
                                         </tr>
                                     <?php
@@ -155,23 +152,12 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                <h5 class="modal-title" id="searchModalLabel">Add driver</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?= base_url('setting/addUser') ?>" method="post">
+            <form action="<?= base_url('driver/addUser') ?>" method="post">
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12 mb-2">
-                            <label for="role" class="form-label">User role</label>
-                            <select name="role" id="role" class="form-select" onchange="showFormAdd()">
-                                <option value="">:: Pilih user role</option>
-                                <option value="2">Staf Kribo Express</option>
-                                <option value="3">Mitra</option>
-                                <option value="4">Driver</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="staff" style="display: none">
+                    <div id="staff">
                         <div class="row">
                             <div class="col-md-6 col-12 mb-2">
                                 <label for="nama_user" class="form-label">Nama user</label>
@@ -190,63 +176,6 @@
                                 <div class="input-group mb-2">
                                     <span class="input-group-text"> @ </span>
                                     <input type="text" class="form-control" name="username" id="username" placeholder="username" autocomplete="off" />
-                                </div>
-                            </div>
-                        </div>
-                        <div id="partner" style="display: none">
-                            <div class="row">
-                                <div class="col-md-6 col-12 mb-2">
-                                    <label for="mitra" class="form-label">Mitra</label>
-                                    <select name="mitra" id="mitra" class="form-select">
-                                        <option value="">:: Pilih mitra</option>
-                                        <?php
-                                        foreach ($partners as $p) : ?>
-                                            <option value="<?= $p->Id ?>"><?= $p->nama_pendaftar ?></option>
-                                        <?php
-                                        endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-12 mb-2">
-                                    <label for="username" class="form-label">Username</label>
-                                    <div class="input-group mb-2">
-                                        <span class="input-group-text"> @ </span>
-                                        <input type="text" class="form-control" placeholder="username" autocomplete="off" />
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-2">
-                                    <label for="yourPassword" class="form-label">Password</label>
-                                    <div class="input-group input-group-flat">
-                                        <input type="password" name="password" id="password" class="form-control" placeholder="Your password" autocomplete="off">
-                                        <span class="input-group-text">
-                                            <a href="#" id="toggle-password" class="link-secondary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                    <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                                </svg>
-                                            </a>
-                                        </span>
-                                    </div>
-                                    <small id="password-error" class="text-danger" style="display:none;">Password must be at least 8 characters long, contain a number, and an uppercase letter.</small>
-                                </div>
-
-                                <div class="col-12 mb-2">
-                                    <label for="yourPassword2" class="form-label">Confirmation Password</label>
-                                    <div class="input-group input-group-flat">
-                                        <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm password" autocomplete="off">
-                                        <span class="input-group-text">
-                                            <a href="#" id="toggle-password-2" class="link-secondary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                    <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                                </svg>
-                                            </a>
-                                        </span>
-                                    </div>
-                                    <small id="confirm-password-error" class="text-danger" style="display:none;">Passwords do not match.</small>
                                 </div>
                             </div>
                         </div>

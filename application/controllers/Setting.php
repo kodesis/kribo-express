@@ -126,13 +126,33 @@ class Setting extends CI_Controller
     public function addUser()
     {
         $data = [
-            "title" => "Create User",
-            "segment" => "setting",
-            "pages" => "pages/setting/v_add_user",
-            "partners" => $this->M_Partner->list_partner(),
+            'name' => htmlspecialchars($this->input->post('nama_user')),
+            'email' => htmlspecialchars($this->input->post('email_user')),
+            'username' => strtolower($this->input->post('username')),
+            'phone_number' => strtolower($this->input->post('no_handphone')),
+            'image' => 'default.jpg',
+            'password' => password_hash(strtolower($this->input->post('username')), PASSWORD_DEFAULT),
+            'role_id' => $this->input->post('role'),
+            'is_active' => '1',
+            'date_created' => time(),
         ];
 
-        $this->load->view('pages/index', $data);
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
+        // exit;
+
+        $this->db->trans_begin();
+
+        if ($this->M_Setting->createAccount($data)) {
+            $this->db->trans_commit();
+            $this->session->set_flashdata('message_name', 'Akun sudah berhasil dibuat.');
+        } else {
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('message_error', 'Gagal membuat akun. Silahkan coba lagi');
+        }
+
+        redirect('setting/user');
     }
 
     public function update_access($id)

@@ -50,6 +50,143 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-9 col-12">
+                            <div class="row row-cards">
+                                <div class="col-12">
+                                    <div class="card card-sm">
+                                        <div class="card-stamp">
+                                            <div class="card-stamp-icon bg-yellow">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-calculator">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M4 3m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+                                                    <path d="M8 7m0 1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z" />
+                                                    <path d="M8 14l0 .01" />
+                                                    <path d="M12 14l0 .01" />
+                                                    <path d="M16 14l0 .01" />
+                                                    <path d="M8 17l0 .01" />
+                                                    <path d="M12 17l0 .01" />
+                                                    <path d="M16 17l0 .01" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+
+                                            <h3 class="card-title">Cek Ongkir</h3>
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
+                                                        <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
+                                                            <option value="D">Domestik</option>
+                                                            <option value="I">Internasional</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Berat timbang</label>
+                                                        <input type="text" name="berat_timbang" id="berat_timbang" class="form-control" placeholder="Masukkan berat timbang">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Total Koli</label>
+                                                        <input type="text" name="total_qty" id="total_qty" class="form-control" placeholder="Masukkan jumlah barang" value="1" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Total Volume</label>
+                                                        <input type="text" name="total_volume" id="total_volume" class="form-control" value="0" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Chargeable</label>
+                                                        <input type="text" name="chargeable" id="chargeable" class="form-control" value="0" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <input type="hidden" name="harga_jual" id="harga_jual" class="form-control" value="0" readonly>
+                                                        <label for="origin" class="form-label">Origin</label>
+                                                        <input type="text" name="origin" id="origin" class="form-control" placeholder="Masukkan origin" oninput="this.value = this.value.toUpperCase()">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="destination" class="form-label">Destination</label>
+                                                        <input type="text" name="destination" id="destination" class="form-control" placeholder="Masukkan destination" oninput="this.value = this.value.toUpperCase()">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="harga" class="form-label">Per Kg</label>
+                                                        <input type="text" name="harga" id="harga" class="form-control" value="0" readonly>
+                                                        <div class="invalid-feedback">Harga tidak tersedia</div>
+                                                        <div class="valid-feedback">Harga tersedia</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Nominal</label>
+                                                        <input type="text" name="nominal" id="nominal" class="form-control" value="0" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <hr> -->
+                                            <label for="" class="form-label">Input dimensi</label>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Panjang</th>
+                                                        <th>Lebar</th>
+                                                        <th>Tinggi</th>
+                                                        <th>Koli</th>
+                                                        <th>Volume</th>
+                                                        <th>delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="table-body">
+                                                    <tr class="baris ">
+                                                        <td class="nomor-urut"></td>
+                                                        <td>
+                                                            <input type="text" name="panjang[]" id="panjang[]" class="form-control">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="lebar[]" id="lebar[]" class="form-control">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="tinggi[]" id="tinggi[]" class="form-control">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="jumlah[]" id="jumlah[]" class="form-control" value="1">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="volume[]" id="volume[]" class="form-control" value="0" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-danger btn-sm hapusRow">Hapus</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7" class="text-end">
+                                                            <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 <?php
                 } else { ?>
@@ -162,6 +299,144 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-12">
+                            <div class="row row-cards">
+                                <div class="col-12">
+                                    <div class="card card-sm">
+                                        <div class="card-stamp">
+                                            <div class="card-stamp-icon bg-yellow">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-calculator">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M4 3m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+                                                    <path d="M8 7m0 1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z" />
+                                                    <path d="M8 14l0 .01" />
+                                                    <path d="M12 14l0 .01" />
+                                                    <path d="M16 14l0 .01" />
+                                                    <path d="M8 17l0 .01" />
+                                                    <path d="M12 17l0 .01" />
+                                                    <path d="M16 17l0 .01" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+
+                                            <h3 class="card-title">Cek Ongkir</h3>
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
+                                                        <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
+                                                            <option value="D">Domestik</option>
+                                                            <option value="I">Internasional</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Berat timbang</label>
+                                                        <input type="text" name="berat_timbang" id="berat_timbang" class="form-control" placeholder="Masukkan berat timbang">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Total Koli</label>
+                                                        <input type="text" name="total_qty" id="total_qty" class="form-control" placeholder="Masukkan jumlah barang" value="1" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Total Volume</label>
+                                                        <input type="text" name="total_volume" id="total_volume" class="form-control" value="0" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Chargeable</label>
+                                                        <input type="text" name="chargeable" id="chargeable" class="form-control" value="0" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <input type="hidden" name="harga_jual" id="harga_jual" class="form-control" value="0" readonly>
+                                                        <label for="origin" class="form-label">Origin</label>
+                                                        <input type="text" name="origin" id="origin" class="form-control" placeholder="Masukkan origin" oninput="this.value = this.value.toUpperCase()">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="destination" class="form-label">Destination</label>
+                                                        <input type="text" name="destination" id="destination" class="form-control" placeholder="Masukkan destination" oninput="this.value = this.value.toUpperCase()">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="harga" class="form-label">Per Kg</label>
+                                                        <input type="text" name="harga" id="harga" class="form-control" value="0" readonly>
+                                                        <div class="invalid-feedback">Harga tidak tersedia</div>
+                                                        <div class="valid-feedback">Harga tersedia</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Nominal</label>
+                                                        <input type="text" name="nominal" id="nominal" class="form-control" value="0" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <hr> -->
+                                            <label for="" class="form-label">Input dimensi</label>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Panjang</th>
+                                                        <th>Lebar</th>
+                                                        <th>Tinggi</th>
+                                                        <th>Koli</th>
+                                                        <th>Volume</th>
+                                                        <th>delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="table-body">
+                                                    <tr class="baris ">
+                                                        <td class="nomor-urut"></td>
+                                                        <td>
+                                                            <input type="text" name="panjang[]" id="panjang[]" class="form-control">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="lebar[]" id="lebar[]" class="form-control">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="tinggi[]" id="tinggi[]" class="form-control">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="jumlah[]" id="jumlah[]" class="form-control" value="1">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="volume[]" id="volume[]" class="form-control" value="0" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-danger btn-sm hapusRow">Hapus</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7" class="text-end">
+                                                            <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal modal-blur fade" id="download-manifest-pickup" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -211,6 +486,8 @@
                 } ?>
 
             </div>
+        </div>
+        <div class="row row-deck row-cards mt-2">
         </div>
     </div>
 </div>

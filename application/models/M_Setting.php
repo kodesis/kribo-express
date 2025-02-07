@@ -140,4 +140,9 @@ class M_Setting extends CI_Model
     {
         return $this->db->where('id', $id)->order_by('nama_kelurahan', 'ASC')->get('mt_kelurahan')->row_array();
     }
+
+    public function createAccount($data)
+    {
+        return $this->db->insert('user', $data);
+    }
 }

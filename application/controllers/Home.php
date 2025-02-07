@@ -121,4 +121,82 @@ class Home extends CI_Controller
 
 		$this->load->view('pages/front/index', $data);
 	}
+
+	public function cek_ongkir()
+	{
+		$data = [
+			'title' => 'Cek Ongkir',
+			'segment' => 'cek_ongkir',
+			'pages' => 'pages/front/home/v_cek_ongkir'
+		];
+
+		$this->load->view('pages/front/index', $data);
+	}
+
+
+
+	public function autocompleteOrigin()
+	{
+		$term = $this->input->get('term');
+
+		$this->db->like('city_origin', $term);
+		$this->db->group_by('city_origin');
+		$query = $this->db->get('mt_pricelist');
+
+		$result = $query->result_array();
+		$items = [];
+		foreach ($result as $row) {
+			$items[] = [
+				'label' => $row['city_origin'],
+				'value' => $row['city_origin'],
+			];
+		}
+		echo json_encode($items);
+	}
+
+	public function autocompleteDestination()
+	{
+		$term = $this->input->get('term');
+
+		$this->db->like('city', $term);
+		$this->db->group_by('city');
+		$query = $this->db->get('mt_pricelist');
+
+		$result = $query->result_array();
+		$items = [];
+		foreach ($result as $row) {
+			$items[] = [
+				'label' => $row['city'],
+				'value' => $row['city'],
+			];
+		}
+		echo json_encode($items);
+	}
+
+	public function getPrice()
+	{
+		$origin = $this->input->post('origin');
+		$destination = $this->input->post('destination');
+		$dom_int = $this->input->post('jenis_pengiriman');
+		$chargeable = $this->input->post('chargeable');
+
+		$this->db->where('city_origin', $origin);
+		$this->db->where('city', $destination);
+
+		if ($dom_int == 'I') {
+			$this->db->where($chargeable . ' >= min_chargeable');
+			if ($chargeable < 10) {
+				$this->db->where($chargeable . ' <= max_chargeable');
+			}
+		}
+
+		$price = $this->db->get('mt_pricelist')->row_array();
+
+		$data = [
+			'harga_up' => $price['total'],
+			'harga_jual' => $price['all_in_smu']
+		];
+
+		echo json_encode($data);
+	}
 }

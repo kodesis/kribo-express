@@ -225,6 +225,8 @@
 			position: relative;
 		}
 	</style>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 </head>
 
 <body>
@@ -255,6 +257,7 @@
 				<a href="<?= base_url('home/service') ?>" class="nav-item nav-link <?= ($segment == 'service') ? 'active' : '' ?>">Layanan</a>
 				<a href="<?= base_url('home/track') ?>" class="nav-item nav-link <?= ($segment == 'track') ? 'active' : '' ?>">Tracking</a>
 				<a href="<?= base_url('home/agent') ?>" class="nav-item nav-link <?= ($segment == 'agent') ? 'active' : '' ?>">Kemitraan</a>
+				<a href="<?= base_url('home/cek_ongkir') ?>" class="nav-item nav-link <?= ($segment == 'cek_ongkir') ? 'active' : '' ?>">Cek Ongkir</a>
 				<a href="<?= base_url('auth') ?>" class="nav-item nav-link"><?= ($this->session->userdata('user_id')) ? 'Dashboard' : 'Login' ?></a>
 			</div>
 			<!-- <h4 class="m-0 pe-lg-5 d-none d-lg-block"><i class="fa fa-headphones text-primary me-3"></i>+012 345 6789</h4> -->
@@ -262,6 +265,7 @@
 	</nav>
 	<!-- Navbar End -->
 
+	<!-- <div class="container"> -->
 
 	<?php $this->load->view($pages) ?>
 
@@ -299,7 +303,7 @@
 			<div class="copyright">
 				<div class="row">
 					<div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-						Copyright &copy; <?= date('Y') ?> <a class="" href="<?= base_url() ?>">Kribo Express</a>, All Right Reserved.
+						Copyright &copy; <span id="tahun"></span> <a class="" href="<?= base_url() ?>">Kribo Express</a>, All Right Reserved.
 					</div>
 					<div class="col-md-6 text-center text-md-end">
 						<!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
@@ -315,8 +319,11 @@
 
 	<!-- Back to Top -->
 	<a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top"><i class="bi bi-arrow-up"></i></a>
+	<!-- </div> -->
 
-
+	<script>
+		var base_url = "<?= base_url() ?>";
+	</script>
 	<!-- JavaScript Libraries -->
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -327,167 +334,18 @@
 	<script src="<?= base_url() ?>assets/front/lib/owlcarousel/owl.carousel.min.js"></script>
 
 	<!-- Template Javascript -->
-	<script src="<?= base_url() ?>assets/front/js/main.js"></script>
 	<script type="text/javascript" src="<?= base_url(); ?>assets/vendor/select2/js/select2.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script>
-		$(document).ready(function() {
-			$.ajax({
-				type: 'POST',
-				url: '<?= base_url('registration/getProvinsi') ?>',
-				cache: false,
-				success: function(msg) {
-					$('#provinsi').html(msg);
-				}
-			});
-
-			$('#alamat_email').on('input', function() {
-				var email = $(this).val();
-
-				$.ajax({
-					type: 'POST',
-					url: '<?= base_url('registration/checkEmail') ?>',
-					data: {
-						email: email
-					},
-					cache: false,
-					success: function(response) {
-						var isEmailAvailable = response == 0;
-						console.log(isEmailAvailable)
-
-						$('#alamat_email')
-							.toggleClass('is-invalid', !isEmailAvailable)
-							.toggleClass('is-valid', isEmailAvailable);
-					},
-					error: function() {
-						console.log('Error while checking email');
-					}
-				});
-			});
+	<script src="<?= base_url() ?>assets/front/js/main.js"></script>
 
 
-			$('#provinsi').change(function() {
-				var provinsi = $('#provinsi').val();
+	<!-- jQuery UI CSS (for autocomplete styling) -->
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-				$.ajax({
-					type: 'POST',
-					url: '<?= base_url('registration/getKota') ?>',
-					data: {
-						provinsi: provinsi,
-					},
-					cache: false,
-					success: function(msg) {
-						$('#kota').html(msg);
-					}
-				})
-			});
+	<script src="<?= base_url(); ?>assets/dashboard/js/jquery.mask.js"></script>
+	<script type="text/javascript" src="<?= base_url(); ?>assets/vendor/select2/js/select2.min.js"></script>
 
-			$('#kota').change(function() {
-				var kota = $('#kota').val();
-
-				$.ajax({
-					type: 'POST',
-					url: '<?= base_url('registration/getKecamatan') ?>',
-					data: {
-						kota: kota,
-					},
-					cache: false,
-					success: function(msg) {
-						$('#kecamatan').html(msg);
-					}
-				})
-			});
-
-			$('#kecamatan').change(function() {
-				var kecamatan = $('#kecamatan').val();
-
-				$.ajax({
-					type: 'POST',
-					url: '<?= base_url('registration/getKelurahan') ?>',
-					data: {
-						kecamatan: kecamatan,
-					},
-					cache: false,
-					success: function(msg) {
-						$('#kelurahan').html(msg);
-					}
-				})
-			});
-		})
-
-		$(document).on("click", ".btn-submit", function(e) {
-			e.preventDefault();
-			const form = $(this).parents("form");
-
-
-			// Validasi semua input form
-			let inputs = form.find('input, select, textarea');
-			let valid = true;
-
-			inputs.each(function() {
-				if (!$(this).val()) {
-					$(this).addClass('is-invalid');
-					valid = false;
-				} else {
-					$(this).removeClass('is-invalid').addClass('is-valid');
-				}
-			});
-
-			// Jika ada input yang tidak valid, cegah submit dan tampilkan peringatan
-			if (!valid) {
-				Swal.fire({
-					icon: 'error',
-					text: 'Please fill out all required fields!'
-				});
-				return;
-			}
-
-			Swal.fire({
-				title: "Are you sure?",
-				text: "You won't be able to revert this!",
-				icon: "warning",
-				showCancelButton: true,
-				confirmButtonColor: "#3085d6",
-				cancelButtonColor: "#d33",
-				confirmButtonText: "Yes, confirm!",
-			}).then((result) => {
-				if (result.isConfirmed) {
-
-					form.on("submit", function() {
-						$(".btn-submit").prop('disabled', true);
-						Swal.fire({
-							title: "Loading...",
-							timerProgressBar: true,
-							allowOutsideClick: false,
-							didOpen: () => {
-								Swal.showLoading();
-							},
-						});
-					});
-
-					form.submit();
-				}
-			});
-		});
-
-		const flashdata = $(".flash-data").data("flashdata");
-		if (flashdata) {
-			Swal.fire({
-				title: "Success!! ",
-				text: flashdata,
-				icon: "success",
-			});
-		}
-
-		const flashdata_error = $(".flash-data-error").data("flashdata");
-		if (flashdata_error) {
-			Swal.fire({
-				title: "Error!! ",
-				text: flashdata_error,
-				icon: "error",
-			});
-		}
-	</script>
+	<!-- <script src="<?= base_url() ?>assets/js/script.js"></script> -->
 </body>
 
 </html>

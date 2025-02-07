@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class pricelist extends CI_Controller
+class Driver extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
         $this->load->library(['session', 'pagination']);
         $this->load->helper(['string', 'url', 'date']);
-        $this->load->model('M_Pricelist');
+        $this->load->model(['M_Driver', 'M_Setting']);
 
         if (!$this->session->userdata('is_logged_in')) {
 
@@ -21,7 +21,7 @@ class pricelist extends CI_Controller
 
             redirect('auth');
         } else {
-            $url = "pricelist";
+            $url = "driver";
             $this->checkAccess($url);
         }
     }
@@ -53,12 +53,12 @@ class pricelist extends CI_Controller
         // print_r($per_page)
 
         $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search_pricelist')) ? $this->session->userdata('search_pricelist') : '');
-        if ($keyword === null) $keyword = $this->session->userdata('search_pricelist');
-        else $this->session->set_userdata('search_pricelist', $keyword);
+        if ($keyword === null) $keyword = $this->session->userdata('search_driver');
+        else $this->session->set_userdata('search_driver', $keyword);
 
         $config = [
-            'base_url' => site_url('pricelist/index'),
-            'total_rows' => $this->M_Pricelist->count($keyword),
+            'base_url' => site_url('driver/index'),
+            'total_rows' => $this->M_Driver->count($keyword),
             'per_page' => $per_page,
             'uri_segment' => 3,
             'num_links' => 1,
@@ -101,12 +101,12 @@ class pricelist extends CI_Controller
         $page = $this->uri->segment(3) ? ($this->uri->segment(3) - 1) * $config['per_page'] : 0;
 
         $data = [
-            "title" => "Pricelist",
+            "title" => "Driver",
             "page" => $page,
             "keyword" => $keyword,
-            "segment" => "pricelist",
-            "pages" => "pages/pricelist/v_pricelist",
-            "pricelists" => $this->M_Pricelist->listpricelistPaginate($config["per_page"], $page, $keyword),
+            "segment" => "driver",
+            "pages" => "pages/driver/v_driver",
+            "drivers" => $this->M_Driver->listDriverPaginate($config["per_page"], $page, $keyword),
             "total_rows" => $config['total_rows'],
             "per_page" => $config['per_page'],
         ];
@@ -132,14 +132,14 @@ class pricelist extends CI_Controller
 
         $old_slug = $this->uri->segment(4);
         if ($old_slug) {
-            $this->M_Pricelist->update($data, $old_slug);
+            $this->M_Driver->update($data, $old_slug);
 
             $this->session->set_flashdata('message_name', 'The pricelist has been successfully updated.');
         } else {
-            if ($this->M_Pricelist->is_available($slug)) {
+            if ($this->M_Driver->is_available($slug)) {
                 $this->session->set_flashdata('message_error', 'pricelist ' . $nama_pricelist . ' sudah ada.');
             } else {
-                $this->M_Pricelist->insert($data);
+                $this->M_Driver->insert($data);
 
                 $this->session->set_flashdata('message_name', 'The pricelist has been successfully added.');
             }
@@ -152,7 +152,7 @@ class pricelist extends CI_Controller
     {
         $id = $this->input->post('id');
 
-        $data = $this->M_Pricelist->show($id);
+        $data = $this->M_Driver->show($id);
 
         $url_form = base_url('pricelist/updateData/' . $id);
 
@@ -196,32 +196,30 @@ class pricelist extends CI_Controller
     {
     }
 
-    public function setStatus($slug, $status)
+    public function setStatus($username, $status)
     {
         $data = ['is_active' => $status];
-        // print_r($data);
-        // exit;
 
         $this->db->trans_begin();
 
-        if ($this->M_Pricelist->update($data, $slug)) {
+        if ($this->M_Setting->update_user($data, $username)) {
             $this->db->trans_commit();
-            $this->session->set_flashdata('message_name', 'Harga ' . $slug . ' telah ' . ($status ? 'diaktifkan' : 'dinonaktifkan') . '.');
+            $this->session->set_flashdata('message_name', 'Akun driver ' . $username . ' telah ' . ($status ? 'diaktifkan' : 'dinonaktifkan') . '.');
         } else {
             $this->db->trans_rollback();
-            $this->session->set_flashdata('message_name', 'Harga ' . $slug . ' gagal diubah.');
+            $this->session->set_flashdata('message_name', 'Akun driver ' . $username . ' gagal diubah.');
         }
 
-        redirect('pricelist');
+        redirect('driver');
     }
 
-    public function activate($slug)
+    public function activate($username)
     {
-        $this->setStatus($slug, "1");
+        $this->setStatus($username, "1");
     }
 
-    public function hold($slug)
+    public function hold($username)
     {
-        $this->setStatus($slug, "0");
+        $this->setStatus($username, "0");
     }
 }

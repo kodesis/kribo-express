@@ -103,6 +103,11 @@ class Booking extends CI_Controller
             "per_page" => $config['per_page'],
         ];
 
+        // echo '<pre>';
+        // print_r($data['bookings']);
+        // echo '</pre>';
+        // exit;
+
         $this->load->view('pages/index', $data);
     }
 

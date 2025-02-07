@@ -31,9 +31,7 @@ class M_Booking extends CI_Model
     public function listBookingPaginate($limit, $from, $keyword)
     {
         $role_id = $this->session->userdata('role_id');
-
-        // print_r($this->session->userdata('partner_id'));
-        // exit;
+        $username = $this->session->userdata('username');
 
         if ($role_id == '3') {
             $this->db->where('partner_id', $this->session->userdata('partner_id'));
@@ -46,7 +44,7 @@ class M_Booking extends CI_Model
         }
 
         $this->db->from('resi b');
-        if ($role_id != '3') {
+        if ($role_id != '3' or $username == "krx0005") {
             $this->db->join('partner p', 'b.partner_id = p.id');
         }
         return $this->db->order_by('b.no_resi', 'DESC')->limit($limit, $from)->get()->result();
