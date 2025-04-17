@@ -72,6 +72,6 @@ class M_Pricelist extends CI_Model
             $this->db->group_end(); // Akhiri grup kondisi
         }
 
-        return $this->db->from('mt_pricelist')->order_by('city', 'ASC')->limit($limit, $from)->get()->result();
+        return $this->db->from('mt_pricelist')->order_by('city', 'ASC')->order_by('min_chargeable', 'ASC')->limit($limit, $from)->get()->result();
     }
 }

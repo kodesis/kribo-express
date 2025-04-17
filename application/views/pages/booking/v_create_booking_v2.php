@@ -54,7 +54,9 @@
                                         <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
                                         <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
                                             <option value="D">Domestik</option>
-                                            <option value="I">Internasional</option>
+                                            <option value="IR">Internasional Reguler</option>
+                                            <option value="IE">Internasional Economy</option>
+                                            <option value="IP">Internasional Premium</option>
                                         </select>
                                     </div>
                                 </div>

@@ -85,9 +85,10 @@
                             <thead>
                                 <tr>
                                     <th class="w-1">#</th>
-                                    <th class="">Route</th>
+                                    <!-- <th class="">Route</th> -->
                                     <th class="">Origin</th>
                                     <th class="">City</th>
+                                    <th class="w-1">Min - Max Chargeable</th>
                                     <th class="">Harga jual</th>
                                     <th class="">Harga up</th>
                                     <th class="w-10">Status</th>
@@ -101,14 +102,14 @@
                                 foreach ($pricelists as $c) : ?>
                                     <tr>
                                         <td class="text-end"><?= $no++; ?>.</td>
-                                        <td><?= $c->origin . '-' . $c->destination ?></td>
                                         <td><?= ($c->city_origin) ?></td>
                                         <td><?= ($c->city) ?></td>
+                                        <td class="text-end"><?= $c->min_chargeable . '-' . $c->max_chargeable ?></td>
                                         <td class="text-end"><?= number_format($c->all_in_smu, 2) ?></td>
                                         <td class="text-end"><?= number_format($c->total, 2) ?></td>
                                         <td>
-                                            <button type="button" class="btn btn-ghost-primary btn-sm editData" data-id="<?= $c->slug ?>">Edit</button>
-                                            <a href='<?= base_url('pricelist/' . ($c->is_active == "1" ? "hold" : "activate") . '/' . $c->slug) ?>' class='btn btn-ghost-<?= $c->is_active == "1" ? "danger" : "secondary" ?> btn-sm btn-process'><?= $c->is_active == "1" ? "Hold" : "Activate" ?></a>
+                                            <button type="button" class="btn btn-ghost-primary btn-sm editData disabled" data-id="<?= $c->slug ?>">Edit</button>
+                                            <a href='<?= base_url('pricelist/' . ($c->is_active == "1" ? "hold" : "activate") . '/' . $c->slug) ?>' class='btn btn-ghost-<?= $c->is_active == "1" ? "danger" : "success" ?> btn-sm btn-process disabled'><?= $c->is_active == "1" ? "Hold" : "Activate" ?></a>
                                         </td>
                                         <td class="<?= ($c->is_active == "1") ? "bg-success" : "bg-danger" ?> text-white"><?= ($c->is_active == "1") ? "Active" : "Hold" ?></td>
                                     </tr>

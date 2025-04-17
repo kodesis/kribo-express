@@ -7,7 +7,7 @@
             <option <?= ($per_page == '100') ? 'selected' : '' ?> value="100">100</option>
         </select>
     </div>
-    <div class="col">
+    <div class="col-auto">
         <input type="text" value="<?= $keyword ?>" class="form-control" name="keyword" placeholder="Search…" aria-label="Search in website">
     </div>
 </div>

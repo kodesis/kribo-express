@@ -137,6 +137,41 @@ class Booking extends CI_Controller
         $this->load->view('pages/index', $data);
     }
 
+    public function load_data()
+    {
+        $mode = $this->input->get('mode'); // Ambil mode dari AJAX (desktop/mobile)
+
+        $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search_order_keyword')) ? $this->session->userdata('search_order_keyword') : '');
+        if ($keyword === null) $keyword = $this->session->userdata('search_order_keyword');
+        else $this->session->set_userdata('search_order_keyword', $keyword);
+
+        // $status = ($this->input->post('status')) ? trim($this->input->post('status')) : (($this->session->userdata('search_order_status')) ? $this->session->userdata('search_order_status') : '');
+        // if ($status === null) $status = $this->session->userdata('search_order_status');
+        // else $this->session->set_userdata('search_order_status', $status);
+
+        // $tanggal = ($this->input->post('tanggal')) ? trim($this->input->post('tanggal')) : (($this->session->userdata('search_order_tanggal')) ? $this->session->userdata('search_order_tanggal') : '');
+        // if ($tanggal === null) $tanggal = $this->session->userdata('search_order_tanggal');
+        // else $this->session->set_userdata('search_order_tanggal', $tanggal);
+
+        $config['per_page'] = 10;
+
+        $page = $this->uri->segment(3) ? ($this->uri->segment(3) - 1) * $config['per_page'] : 0;
+
+        $data = [
+            "keyword" => $keyword,
+            "bookings" => $this->M_Booking->listBookingPaginate($config["per_page"], $page, $keyword),
+            "partners" => $this->M_Partner->list_partner(),
+            "per_page" => $config['per_page'],
+            "total_rows" => $this->M_Booking->countBooking($keyword),
+        ];
+
+        if ($mode == 'mobile') {
+            $this->load->view('pages/booking/v_booking_mobile', $data);
+        } else {
+            $this->load->view('pages/booking/v_booking_desktop', $data);
+        }
+    }
+
     private function checkSaldo($id)
     {
         return $this->M_Partner->getSaldoAkhirPartner($id)['saldo_akhir'];
@@ -1233,28 +1268,74 @@ class Booking extends CI_Controller
     {
         $origin = $this->input->post('origin');
         $destination = $this->input->post('destination');
-        $dom_int = $this->input->post('jenis_pengiriman');
-        $chargeable = $this->input->post('chargeable');
+        $jenis = $this->input->post('jenis_pengiriman');
+        $chargeable = (float) $this->input->post('chargeable');
 
+        // print_r($jenis);
+
+        $this->db->where('jenis', $jenis);
         $this->db->where('city_origin', $origin);
         $this->db->where('city', $destination);
+        $this->db->where('is_active', '1');
 
-        if ($dom_int == 'I') {
-            $this->db->where($chargeable . ' >= min_chargeable');
-            if ($chargeable < 10) {
-                $this->db->where($chargeable . ' <= max_chargeable');
+        if ($jenis === 'IE') {
+            if ($chargeable >= 21) {
+                $this->db->where('min_chargeable', '21');
+            } else {
+                $this->db->where('min_chargeable <=', $chargeable);
+                $this->db->where('max_chargeable >=', $chargeable);
+            }
+        } else {
+            // Untuk jenis lain, ambil sesuai range chargeable
+            if ($jenis == 'IR' || $jenis == "IP") {
+                $this->db->where('min_chargeable <=', $chargeable);
+                $this->db->where('max_chargeable >=', $chargeable);
             }
         }
 
         $price = $this->db->get('mt_pricelist')->row_array();
 
+        $harga_up = 0;
+        $harga_jual = 0;
+        $per_kg = 0;
+
+        if ($price) {
+            if ($jenis === 'IE') {
+                if ($chargeable >= 21) {
+                    $harga_up = (float) $price['total'] * $chargeable;
+                    $harga_jual = (float) $price['all_in_smu'] * $chargeable;
+                } else {
+                    $harga_up = (float) $price['total'];
+                    $harga_jual = (float) $price['all_in_smu'];
+                }
+            } else if ($jenis === 'IP') {
+                if ($chargeable >= 31 && $chargeable <= 300) {
+                    $harga_up = (float) $price['total'] * $chargeable;
+                    $harga_jual = (float) $price['all_in_smu'] * $chargeable;
+                } else {
+                    $harga_up = (float) $price['total'];
+                    $harga_jual = (float) $price['all_in_smu'];
+                }
+            } else {
+                // Selain IE 21UP, harga tetap dikali chargeable
+                $harga_up = (float) $price['total'] * $chargeable;
+                $harga_jual = (float) $price['all_in_smu'] * $chargeable;
+            }
+
+            $per_kg = $price['total'];
+        }
+
         $data = [
-            'harga_up' => $price['total'],
-            'harga_jual' => $price['all_in_smu']
+            'chargeable' => $chargeable,
+            'per_kg' => $per_kg,
+            'harga_up' => $harga_up,
+            'harga_jual' => $harga_jual
         ];
 
         echo json_encode($data);
     }
+
+
 
     public function downloadRekapExcel()
     {
@@ -1409,19 +1490,25 @@ class Booking extends CI_Controller
     public function autocompleteDestination()
     {
         $term = $this->input->get('term');
+        $jenis = $this->input->get('jenis');
 
+        $this->db->where('jenis', $jenis);
         $this->db->like('city', $term);
         $this->db->group_by('city');
+        $this->db->order_by('city', 'ASC');
+
         $query = $this->db->get('mt_pricelist');
 
         $result = $query->result_array();
         $items = [];
+
         foreach ($result as $row) {
             $items[] = [
                 'label' => $row['city'],
                 'value' => $row['city'],
             ];
         }
+
         echo json_encode($items);
     }
 

@@ -46,7 +46,6 @@
                         </a>
                     <?php
                     } ?>
-                    <a href=</div>
                 </div>
             </div>
         </div>

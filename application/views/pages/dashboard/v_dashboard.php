@@ -49,6 +49,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="dropdown mt-2 w-100">
+                                <button type="button" class="btn btn-primary dropdown-toggle w-100" data-bs-toggle="dropdown">Buat Booking</button>
+                                <div class="dropdown-menu dropdown-menu-arrow w-100">
+                                    <span class="dropdown-header">Pilih jenis booking</span>
+                                    <a class="dropdown-item" href="<?= base_url('booking/create_booking') ?>">
+                                        Domestik
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        Intl. Regular
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        Intl. Economy
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        Intl. Premium All Commodity
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-9 col-12">
                             <div class="row row-cards">
@@ -79,7 +97,9 @@
                                                         <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
                                                         <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
                                                             <option value="D">Domestik</option>
-                                                            <option value="I">Internasional</option>
+                                                            <option value="IR">Internasional Reguler</option>
+                                                            <option value="IE">Internasional Economy</option>
+                                                            <option value="IP">Internasional Premium</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -329,7 +349,9 @@
                                                         <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
                                                         <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
                                                             <option value="D">Domestik</option>
-                                                            <option value="I">Internasional</option>
+                                                            <option value="IR">Internasional Reguler</option>
+                                                            <option value="IE">Internasional Economy</option>
+                                                            <option value="IP">Internasional Premium</option>
                                                         </select>
                                                     </div>
                                                 </div>

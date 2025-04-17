@@ -20,6 +20,18 @@ if (flashdata_error) {
 
 // jquery tolong carikan btn-delete yang ketika diklik jalankan fungsi berikut ini
 $(document).ready(function () {
+
+	function checkScreen() {
+		var mode = window.innerWidth < 768 ? 'mobile' : 'desktop';
+
+		// Cek apakah mode berubah atau pertama kali akses
+		if (mode !== localStorage.getItem("viewMode") || !localStorage.getItem("viewMode")) {
+			localStorage.setItem("viewMode", mode);
+			loadOrders(mode);
+		}
+	}
+
+
 	$(".btn-delete").on("click", function (e) {
 		e.preventDefault();
 		const href = $(this).attr("href");
@@ -261,7 +273,7 @@ $(document).ready(function () {
 
 	$('#berat_timbang').on('input', function () {
 		tentukanChargeable();
-		hitungNominal();
+		// hitungNominal();
 
 
 		var origin = $("#origin").val();
@@ -314,11 +326,14 @@ $(document).ready(function () {
 	});
 	$("#destination").autocomplete({
 		source: function (request, response) {
+
+			var jenis_pengiriman = $("#jenis_pengiriman").val();
 			$.ajax({
 				url: base_url + 'booking/autocompleteDestination',
 				dataType: "json",
 				data: {
-					term: request.term
+					term: request.term,
+					jenis: jenis_pengiriman
 				},
 				success: function (data) {
 					response(data);
@@ -351,12 +366,13 @@ $(document).ready(function () {
 				origin: origin,
 				destination: destination,
 				jenis_pengiriman: jenis_pengiriman,
-				// chargeable: chargeable,
+				chargeable: chargeable,
 			},
 			cache: false,
 			success: function (response) {
 				var data = JSON.parse(response);
 
+				var per_kg = parseFloat(data.per_kg) || 0; // Handle null or NaN
 				var harga_up = parseFloat(data.harga_up) || 0; // Handle null or NaN
 				var harga_jual = parseFloat(data.harga_jual) || 0; // Handle null or NaN
 
@@ -366,9 +382,10 @@ $(document).ready(function () {
 					$('#harga').removeClass('is-valid').addClass('is-invalid');
 				}
 
-				$('#harga').val(harga_up);
+				$('#harga').val(per_kg);
 				$('#harga_jual').val(harga_jual);
-				hitungNominal();
+				$('#nominal').val(formatNumber(harga_up));
+				// hitungNominal();
 			},
 			error: function () {
 				console.log('Price not found');
@@ -377,16 +394,30 @@ $(document).ready(function () {
 		});
 	}
 
-	function hitungNominal() {
-		var chargeable = parseFloat($('#chargeable').val().replace(/\,/g, '')) || 0;
-		// var harga = parseFloat($('#harga').val().replace(/\,/g, '')) || 0;
-		var harga = parseFloat($('#harga').val()) || 0;
+	// function hitungNominal() {
+	// 	var chargeable = parseFloat($('#chargeable').val().replace(/\,/g, '')) || 0;
+	// 	var harga = parseFloat($('#harga').val()) || 0;
 
-		var nominal;
+	// 	var nominal = Math.round(harga); // default
+	// 	var jenis = $('#jenis_pengiriman').val();
 
-		nominal = Math.round(chargeable * harga);
-		$('#nominal').val(formatNumber(nominal));
-	}
+	// 	// Untuk IE, nominal bisa jadi hasil perkalian (kalau >= 21 kg)
+	// 	if (jenis === 'IE' && chargeable >= 21) {
+	// 		nominal = Math.round(chargeable * harga);
+	// 	}
+
+	// 	$('#nominal').val(formatNumber(nominal));
+	// }
+
+	// function hitungNominal() {
+	// 	var chargeable = parseFloat($('#chargeable').val().replace(/\,/g, '')) || 0;
+	// 	var harga = parseFloat($('#harga').val()) || 0;
+
+	// 	var nominal = Math.round(harga);
+	// 	$('#nominal').val(formatNumber(nominal));
+	// }
+
+
 
 	$(document).on('change click keyup input paste', 'input[name="panjang[]"], input[name="lebar[]"], input[name="tinggi[]"], input[name="jumlah[]"]', function (event) {
 		$(this).val(function (index, value) {
@@ -465,9 +496,9 @@ $(document).ready(function () {
 			chargeable = chargeable;
 		}
 
-		$('#chargeable').val(formatNumber(chargeable));
+		$('#chargeable').val(formatNumber(Math.ceil(chargeable)));
 
-		hitungNominal();
+		// hitungNominal();
 	}
 
 	function formatNumber(number) {
