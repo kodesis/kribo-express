@@ -122,7 +122,8 @@ class Booking extends CI_Controller
             }
         }
 
-        $pages_booking = ($this->session->userdata('role_id') == '3') ? 'v_create_booking_v2' : 'v_create_booking';
+        // $pages_booking = ($this->session->userdata('role_id') == '3') ? 'v_create_booking_v2' : 'v_create_booking';
+        $pages_booking = 'v_create_booking_v2';
 
         $data = [
             "title" => "Create Booking",
@@ -273,6 +274,11 @@ class Booking extends CI_Controller
             'partner_fee' => $partner_fee,
             'jenis_pengiriman' => $dom_int,
         ];
+
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
+        // exit;
 
         $id_resi = $this->M_Booking->insertResi($data);
 
@@ -1147,6 +1153,7 @@ class Booking extends CI_Controller
             'tanggal_berangkat' => trim($this->input->post('tanggal_berangkat')),
             'driver_pickup_id' => trim($this->input->post('driver')),
             'jadwal_pickup' => trim($this->input->post('jadwal_pickup')),
+            'url_tracking' => trim($this->input->post('url_tracking')),
         ];
 
         // echo '<pre>';
@@ -1171,7 +1178,7 @@ class Booking extends CI_Controller
         $resi = $this->M_Booking->getResi($no_resi);
         // $booking = $this->M_Booking->getBookingById($resi['booking_id']);
 
-        $linkTracking = base_url("home/track");
+        $linkTracking = base_url("home/track/$no_resi");
 
         // Load library CIQRCode
         $this->load->library('ciqrcode');
@@ -1329,7 +1336,7 @@ class Booking extends CI_Controller
             'chargeable' => $chargeable,
             'per_kg' => $per_kg,
             'harga_up' => $harga_up,
-            'harga_jual' => $harga_jual
+            'harga_jual' => round($harga_jual)
         ];
 
         echo json_encode($data);

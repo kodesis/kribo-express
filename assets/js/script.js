@@ -271,31 +271,21 @@ $(document).ready(function () {
 
 
 
-	$('#berat_timbang').on('input', function () {
+	function handleChange() {
 		tentukanChargeable();
 		// hitungNominal();
 
-
 		var origin = $("#origin").val();
 		var destination = $("#destination").val();
-		// var jenis_pengiriman = $("#jenis_pengiriman").val();
 
 		if (origin && destination) {
 			fetchPrice(origin, destination);
 		}
-	});
+	}
 
-	$('#jenis_pengiriman').on('change', function () {
-		tentukanChargeable();
+	$('#berat_timbang').on('input', handleChange);
+	$('#jenis_pengiriman').on('change', handleChange);
 
-		var origin = $("#origin").val();
-		var destination = $("#destination").val();
-		// var jenis_pengiriman = $("#jenis_pengiriman").val();
-
-		if (origin && destination) {
-			fetchPrice(origin, destination);
-		}
-	});
 
 	$("#origin").autocomplete({
 		source: function (request, response) {
@@ -448,7 +438,8 @@ $(document).ready(function () {
 
 		row.find('input[name="volume[]"]').val(formatNumber(volume.toFixed(2)));
 		updateTotalRow();
-		tentukanChargeable()
+		tentukanChargeable();
+		handleChange();
 	}
 
 	function updateTotalRow() {
@@ -473,6 +464,7 @@ $(document).ready(function () {
 		$('#total_volume').val(formatNumber(total_volume.toFixed(2))); // Atur nilai input #total_chargeable dengan total_chwt
 
 		tentukanChargeable();
+		handleChange();
 	}
 
 	function tentukanChargeable() {
@@ -483,6 +475,8 @@ $(document).ready(function () {
 		var berat_timbang = parseFloat($('#berat_timbang').val().replace(/\,/g, '')) || 0;
 
 		var volume = parseFloat($('#total_volume').val().replace(/\,/g, '')) || 0;
+
+		console.log(volume);
 
 		if (berat_timbang >= volume) {
 			chargeable = berat_timbang;

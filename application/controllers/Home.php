@@ -43,19 +43,21 @@ class Home extends CI_Controller
 		$this->load->view('pages/front/index', $data);
 	}
 
-	public function track()
+	public function track($resi = NULL)
 	{
-		$nomor_resi = $this->input->post('nomor_resi');
+		$nomor_resi = ($resi) ? $resi : $this->input->post('nomor_resi');
 
 		if (!empty($nomor_resi)) {
-			$this->form_validation->set_rules('g-recaptcha-response', 'reCAPTCHA', 'required');
+			if (!$resi) {
+				// Validasi hanya saat form POST
+				$this->form_validation->set_rules('g-recaptcha-response', 'reCAPTCHA', 'required');
 
-			if ($this->form_validation->run() == FALSE) {
-				$this->session->set_flashdata('message', 'reCAPTCHA is required.');
-				redirect('home/track');
-			} else {
+				if ($this->form_validation->run() == FALSE) {
+					$this->session->set_flashdata('message', 'reCAPTCHA is required.');
+					redirect('home/track');
+				}
+
 				$recaptchaResponse = $this->input->post('g-recaptcha-response');
-				// $secretKey = '6Le8ZkcqAAAAACRQtxwa7SSZpcyETjp_gWkVmLBE'; // Local
 				$secretKey = '6LcrQFQqAAAAAKO2oNf5Gx-8MOR1vExhoD0oiDVY'; // Hosting
 				$userIP = $this->input->ip_address();
 
@@ -68,8 +70,8 @@ class Home extends CI_Controller
 
 				$options = [
 					'http' => [
-						'header' => 'Content-type: application/x-www-form-urlencoded',
-						'method' => 'POST',
+						'header'  => 'Content-type: application/x-www-form-urlencoded',
+						'method'  => 'POST',
 						'content' => http_build_query($data)
 					]
 				];
@@ -78,26 +80,26 @@ class Home extends CI_Controller
 				$result = file_get_contents($url, false, $context);
 				$resultData = json_decode($result);
 
-				if ($resultData->success) {
-					$cek_resi = $this->M_Booking->cekResi($nomor_resi);
-
-					if ($cek_resi) {
-						$resi = $this->M_Booking->getResi($nomor_resi);
-						$this->session->set_flashdata('message', "Nomor resi $nomor_resi ditemukan!");
-					} else {
-						$this->session->set_flashdata('message', "Nomor resi $nomor_resi tidak ditemukan!");
-					}
-				} else {
+				if (!$resultData->success) {
 					$this->session->set_flashdata('message', 'Unable to verify reCAPTCHA. Please try again later.');
+					redirect('home/track');
 				}
-				$resi = $this->M_Booking->getResi($nomor_resi);
-				$data = [
-					'title' => 'Track',
-					'segment' => 'track',
-					'pages' => 'pages/front/home/v_track',
-					'resi' => ($resi) ? $resi : '',
-				];
 			}
+
+			$cek_resi = $this->M_Booking->cekResi($nomor_resi);
+			if ($cek_resi) {
+				$resi = $this->M_Booking->getResi($nomor_resi);
+				$this->session->set_flashdata('message', "Nomor resi $nomor_resi ditemukan!");
+			} else {
+				$this->session->set_flashdata('message', "Nomor resi $nomor_resi tidak ditemukan!");
+			}
+
+			$data = [
+				'title' => 'Track',
+				'segment' => 'track',
+				'pages' => 'pages/front/home/v_track',
+				'resi' => ($resi) ? $resi : '',
+			];
 		} else {
 			$data = [
 				'title' => 'Track',
@@ -109,6 +111,7 @@ class Home extends CI_Controller
 
 		$this->load->view('pages/front/index', $data);
 	}
+
 
 
 	public function agent()

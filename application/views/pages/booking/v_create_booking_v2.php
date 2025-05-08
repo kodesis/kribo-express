@@ -246,7 +246,7 @@
                     </div>
                     <div class="card-footer text-end">
                         <div class="d-flex">
-                            <button type="submit" class="btn btn-primary ms-auto btn-submit">
+                            <button type="submit" class="btn btn-primary ms-auto">
                                 Simpan
                             </button>
                         </div>

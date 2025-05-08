@@ -50,22 +50,11 @@
                                 </div>
                             </div>
                             <div class="dropdown mt-2 w-100">
-                                <button type="button" class="btn btn-primary dropdown-toggle w-100" data-bs-toggle="dropdown">Buat Booking</button>
-                                <div class="dropdown-menu dropdown-menu-arrow w-100">
-                                    <span class="dropdown-header">Pilih jenis booking</span>
-                                    <a class="dropdown-item" href="<?= base_url('booking/create_booking') ?>">
-                                        Domestik
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        Intl. Regular
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        Intl. Economy
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        Intl. Premium All Commodity
-                                    </a>
-                                </div>
+                                <!-- <button type="button" class="btn btn-primary dropdown-toggle w-100" data-bs-toggle="dropdown">Buat Booking</button> -->
+
+                                <a class="btn btn-primary w-100" href="<?= base_url('booking/create_booking') ?>">
+                                    Buat booking
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-9 col-12">

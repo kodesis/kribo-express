@@ -229,6 +229,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-6 col-12">
+                                <div class="mb-3">
+                                    <label for="url_tracking" class="form-label">URL Tracking</label>
+                                    <textarea name="url_tracking" id="url_tracking" class="form-control" placeholder="Masukkan URL Tracking"><?= $resi['url_tracking'] ?></textarea>
+                                </div>
+                            </div>
                         </div>
                         <div id="newAgent" style="display: none;">
                             <div class="row">

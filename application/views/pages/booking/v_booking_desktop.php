@@ -171,7 +171,13 @@
                                         ?>
                                             <a href="<?= base_url('booking/detailResi/') . $b->no_resi ?>" class="btn btn-primary btn-sm ms-auto mb-1">Detail</a>
                                             <button href="#" class="btn btn-danger btn-sm ms-auto mb-1">Void</button>
+
                                             <?php
+                                            if ($b->url_tracking) {
+                                            ?>
+                                                <a href="<?= $b->url_tracking ?>" class="btn btn-info btn-sm ms-auto mb-1" target="_blank">Track Barang</a>
+                                            <?php
+                                            }
                                         } else {
                                             if ($b->status_bayar == '0') {
                                             ?>

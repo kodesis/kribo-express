@@ -216,8 +216,10 @@ class M_Booking extends CI_Model
 
     public function insertResi($data)
     {
-        return $this->db->insert('resi', $data);
+        $this->db->insert('resi', $data);
+        return $this->db->insert_id(); // Dapatkan ID terakhir yang diinsert
     }
+
 
     public function getResi($no_resi)
     {
