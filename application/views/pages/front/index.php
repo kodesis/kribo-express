@@ -258,6 +258,7 @@
 				<a href="<?= base_url('home/track') ?>" class="nav-item nav-link <?= ($segment == 'track') ? 'active' : '' ?>">Tracking</a>
 				<a href="<?= base_url('home/agent') ?>" class="nav-item nav-link <?= ($segment == 'agent') ? 'active' : '' ?>">Kemitraan</a>
 				<a href="<?= base_url('home/cek_ongkir') ?>" class="nav-item nav-link <?= ($segment == 'cek_ongkir') ? 'active' : '' ?>">Cek Ongkir</a>
+				<a href="<?= base_url('home/pricelist') ?>" class="nav-item nav-link <?= ($segment == 'pricelist') ? 'active' : '' ?>">Daftar Harga</a>
 				<a href="<?= base_url('auth') ?>" class="nav-item nav-link"><?= ($this->session->userdata('is_logged_in')) ? 'Dashboard' : 'Login' ?></a>
 			</div>
 			<!-- <h4 class="m-0 pe-lg-5 d-none d-lg-block"><i class="fa fa-headphones text-primary me-3"></i>+012 345 6789</h4> -->

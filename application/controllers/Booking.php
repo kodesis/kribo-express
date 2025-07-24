@@ -239,7 +239,7 @@ class Booking extends CI_Controller
         $no_resi = $kode . $no_urut;
 
         // nominal
-        $nominal = $this->convertToNumberWithComma($this->input->post('nominal'));
+        $nominal = $this->convertToNumberWithComma($this->input->post('nominal')); // 1055530.00
         $harga_jual = $this->input->post('harga_jual');
         $chargeable = $this->convertToNumberWithComma($this->input->post('chargeable'));
         $partner_fee = ceil($nominal * (0.2));
@@ -275,10 +275,10 @@ class Booking extends CI_Controller
             'jenis_pengiriman' => $dom_int,
         ];
 
-        // echo '<pre>';
-        // print_r($data);
-        // echo '</pre>';
-        // exit;
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        exit;
 
         $id_resi = $this->M_Booking->insertResi($data);
 
@@ -826,23 +826,67 @@ class Booking extends CI_Controller
         $id = $this->input->post('id');
         $status = $this->input->post('status');
 
+        // Mulai transaksi DB
+        $this->db->trans_begin();
+
+        $foto_path = null;
+
+        // Proses upload file jika ada
+        if (!empty($_FILES['foto_pickup']['name'])) {
+            $config['upload_path']   = './assets/files/dokumentasi_pickup/';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_size']      = 2048;
+            $config['file_name']     = 'pickup_' . time();
+
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload('foto_pickup')) {
+                // Batalkan transaksi karena upload gagal
+                $this->db->trans_rollback();
+
+                $response = array(
+                    'success' => false,
+                    'message' => 'Upload foto gagal: ' . strip_tags($this->upload->display_errors())
+                );
+                return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+            }
+
+            $upload_data = $this->upload->data();
+            $foto_path = 'assets/files/dokumentasi_pickup/' . $upload_data['file_name'];
+        }
+
+        // Data yang akan diupdate
         $data = [
             'confirm_pickup' => $status,
-            'status_tracking' => '2'
+            'status_tracking' => '2',
+            'foto_pickup' => $foto_path
         ];
 
-        // Lakukan pembaruan status pada database
+        // Update database
         $this->M_Booking->updateResi($id, $data);
 
-        if ($status == '1') {
-            $message = "Barang sudah di-pickup";
+        // Cek apakah ada error selama transaksi
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+
+            $response = array(
+                'success' => false,
+                'message' => 'Gagal memperbarui status pickup di database.'
+            );
         } else {
-            $message = "Barang batal di-pickup";
+            $this->db->trans_commit();
+
+            $message = $status == '1' ? "Barang sudah di-pickup" : "Barang batal di-pickup";
+            $response = array(
+                'success' => true,
+                'message' => $message
+            );
         }
-        // Kembalikan respon JSON
-        $response = array('success' => true, 'status', 'message' => $message);
-        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+
+
 
     public function confirmWarehouse()
     {
@@ -1278,7 +1322,18 @@ class Booking extends CI_Controller
         $jenis = $this->input->post('jenis_pengiriman');
         $chargeable = (float) $this->input->post('chargeable');
 
+        // cek dulu di tabel mt_destination
+        $query_zone = $this->db->where('destination_name', $destination)->get('mt_destination')->row_array();
+
+        $zone = $query_zone['zone'];
+
+        if ($zone) {
+            $destination = $zone;
+        }
+
+        $jenis = $this->db->select('jenis')->where('city', $destination)->get('mt_pricelist')->row_array()['jenis'];
         // print_r($jenis);
+
 
         $this->db->where('jenis', $jenis);
         $this->db->where('city_origin', $origin);
@@ -1336,7 +1391,8 @@ class Booking extends CI_Controller
             'chargeable' => $chargeable,
             'per_kg' => $per_kg,
             'harga_up' => $harga_up,
-            'harga_jual' => round($harga_jual)
+            'harga_jual' => round($harga_jual),
+            'jenis' => $jenis
         ];
 
         echo json_encode($data);
@@ -1497,22 +1553,19 @@ class Booking extends CI_Controller
     public function autocompleteDestination()
     {
         $term = $this->input->get('term');
-        $jenis = $this->input->get('jenis');
 
-        $this->db->where('jenis', $jenis);
-        $this->db->like('city', $term);
-        $this->db->group_by('city');
-        $this->db->order_by('city', 'ASC');
+        $this->db->like('destination_name', $term);
+        $this->db->order_by('destination_name', 'ASC');
 
-        $query = $this->db->get('mt_pricelist');
+        $query = $this->db->get('mt_destination');
 
         $result = $query->result_array();
         $items = [];
 
         foreach ($result as $row) {
             $items[] = [
-                'label' => $row['city'],
-                'value' => $row['city'],
+                'label' => $row['destination_name'],
+                'value' => $row['destination_name'],
             ];
         }
 

@@ -79,7 +79,7 @@
                                         <div class="card-body">
 
                                             <h3 class="card-title">Cek Ongkir</h3>
-                                            <div class="row">
+                                            <!-- <div class="row">
 
                                                 <div class="col-md-6 col-12">
                                                     <div class="mb-3">
@@ -92,7 +92,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
 
                                             <div class="row">
 
@@ -135,7 +135,7 @@
                                                 </div>
                                                 <div class="col-md-3 col-12">
                                                     <div class="mb-3">
-                                                        <label for="harga" class="form-label">Per Kg</label>
+                                                        <label for="harga" class="form-label">Harga Satuan</label>
                                                         <input type="text" name="harga" id="harga" class="form-control" value="0" readonly>
                                                         <div class="invalid-feedback">Harga tidak tersedia</div>
                                                         <div class="valid-feedback">Harga tersedia</div>
@@ -338,9 +338,9 @@
                                                         <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
                                                         <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
                                                             <option value="D">Domestik</option>
-                                                            <option value="IR">Internasional Reguler</option>
-                                                            <option value="IE">Internasional Economy</option>
-                                                            <option value="IP">Internasional Premium</option>
+                                                            <option value="I">Internasional</option>
+                                                            <!-- <option value="IE">Internasional Economy</option>
+                                                            <option value="IP">Internasional Premium</option> -->
                                                         </select>
                                                     </div>
                                                 </div>

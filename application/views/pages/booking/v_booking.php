@@ -238,7 +238,6 @@
             let id = checkbox.attr('id').replace('pickup_', '');
             let status = checkbox.is(':checked') ? '1' : '0';
 
-            // Fungsi untuk generate kode acak
             function generateRandomCode(length) {
                 let code = '';
                 let characters = '0123456789';
@@ -249,89 +248,103 @@
                 return code;
             }
 
-            // Generate kode acak dengan panjang 6 digit
             let randomCode = generateRandomCode(6);
 
-            // Tampilkan modal konfirmasi dengan kode acak
             Swal.fire({
                 title: 'Konfirmasi penjemputan',
-                html: `Masukkan kode konfirmasi berikut untuk melanjutkan: <strong>${randomCode}</strong>`, // Tampilkan kode acak di modal
-                input: 'text',
-                inputPlaceholder: 'Masukkan kode konfirmasi',
-                showCancelButton: true,
-                confirmButtonText: 'Konfirmasi',
-                cancelButtonText: 'Batal',
-                preConfirm: (inputValue) => {
-                    // Validasi input
-                    if (!inputValue) {
+                html: `
+                    <p>Masukkan kode konfirmasi berikut untuk melanjutkan:</p>
+                    <p><strong>${randomCode}</strong></p>
+                    <input id="kode_konfirmasi_input" class="form-control mb-2" placeholder="Masukkan kode konfirmasi">
+                    <input id="foto_pickup_input" type="file" accept="image/*" class="form-control mb-2">
+                    <div id="preview_container" style="display:none;">
+                        <img id="preview_image" src="" alt="Preview" class="img-fluid rounded" style="max-height: 200px;" />
+                    </div>
+                `,
+                didOpen: () => {
+                    // Pasang event listener untuk preview gambar
+                    document.getElementById('foto_pickup_input').addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const previewContainer = document.getElementById('preview_container');
+                                const previewImage = document.getElementById('preview_image');
+                                previewImage.src = e.target.result;
+                                previewContainer.style.display = 'block';
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                },
+                preConfirm: () => {
+                    const inputKode = document.getElementById('kode_konfirmasi_input').value;
+                    const fileInput = document.getElementById('foto_pickup_input').files[0];
+
+                    if (!inputKode) {
                         Swal.showValidationMessage('Kode konfirmasi tidak boleh kosong!');
-                    } else if (inputValue !== randomCode) {
+                    } else if (inputKode !== randomCode) {
                         Swal.showValidationMessage('Kode konfirmasi salah!');
                     } else {
-                        return inputValue; // Kembalikan nilai input jika valid
+                        return {
+                            inputKode,
+                            fileInput: fileInput || null
+                        };
                     }
-                }
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Konfirmasi',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Tampilkan loading Swal
+                    let formData = new FormData();
+                    formData.append('id', id);
+                    formData.append('status', status);
+
+                    if (result.value.fileInput) {
+                        formData.append('foto_pickup', result.value.fileInput);
+                    }
+
                     Swal.fire({
                         title: "Loading...",
-                        timerProgressBar: true,
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         didOpen: () => {
-                            Swal.showLoading()
+                            Swal.showLoading();
                         },
                     });
 
-                    // Kirimkan status baru ke server
                     $.ajax({
-                        url: '<?= base_url("booking/confirmPickup/") ?>', // Ganti dengan URL endpoint Anda
+                        url: '<?= base_url("booking/confirmPickup/") ?>',
                         method: 'POST',
-                        data: {
-                            id: id,
-                            status: status
-                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
                         success: function(response) {
-                            Swal.close(); // Tutup loading Swal
+                            Swal.close();
                             if (response.success) {
-                                Swal.fire({
-                                    title: "Success!!",
-                                    text: response.message,
-                                    icon: "success",
-                                }).then(function() {
-                                    // Reload halaman setelah sukses
+                                Swal.fire("Sukses!", response.message, "success").then(() => {
                                     window.location.reload();
                                 });
                             } else {
-                                Swal.fire({
-                                    title: "Error!!",
-                                    text: 'Gagal memperbarui status!',
-                                    icon: "error",
-                                }).then(function() {
-                                    // Reload halaman setelah gagal
+                                Swal.fire("Error!", response.message || "Gagal memperbarui status!", "error").then(() => {
                                     window.location.reload();
                                 });
                             }
                         },
                         error: function() {
-                            Swal.close(); // Tutup loading Swal jika terjadi kesalahan
-                            Swal.fire({
-                                title: "Error!!",
-                                text: 'Terjadi kesalahan saat menghubungi server.',
-                                icon: "error",
-                            }).then(function() {
-                                // Reload halaman jika terjadi error
+                            Swal.close();
+                            Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server.", "error").then(() => {
                                 window.location.reload();
                             });
                         }
                     });
                 } else {
-                    // Jika modal dibatalkan, kembalikan status checkbox ke semula
                     checkbox.prop('checked', !checkbox.is(':checked'));
                 }
             });
         });
+
         $(document).on('change', '.check_warehouse', function() {
             let checkbox = $(this);
             let id = checkbox.attr('id').replace('arrWarehouse_', '');

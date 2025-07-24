@@ -54,9 +54,7 @@
                                         <label for="jenis_pengiriman" class="form-label">Jenis pengiriman</label>
                                         <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-control">
                                             <option value="D">Domestik</option>
-                                            <option value="IR">Internasional Reguler</option>
-                                            <option value="IE">Internasional Economy</option>
-                                            <option value="IP">Internasional Premium</option>
+                                            <option value="I">International</option>
                                         </select>
                                     </div>
                                 </div>
@@ -185,7 +183,7 @@
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <div class="mb-3">
-                                        <label for="harga" class="form-label">Per Kg</label>
+                                        <label for="harga" class="form-label">Harga satuan</label>
                                         <input type="text" name="harga" id="harga" class="form-control" value="0" readonly>
                                         <div class="invalid-feedback">Harga tidak tersedia</div>
                                         <div class="valid-feedback">Harga tersedia</div>

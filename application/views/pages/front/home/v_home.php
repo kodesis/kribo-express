@@ -2,6 +2,38 @@
 <div class="container-fluid p-0">
     <div class="owl-carousel header-carousel position-relative mb-5">
         <div class="owl-carousel-item position-relative">
+            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kribo-07.png" alt="">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-10 col-lg-8">
+                            <!-- <h5 class="text-white text-uppercase mb-3 animated slideInDown">Pengiriman Cepat & Terpercaya</h5>
+                            <h1 class="display-3 text-white animated slideInDown mb-4">Mitra Utama Anda untuk <span class="text-primary">Solusi Logistik</span></h1>
+                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Dengan Kribo Express, paket Anda berada di tangan yang aman. Cepat, aman, dan selalu tepat waktu.</p> -->
+                            <!-- <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Baca Selengkapnya</a>
+                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Dapatkan Penawaran</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="owl-carousel-item position-relative">
+            <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kribo-08.png" alt="">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-10 col-lg-8">
+                            <!-- <h5 class="text-white text-uppercase mb-3 animated slideInDown">Pengiriman Cepat & Terpercaya</h5>
+                            <h1 class="display-3 text-white animated slideInDown mb-4">Mitra Utama Anda untuk <span class="text-primary">Solusi Logistik</span></h1>
+                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Dengan Kribo Express, paket Anda berada di tangan yang aman. Cepat, aman, dan selalu tepat waktu.</p> -->
+                            <!-- <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Baca Selengkapnya</a>
+                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Dapatkan Penawaran</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="owl-carousel-item position-relative">
             <img class="img-fluid" src="<?= base_url() ?>assets/front/img/kribo-01.png" alt="">
             <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center">
                 <div class="container">

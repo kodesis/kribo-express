@@ -112,8 +112,6 @@ class Home extends CI_Controller
 		$this->load->view('pages/front/index', $data);
 	}
 
-
-
 	public function agent()
 	{
 		$data = [
@@ -135,8 +133,6 @@ class Home extends CI_Controller
 
 		$this->load->view('pages/front/index', $data);
 	}
-
-
 
 	public function autocompleteOrigin()
 	{
@@ -161,18 +157,21 @@ class Home extends CI_Controller
 	{
 		$term = $this->input->get('term');
 
-		$this->db->like('city', $term);
-		$this->db->group_by('city');
-		$query = $this->db->get('mt_pricelist');
+		$this->db->like('destination_name', $term);
+		$this->db->order_by('destination_name', 'ASC');
+
+		$query = $this->db->get('mt_destination');
 
 		$result = $query->result_array();
 		$items = [];
+
 		foreach ($result as $row) {
 			$items[] = [
-				'label' => $row['city'],
-				'value' => $row['city'],
+				'label' => $row['destination_name'],
+				'value' => $row['destination_name'],
 			];
 		}
+
 		echo json_encode($items);
 	}
 
@@ -180,26 +179,93 @@ class Home extends CI_Controller
 	{
 		$origin = $this->input->post('origin');
 		$destination = $this->input->post('destination');
-		$dom_int = $this->input->post('jenis_pengiriman');
-		$chargeable = $this->input->post('chargeable');
+		$jenis = $this->input->post('jenis_pengiriman');
+		$chargeable = (float) $this->input->post('chargeable');
 
+		// cek dulu di tabel mt_destination
+		$query_zone = $this->db->where('destination_name', $destination)->get('mt_destination')->row_array();
+
+		$zone = $query_zone['zone'];
+
+		if ($zone) {
+			$destination = $zone;
+		}
+
+		$jenis = $this->db->select('jenis')->where('city', $destination)->get('mt_pricelist')->row_array()['jenis'];
+		// print_r($jenis);
+
+
+		$this->db->where('jenis', $jenis);
 		$this->db->where('city_origin', $origin);
 		$this->db->where('city', $destination);
+		$this->db->where('is_active', '1');
 
-		if ($dom_int == 'I') {
-			$this->db->where($chargeable . ' >= min_chargeable');
-			if ($chargeable < 10) {
-				$this->db->where($chargeable . ' <= max_chargeable');
+		if ($jenis === 'IE') {
+			if ($chargeable >= 21) {
+				$this->db->where('min_chargeable', '21');
+			} else {
+				$this->db->where('min_chargeable <=', $chargeable);
+				$this->db->where('max_chargeable >=', $chargeable);
+			}
+		} else {
+			// Untuk jenis lain, ambil sesuai range chargeable
+			if ($jenis == 'IR' || $jenis == "IP") {
+				$this->db->where('min_chargeable <=', $chargeable);
+				$this->db->where('max_chargeable >=', $chargeable);
 			}
 		}
 
 		$price = $this->db->get('mt_pricelist')->row_array();
 
+		$harga_up = 0;
+		$harga_jual = 0;
+		$per_kg = 0;
+
+		if ($price) {
+			if ($jenis === 'IE') {
+				if ($chargeable >= 21) {
+					$harga_up = (float) $price['total'] * $chargeable;
+					$harga_jual = (float) $price['all_in_smu'] * $chargeable;
+				} else {
+					$harga_up = (float) $price['total'];
+					$harga_jual = (float) $price['all_in_smu'];
+				}
+			} else if ($jenis === 'IP') {
+				if ($chargeable >= 31 && $chargeable <= 300) {
+					$harga_up = (float) $price['total'] * $chargeable;
+					$harga_jual = (float) $price['all_in_smu'] * $chargeable;
+				} else {
+					$harga_up = (float) $price['total'];
+					$harga_jual = (float) $price['all_in_smu'];
+				}
+			} else {
+				// Selain IE 21UP, harga tetap dikali chargeable
+				$harga_up = (float) $price['total'] * $chargeable;
+				$harga_jual = (float) $price['all_in_smu'] * $chargeable;
+			}
+
+			$per_kg = $price['total'];
+		}
+
 		$data = [
-			'harga_up' => $price['total'],
-			'harga_jual' => $price['all_in_smu']
+			'chargeable' => $chargeable,
+			'per_kg' => $per_kg,
+			'harga_up' => $harga_up,
+			'harga_jual' => round($harga_jual),
+			'jenis' => $jenis
 		];
 
 		echo json_encode($data);
+	}
+
+	public function pricelist()
+	{
+		$data = [
+			'title' => 'Pricelist',
+			'segment' => 'pricelist',
+			'pages' => 'pages/front/home/v_pricelist'
+		];
+
+		$this->load->view('pages/front/index', $data);
 	}
 }

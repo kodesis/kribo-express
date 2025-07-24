@@ -348,14 +348,14 @@ $(document).ready(function () {
 	// Fungsi untuk melakukan AJAX request dan mendapatkan harga
 	function fetchPrice(origin, destination) {
 		var chargeable = $("#chargeable").val();
-		var jenis_pengiriman = $("#jenis_pengiriman").val();
+		// var jenis_pengiriman = $("#jenis_pengiriman").val();
 		$.ajax({
 			type: 'POST',
 			url: base_url + 'booking/getPrice',
 			data: {
 				origin: origin,
 				destination: destination,
-				jenis_pengiriman: jenis_pengiriman,
+				// jenis_pengiriman: jenis_pengiriman,
 				chargeable: chargeable,
 			},
 			cache: false,

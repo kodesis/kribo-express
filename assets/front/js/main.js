@@ -198,20 +198,21 @@ $(document).ready(function () {
     // Fungsi untuk melakukan AJAX request dan mendapatkan harga
     function fetchPrice(origin, destination) {
         var chargeable = $("#chargeable").val();
-        var jenis_pengiriman = $("#jenis_pengiriman").val();
+        // var jenis_pengiriman = $("#jenis_pengiriman").val();
         $.ajax({
             type: 'POST',
             url: base_url + 'home/getPrice',
             data: {
                 origin: origin,
                 destination: destination,
-                jenis_pengiriman: jenis_pengiriman,
-                // chargeable: chargeable,
+                // jenis_pengiriman: jenis_pengiriman,
+                chargeable: chargeable,
             },
             cache: false,
             success: function (response) {
                 var data = JSON.parse(response);
 
+                var per_kg = parseFloat(data.per_kg) || 0; // Handle null or NaN
                 var harga_up = parseFloat(data.harga_up) || 0; // Handle null or NaN
                 var harga_jual = parseFloat(data.harga_jual) || 0; // Handle null or NaN
 
@@ -221,9 +222,10 @@ $(document).ready(function () {
                     $('#harga').removeClass('is-valid').addClass('is-invalid');
                 }
 
-                $('#harga').val(harga_up);
+                $('#harga').val(per_kg);
                 $('#harga_jual').val(harga_jual);
-                hitungNominal();
+                $('#nominal').val(formatNumber(harga_up));
+                // hitungNominal();
             },
             error: function () {
                 console.log('Price not found');
