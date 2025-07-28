@@ -21,9 +21,7 @@
         </div>
         <div class="row g-4 justify-content-center">
             <div class="col-12 wow fadeInUp justify-content-center" data-wow-delay="0.3s">
-                <!-- <embed src="<?php echo base_url('assets/files/kribo_express_pricelist_2025.pdf'); ?>" type="application/pdf" width="100%" height="600px" /> -->
                 <div id="pdf-container" class="text-center"></div>
-
             </div>
         </div>
     </div>
