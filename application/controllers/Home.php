@@ -268,4 +268,16 @@ class Home extends CI_Controller
 
 		$this->load->view('pages/front/index', $data);
 	}
+
+	public function outlet()
+	{
+		$data = [
+			'title' => 'Outlet',
+			'segment' => 'outlet',
+			'pages' => 'pages/front/home/v_outlet',
+			'outlets' => $this->db->where(['is_active' => '1'])->order_by('nama_pendaftar', 'ASC')->get('partner')->result()
+		];
+
+		$this->load->view('pages/front/index', $data);
+	}
 }
