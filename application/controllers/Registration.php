@@ -51,8 +51,8 @@ class Registration extends CI_Controller
                 'no_telepon' => $this->input->post('no_telepon')
             ];
 
-            echo '<pre>', print_r($this->input->post()), '</pre>';
-            exit;
+            // echo '<pre>', print_r($this->input->post()), '</pre>';
+            // exit;
         }
     }
 

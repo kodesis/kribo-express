@@ -275,10 +275,10 @@ class Booking extends CI_Controller
             'jenis_pengiriman' => $dom_int,
         ];
 
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-        exit;
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
+        // exit;
 
         $id_resi = $this->M_Booking->insertResi($data);
 
