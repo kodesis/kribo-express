@@ -349,4 +349,31 @@ class Home extends CI_Controller
 
 		$this->load->view('landing-page/index', $data);
 	}
+
+	public function tracking()
+	{
+		$awb = $this->input->get('awb', TRUE);
+		$this->load->model('M_Shipment');
+
+		$data = [
+			'title'    => 'Tracking Resi - Smesco Express',
+			'awb'      => $awb,
+			'pages'    => 'landing-page/pages/tracking',
+			'shipment' => NULL,
+			'history'  => []
+		];
+
+		if ($awb) {
+			// 1. Ambil data master shipment
+			$shipment = $this->M_Shipment->getResi($awb);
+
+			if ($shipment) {
+				$data['shipment'] = $shipment;
+				// 2. Ambil riwayat tracking berdasarkan ID shipment
+				$data['history']  = $this->M_Shipment->get_tracking_public($shipment['id']);
+			}
+		}
+
+		$this->load->view('landing-page/index', $data);
+	}
 }
