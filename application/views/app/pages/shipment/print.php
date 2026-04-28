@@ -148,7 +148,7 @@
 		}
 
 		.barcode-area {
-			padding: 15px 0;
+			padding: 10px 0px 2px;
 			text-align: center;
 		}
 
@@ -200,7 +200,7 @@
 			<div class="resi-container">
 				<div class="header">
 					<div class="header-logo">
-						<img src="<?= $logo_base64 ?>" style="width: 200px;">
+						<img src="<?= $logo_base64 ?>" style="width: 150px; margin-left: 10px">
 						<!-- <div class="koli-tag">KOLI: <?= $l['koli_ke'] ?>/<?= $total_koli ?></div> -->
 					</div>
 					<div class="header-qr">
@@ -269,7 +269,7 @@
 									<i style="font-size: 8px;">*Simpan resi ini untuk bukti komplain</i>
 								</td>
 								<td width="30%" class="text-right">
-									<img src="<?= $qr_tracking ?>" style="width: 50px;"><br>
+									<img src="<?= $qr_tracking ?>" style="width: 40px;"><br>
 									<span style="font-size: 7px;">Lacak Kiriman Anda</span>
 								</td>
 							</tr>
