@@ -1,4 +1,4 @@
-<!-- create_intl.php -->
+<!-- create.php -->
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <div class="page-header d-print-none mb-4">
@@ -36,29 +36,21 @@
 								<h3 class="card-title">Rute & Layanan</h3>
 							</div>
 							<div class="card-body row">
-								<?php if (validation_errors()): ?>
-									<div class="alert alert-danger mb-3">
-										<?= validation_errors('<div>', '</div>') ?>
-									</div>
-								<?php endif; ?>
-								<?php if ($this->session->flashdata('error')): ?>
-									<div class="alert alert-danger mb-3"><?= $this->session->flashdata('error') ?></div>
-								<?php endif; ?>
 								<div class="col-md-4 mb-3">
 									<label class="form-label required">Kota Asal</label>
 									<select name="origin" id="origin" class="form-select trigger-price select2" required>
 										<option value="">- Pilih Asal -</option>
-										<option value="JAKARTA">JAKARTA</option>
+										<?php
+										foreach ($origins as $c): ?>
+											<option value="<?= $c->origin ?>"><?= $c->origin ?></option>
+										<?php
+										endforeach; ?>
 									</select>
 								</div>
 								<div class="col-md-4 mb-3">
 									<label class="form-label required">Negara Tujuan</label>
 									<select name="destination_country" id="destination" class="form-select trigger-price select2" required>
 										<option value="">- Pilih Negara -</option>
-										<?php if (isset($countries)): foreach ($countries as $ctr): ?>
-												<option value="<?= $ctr->destination ?>"><?= $ctr->destination ?></option>
-										<?php endforeach;
-										endif; ?>
 									</select>
 								</div>
 								<div class="col-md-4 mb-3">
@@ -170,8 +162,8 @@
 										$rates = $this->db->get_where('master_pickup_rates', ['is_active' => 1])->result();
 										foreach ($rates as $r):
 										?>
-											<option value="<?= $r->id ?>" data-price="<?= $r->harga_jual ?>">
-												<?= $r->area_name ?> (Rp <?= number_format($r->harga_jual) ?>)
+											<option value="<?= $r->id ?>" data-price="<?= $r->price_smesco ?>">
+												<?= $r->area_name ?> (Rp <?= number_format($r->price_smesco) ?>)
 											</option>
 										<?php endforeach; ?>
 									</select>
@@ -454,7 +446,7 @@
 										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div class="modal-body text-dark">
-										<p class="mb-3">Sesuai dengan regulasi Keselamatan Penerbangan, Kepabeanan, dan <strong>Permendag No. 20 Tahun 2024</strong>, barang-barang berikut dilarang keras untuk diekspor / dikirimkan melalui Kribo Express:</p>
+										<p class="mb-3">Sesuai dengan regulasi Keselamatan Penerbangan, Kepabeanan, dan <strong>Permendag No. 20 Tahun 2024</strong>, barang-barang berikut dilarang keras untuk diekspor / dikirimkan melalui Smesco Express:</p>
 
 										<h6 class="fw-bold text-danger mb-2">A. Kategori Komoditas Ekspor Terlarang (Permendag)</h6>
 										<div class="list-group list-group-flush list-group-hoverable mb-4">
@@ -634,6 +626,41 @@
 				checkPrice();
 			});
 		}
+
+		// Destination cascade by origin
+		$('#origin').on('change', function() {
+			const origin = $(this).val();
+			const destSelect = $('#destination');
+
+			// Reset destination
+			destSelect.html('<option value="">- Pilih Tujuan -').trigger('change');
+
+			if (!origin) return;
+
+			$.ajax({
+				url: "<?= site_url('master/ajax_get_international_destination_by_origin') ?>",
+				type: "GET",
+				dataType: "json",
+				data: {
+					origin: origin
+				},
+				success: function(res) {
+					let html = '<option value="">- Pilih Tujuan -</option>';
+					res.forEach(function(item) {
+						html += `<option value="${item.destination}">${item.destination}</option>`;
+					});
+					destSelect.html(html);
+
+					// Reinit Select2 setelah data masuk
+					if (destSelect.hasClass('select2-hidden-accessible')) {
+						destSelect.select2('destroy');
+					}
+					destSelect.select2({
+						width: '100%'
+					});
+				}
+			});
+		});
 
 		// --- DOM Elements ---
 		const inputActual = document.getElementById('actual_weight');

@@ -39,21 +39,20 @@
 									<label class="form-label required">Kota Asal</label>
 									<select name="origin" id="origin" class="form-select trigger-price select2" required>
 										<option value="">- Pilih Asal -</option>
-										<option value="JAKARTA">JAKARTA</option>
-										<!-- <?php foreach ($cities as $c):
-													if ($c->destination == 'ALOR') : ?>
-											<?php
-													endif ?>
-										<?php endforeach; ?> -->
+										<?php
+										foreach ($origins as $c): ?>
+											<option value="<?= $c->origin ?>"><?= $c->origin ?></option>
+										<?php
+										endforeach; ?>
 									</select>
 								</div>
 								<div class="col-md-4 mb-3">
 									<label class="form-label required">Kota Tujuan</label>
 									<select name="destination" id="destination" class="form-select trigger-price select2" required>
 										<option value="">- Pilih Tujuan -</option>
-										<?php foreach ($cities as $c): ?>
+										<!-- <?php foreach ($cities as $c): ?>
 											<option value="<?= $c->destination ?>"><?= $c->destination ?></option>
-										<?php endforeach; ?>
+										<?php endforeach; ?> -->
 									</select>
 								</div>
 								<div class="col-md-4 mb-3">
@@ -148,8 +147,8 @@
 										$rates = $this->db->get_where('master_pickup_rates', ['is_active' => 1])->result();
 										foreach ($rates as $r):
 										?>
-											<option value="<?= $r->id ?>" data-price="<?= $r->harga_jual ?>">
-												<?= $r->area_name ?> (Rp <?= number_format($r->harga_jual) ?>)
+											<option value="<?= $r->id ?>" data-price="<?= $r->price_smesco ?>">
+												<?= $r->area_name ?> (Rp <?= number_format($r->price_smesco) ?>)
 											</option>
 										<?php endforeach; ?>
 									</select>
@@ -299,6 +298,7 @@
 													class="form-selectgroup-input chk-addon"
 													data-method="<?= $addon->calc_method ?>"
 													data-factor="<?= $addon->base_factor ?>"
+													data-min="<?= $addon->min_charge ?>"
 													data-name="<?= html_escape($addon->name) ?>">
 
 												<div class="form-selectgroup-label d-flex align-items-center p-3 h-100">
@@ -446,7 +446,7 @@
 										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div class="modal-body text-dark">
-										<p class="mb-3">Sesuai dengan regulasi Keselamatan Penerbangan, Kepabeanan, dan <strong>Permendag No. 20 Tahun 2024</strong>, barang-barang berikut dilarang keras untuk diekspor / dikirimkan melalui Kribo Express:</p>
+										<p class="mb-3">Sesuai dengan regulasi Keselamatan Penerbangan, Kepabeanan, dan <strong>Permendag No. 20 Tahun 2024</strong>, barang-barang berikut dilarang keras untuk diekspor / dikirimkan melalui Smesco Express:</p>
 
 										<h6 class="fw-bold text-danger mb-2">A. Kategori Komoditas Ekspor Terlarang (Permendag)</h6>
 										<div class="list-group list-group-flush list-group-hoverable mb-4">
@@ -627,6 +627,41 @@
 			});
 		}
 
+		// Destination cascade by origin
+		$('#origin').on('change', function() {
+			const origin = $(this).val();
+			const destSelect = $('#destination');
+
+			// Reset destination
+			destSelect.html('<option value="">- Pilih Tujuan -').trigger('change');
+
+			if (!origin) return;
+
+			$.ajax({
+				url: "<?= site_url('master/ajax_get_domestic_destination_by_origin') ?>",
+				type: "GET",
+				dataType: "json",
+				data: {
+					origin: origin
+				},
+				success: function(res) {
+					let html = '<option value="">- Pilih Tujuan -</option>';
+					res.forEach(function(item) {
+						html += `<option value="${item.destination}">${item.destination}</option>`;
+					});
+					destSelect.html(html);
+
+					// Reinit Select2 setelah data masuk
+					if (destSelect.hasClass('select2-hidden-accessible')) {
+						destSelect.select2('destroy');
+					}
+					destSelect.select2({
+						width: '100%'
+					});
+				}
+			});
+		});
+
 		// --- DOM Elements ---
 		const inputActual = document.getElementById('actual_weight');
 		const lblVolume = document.getElementById('lbl_volume');
@@ -718,6 +753,7 @@
 				let factor = parseFloat(chk.dataset.factor);
 				let name = chk.dataset.name;
 				let feePerItem = 0;
+				const min = parseFloat(chk.dataset.min || 0);
 
 				// Looping dimensi khusus buat ngitung addon ini
 				document.querySelectorAll('.dim-row').forEach(row => {
@@ -727,15 +763,17 @@
 					let q = parseIndoNumber(row.querySelector('.dim-qty').value);
 
 					if (q > 0) {
+						let feeKoli = 0;
 						// Logic perhitungannya dikendalikan oleh calc_method dari Database
 						if (method === 'VOLUME') {
-							feePerItem += (p * l * t * factor) * q;
+							feeKoli = p * l * t * factor;
 						} else if (method === 'VOLUME_PLUS') {
-							// Asumsi Packing Kayu nambah 10cm tiap sisi
-							feePerItem += ((p + 10) * (l + 10) * (t + 10) * factor) * q;
+							feeKoli = (p + 10) * (l + 10) * (t + 10) * factor;
 						} else if (method === 'PER_KOLI') {
-							feePerItem += (factor * q);
+							feeKoli = factor;
 						}
+
+						feePerItem += Math.max(feeKoli, min) * q;
 					}
 				});
 
