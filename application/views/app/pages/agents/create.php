@@ -71,7 +71,7 @@
 						<div class="form-text">
 							<?= tabler_icon('info-circle', 'me-1 text-blue') ?>
 							Kode agen dibuat otomatis berdasarkan wilayah dan urutan pendaftaran.
-							Format: <code>SMC-{kode.kota}.{urutan}</code>
+							Format: <code>KRX-{kode.kota}.{urutan}</code>
 						</div>
 					</div>
 

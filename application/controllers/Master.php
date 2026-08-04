@@ -434,11 +434,14 @@ class Master extends Authenticated_Controller
 		$service_type_id = $this->input->post('service_type_id');
 		$weight          = floatval($this->input->post('weight') ?? 0);
 
+		$sess = $this->session->userdata('user');
+
 		$pricelist = $this->db->get_where('pricelist', [
 			'origin'          => $origin,
 			'destination'     => $destination,
 			'service_type_id' => $service_type_id,
-			'is_active'       => 1
+			'is_active'       => 1,
+			'is_indah_kargo'	=> $sess['is_indah_kargo']
 		])->row();
 
 		if ($pricelist) {
@@ -690,12 +693,15 @@ class Master extends Authenticated_Controller
 			echo json_encode([]);
 			return;
 		}
+		
+		$sess = $this->session->userdata('user');
 
 		$destinations = $this->db
 			->select('destination')
 			->where('category', 'INTERNATIONAL')
 			->where('origin', $origin)
 			->where('is_active', 1)
+			->where('is_indah_kargo', $sess['is_indah_kargo'])
 			->group_by('destination')
 			->order_by('destination', 'ASC')
 			->get('pricelist')

@@ -5,6 +5,10 @@ $is_kribo = in_array($sess['role_slug'], ['superadmin', 'admin-kribo', 'finance-
 
 $no_print_statuses = ['BOOKED', 'CANCELLED'];
 $can_print = !in_array($shipment['status'], $no_print_statuses);
+
+if ($shipment['is_indah_kargo'] === '1') {
+	$can_print = true; // Override untuk Indah Kargo, selalu bisa print label
+}
 ?>
 
 <div class="page-header d-print-none">
@@ -22,7 +26,7 @@ $can_print = !in_array($shipment['status'], $no_print_statuses);
 						<?= tabler_icon('arrow-left', 'me-1') ?> Kembali
 					</a>
 
-					<?php if ($shipment['status'] == 'BOOKED'): ?>
+					<?php if ($shipment['status'] == 'BOOKED' AND $shipment['is_indah_kargo'] !== '1'): ?>
 						<?php if ($shipment['payment_type'] !== 'TRANSFER'): ?>
 
 							<button type="button" class="btn btn-success btn-confirm-paid"
@@ -271,6 +275,14 @@ $can_print = !in_array($shipment['status'], $no_print_statuses);
 											<td class="text-end fw-bold text-success">Rp <?= number_format($shipment['margin_amount']) ?></td>
 										</tr>
 									<?php endif; ?>
+
+									<?php if ($shipment['ppn_amount'] > 0): ?>
+										<tr class="table-warning">
+											<td class="fw-bold">PPN</td>
+											<td class="text-end">Rp <?= number_format($shipment['ppn_amount']) ?></td>
+										</tr>
+									<?php endif; ?>
+									
 
 									<tr class="table-primary">
 										<td class="fw-bold h5 mb-0">Total Biaya</td>

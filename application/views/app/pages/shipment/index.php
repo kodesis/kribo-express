@@ -13,15 +13,33 @@
 			<div class="col-auto ms-auto d-print-none">
 				<div class="btn-list">
 
-					<a href="<?= site_url('shipment/preview_manifest') ?>" class="btn btn-warning">
-						<?= tabler_icon('file-spreadsheet', 'me-1') ?>
-						Buat Manifest
-					</a>
-
-					<a href="<?= site_url('shipment/create') ?>" class="btn btn-primary">
-						<?= tabler_icon('plus', 'me-1') ?>
-						Buat Shipment Baru
-					</a>
+					<?php
+					$sess = $this->session->userdata('user');
+					if ($sess['is_indah_kargo'] !== '1') {
+					?>
+						<a href="<?= site_url('shipment/preview_manifest') ?>" class="btn btn-warning">
+							<?= tabler_icon('file-spreadsheet', 'me-1') ?>
+							Buat Manifest
+						</a>
+					<?php
+					}
+					
+					if ($sess['is_indah_kargo'] == '1') {
+					?>
+						<a href="<?= site_url('shipment/create_intl') ?>" class="btn btn-primary">
+							<?= tabler_icon('plus', 'me-1') ?>
+							Buat Shipment Baru
+						</a>
+					<?php
+					} else {
+					?>
+						<a href="<?= site_url('shipment/create') ?>" class="btn btn-primary">
+							<?= tabler_icon('plus', 'me-1') ?>
+							Buat Shipment Baru
+						</a>
+					<?php
+					}
+					?>
 
 				</div>
 			</div>
@@ -32,6 +50,25 @@
 
 <div class="page-body">
 	<div class="container-xl">
+
+		<?php if ($this->session->flashdata('success')): ?>
+			<div class="alert alert-success alert-dismissible mb-4" role="alert">
+				<div class="d-flex align-items-center">
+					<div><?= tabler_icon('circle-check', 'me-2') ?></div>
+					<div><?= $this->session->flashdata('success') ?></div>
+				</div>
+				<a href="#" class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+			</div>
+		<?php endif; ?>
+		<?php if ($this->session->flashdata('error')): ?>
+			<div class="alert alert-danger alert-dismissible mb-4" role="alert">
+				<div class="d-flex align-items-center">
+					<div><?= tabler_icon('alert-circle', 'me-2') ?></div>
+					<div><?= $this->session->flashdata('error') ?></div>
+				</div>
+				<a href="#" class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+			</div>
+		<?php endif; ?>
 
 		<!-- SUMMARY CARDS (data dari $stats) -->
 		<div class="row row-cards mb-4">
@@ -108,6 +145,8 @@
 									'READY_TO_PICKUP',
 									'PICKED_UP',
 									'RECEIVED_ORIGIN',
+									'OFFLOADED',
+									'CONSOLIDATED',
 									'MANIFESTED',
 									'DEPARTED',
 									'ARRIVED',
@@ -155,7 +194,7 @@
 				<table class="table table-vcenter card-table table-hover">
 					<thead class="bg-light">
 						<tr>
-							<th style="width:20px"><input type="checkbox" id="check-all" class="form-check-input"></th>
+							<!-- <th style="width:20px"><input type="checkbox" id="check-all" class="form-check-input"></th> -->
 							<th class="w-1">No</th>
 							<th>No. Resi (AWB)</th>
 							<th>Rute & Layanan</th>
@@ -169,15 +208,15 @@
 						<?php if (!empty($shipments)): $no = 1;
 							foreach ($shipments as $s): ?>
 								<tr>
-									<td>
+									<!-- <td>
 										<?php if ($s->status == 'RECEIVED_ORIGIN' && $role_slug == 'admin-kribo'): ?>
 											<input type="checkbox" class="form-check-input shipment-check" value="<?= $s->id ?>">
 										<?php endif; ?>
-									</td>
+									</td> -->
 									<td class="text-muted small"><?= $no++ ?></td>
 									<td>
 										<div class="d-flex align-items-center gap-1">
-											<span class="fw-bold text-primary"><?= $s->no_resi ?></span>
+											<a href="<?= site_url('shipment/detail/' . $s->id) ?>"><span class="fw-bold text-primary"><?= $s->no_resi ?></span></a>
 											<?php if ($s->is_valuable): ?>
 												<span class="text-danger" title="Barang Berharga"><?= tabler_icon('shield-check', 'icon-sm') ?></span>
 											<?php endif; ?>
@@ -200,26 +239,10 @@
 										<div class="fw-bold text-success small">Rp <?= number_format($s->total_amount, 0, ',', '.') ?></div>
 										<div class="small text-muted"><?= $s->koli ?> Koli | <?= floatval($s->chargeable_weight) ?> Kg</div>
 									</td>
-									<td>
-										<?php
-										$bg = 'bg-secondary';
-
-										if ($s->status == 'BOOKED')           $bg = 'bg-cyan';
-										if ($s->status == 'READY_TO_PICKUP')  $bg = 'bg-yellow';
-										if ($s->status == 'PICKED_UP')             $bg = 'bg-teal';
-										if ($s->status == 'RECEIVED_ORIGIN')  $bg = 'bg-indigo';
-										if ($s->status == 'MANIFESTED')       $bg = 'bg-blue';
-										if ($s->status == 'DEPARTED')              $bg = 'bg-orange';
-										if ($s->status == 'ARRIVED')               $bg = 'bg-purple';
-										if ($s->status == 'RECEIVED_DESTINATION')  $bg = 'bg-cyan';
-										if ($s->status == 'DELIVERED')        $bg = 'bg-success';
-										if ($s->status == 'CANCELLED')        $bg = 'bg-danger';
-										?>
-										<span class="badge <?= $bg ?> fw-bold"><?= str_replace('_', ' ', $s->status) ?></span>
-									</td>
+									<td><?= shipment_status_badge($s->status) ?></td>
 									<td>
 										<div class="btn-list flex-nowrap">
-											<?php if ($s->status == 'BOOKED'): ?>
+											<?php if ($s->status == 'BOOKED' && $s->is_indah_kargo !== $sess['is_indah_kargo']): ?>
 												<?php if ($s->payment_type !== 'TRANSFER'): ?>
 
 													<button type="button" class="btn btn-sm btn-success btn-confirm-paid"
@@ -236,6 +259,23 @@
 												<?php endif; ?>
 											<?php endif; ?>
 											<a href="<?= site_url('shipment/detail/' . $s->id) ?>" class="btn btn-sm btn-icon btn-outline-primary" title="Detail"><?= tabler_icon('eye') ?></a>
+											<?php if ($s->category === 'INTERNATIONAL'): ?>
+												<button type="button" class="btn btn-sm btn-icon btn-outline-azure btn-set-vendor"
+													data-id="<?= $s->id ?>"
+													data-resi="<?= $s->no_resi ?>"
+													data-vendor="<?= $s->vendor ?>"
+													data-connote="<?= $s->vendor_connote ?>"
+													title="Set Vendor Connote">
+													<?= tabler_icon('world-upload') ?>
+												</button>
+											<?php endif; ?>
+											<?php if ($s->status == 'RECEIVED_DESTINATION'): ?>
+												<button type="button" class="btn btn-sm btn-success btn-trigger-delivery"
+													data-id="<?= $s->id ?>"
+													data-resi="<?= $s->no_resi ?>">
+													<?= tabler_icon('truck-delivery', 'me-1') ?> Kirim
+												</button>
+											<?php endif; ?>
 											<?php if ($s->status !== 'BOOKED' && $s->status !== 'CANCELLED'): ?>
 												<a href="<?= site_url('shipment/print_label/' . $s->no_resi) ?>" target="_blank" class="btn btn-sm btn-icon btn-outline-secondary" title="Cetak Label"><?= tabler_icon('printer') ?></a>
 											<?php endif; ?>
@@ -333,6 +373,23 @@
 									<?php endif; ?>
 								<?php endif; ?>
 								<a href="<?= site_url('shipment/detail/' . $s->id) ?>" class="btn btn-sm btn-outline-primary"><?= tabler_icon('eye', 'me-1') ?> Detail</a>
+								<?php if ($s->category === 'INTERNATIONAL'): ?>
+									<button type="button" class="btn btn-sm btn-outline-azure btn-set-vendor"
+										data-id="<?= $s->id ?>"
+										data-resi="<?= $s->no_resi ?>"
+										data-vendor="<?= $s->vendor ?>"
+										data-connote="<?= $s->vendor_connote ?>"
+										title="Set Vendor Connote">
+										<?= tabler_icon('world-upload', 'me-1') ?> Vendor
+									</button>
+								<?php endif; ?>
+								<?php if ($s->status == 'RECEIVED_DESTINATION'): ?>
+									<button type="button" class="btn btn-sm btn-success btn-trigger-delivery"
+										data-id="<?= $s->id ?>"
+										data-resi="<?= $s->no_resi ?>">
+										<?= tabler_icon('truck-delivery', 'me-1') ?> Kirim
+									</button>
+								<?php endif; ?>
 								<a href="<?= site_url('shipment/print_label/' . $s->no_resi) ?>" target="_blank" class="btn btn-sm btn-outline-secondary"><?= tabler_icon('printer') ?></a>
 								<button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-void-shipment"
 									data-id="<?= $s->id ?>"
@@ -355,6 +412,38 @@
 			<?php $this->load->view('app/layouts/_pagination', compact('total', 'page', 'per_page', 'offset', 'total_pages', 'base_url')); ?>
 		</div>
 
+	</div>
+</div>
+
+<!-- MODAL UPLOAD BUKTI DELIVERED -->
+<div class="modal fade" id="modal-delivery" statistical="false" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title fw-bold">Konfirmasi Pengiriman Selesai</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form id="form-delivery-submit" enctype="multipart/form-data">
+				<div class="modal-body">
+					<input type="hidden" name="shipment_id" id="delivery-shipment-id">
+
+					<div class="mb-3">
+						<label class="form-label small fw-bold mb-1">No. Resi</label>
+						<input type="text" id="delivery-no-resi" class="form-control bg-light fw-bold text-primary" readonly tabindex="-1">
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label small fw-bold mb-1">Foto Bukti Pengiriman (POD) <span class="text-danger">*</span></label>
+						<input type="file" name="pod_image" id="pod_image" class="form-control" accept="image/*" required>
+						<small class="text-muted mt-1 d-block">*Ambil foto serah terima barang atau tanda terima fisik.</small>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-sm btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+					<button type="submit" id="btn-save-delivery" class="btn btn-sm btn-success">Konfirmasi & Delivered</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 
@@ -392,6 +481,39 @@
 					<button type="submit" class="btn btn-primary">Simpan & Manifestkan</button>
 				</div>
 			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modal-set-vendor" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title fw-bold">Set Vendor Tracking</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="vendor-shipment-id">
+				<div class="mb-2">
+					<label class="form-label fw-bold mb-1">No. Resi</label>
+					<input type="text" id="vendor-no-resi" class="form-control bg-light fw-bold text-primary" readonly>
+				</div>
+				<div class="mb-2">
+					<label class="form-label fw-bold mb-1">Vendor <span class="text-danger">*</span></label>
+					<select id="vendor-name" class="form-select">
+						<option value="">-- Pilih Vendor --</option>
+						<option value="TLX">TLX</option>
+					</select>
+				</div>
+				<div class="mb-2">
+					<label class="form-label fw-bold mb-1">Connote / Resi Vendor <span class="text-danger">*</span></label>
+					<input type="text" id="vendor-connote" class="form-control" placeholder="Masukkan nomor resi vendor">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+				<button type="button" id="btn-save-vendor" class="btn btn-sm btn-primary">Simpan</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -469,6 +591,101 @@
 					}, 'json');
 				}
 			});
+		});
+	});
+
+	$(document).ready(function() {
+		// Ketika tombol 'Kirim' diklik, munculkan modal dan set data ID & Resi
+		$(document).on('click', '.btn-trigger-delivery', function() {
+			var id = $(this).data('id');
+			var resi = $(this).data('resi');
+
+			$('#delivery-shipment-id').val(id);
+			$('#delivery-no-resi').val(resi);
+			$('#pod_image').val(''); // Reset input file
+
+			$('#modal-delivery').modal('show');
+		});
+
+		// Handle submit form upload via AJAX
+		$('#form-delivery-submit').on('submit', function(e) {
+			e.preventDefault();
+
+			var formData = new FormData(this);
+
+			// Mengubah state tombol menjadi loading
+			$('#btn-save-delivery').attr('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> Memproses...');
+
+			$.ajax({
+				url: "<?= site_url('shipment/update_to_delivered') ?>",
+				type: "POST",
+				data: formData,
+				contentType: false,
+				processData: false,
+				dataType: "JSON",
+				success: function(response) {
+					if (response.status == 'success') {
+						Swal.fire({
+							title: "Berhasil!",
+							text: response.message,
+							icon: "success"
+						}).then(function() {
+							window.location.reload(); // Reload halaman untuk memperbarui status tabel
+						});
+					} else {
+						Swal.fire({
+							title: "Gagal!",
+							text: response.message,
+							icon: "error"
+						});
+						$('#btn-save-delivery').attr('disabled', false).text('Konfirmasi & Delivered');
+					}
+				},
+				error: function() {
+					Swal.fire({
+						title: "Error!",
+						text: "Terjadi kesalahan sistem pada server.",
+						icon: "error"
+					});
+					$('#btn-save-delivery').attr('disabled', false).text('Konfirmasi & Delivered');
+				}
+			});
+		});
+
+		// Buka modal set vendor
+		$(document).on('click', '.btn-set-vendor', function() {
+			$('#vendor-shipment-id').val($(this).data('id'));
+			$('#vendor-no-resi').val($(this).data('resi'));
+			$('#vendor-name').val($(this).data('vendor') || '');
+			$('#vendor-connote').val($(this).data('connote') || '');
+			$('#modal-set-vendor').modal('show');
+		});
+
+		// Submit
+		$('#btn-save-vendor').on('click', function() {
+			const id = $('#vendor-shipment-id').val();
+			const vendor = $('#vendor-name').val();
+			const connote = $('#vendor-connote').val().trim();
+
+			if (!vendor || !connote) {
+				Swal.fire('Perhatian', 'Vendor dan connote wajib diisi.', 'warning');
+				return;
+			}
+
+			$('#btn-save-vendor').attr('disabled', true).text('Menyimpan...');
+
+			$.post("<?= site_url('shipment/ajax_set_vendor') ?>", {
+				id,
+				vendor,
+				connote
+			}, function(res) {
+				if (res.status) {
+					Swal.fire('Berhasil!', res.message, 'success').then(() => location.reload());
+				} else {
+					Swal.fire('Gagal', res.message, 'error');
+					$('#btn-save-vendor').attr('disabled', false).text('Simpan');
+				}
+			}, 'json');
 		});
 	});
 </script>

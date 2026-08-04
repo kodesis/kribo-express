@@ -17,7 +17,6 @@ class Dashboard extends Authenticated_Controller
 		$sess      = $this->session->userdata('user');
 		$role_slug = $sess['role_slug'];
 
-		// Tentukan view & data berdasarkan role
 		switch ($role_slug) {
 			case 'superadmin':
 				$this->_superadmin($sess);
@@ -41,6 +40,9 @@ class Dashboard extends Authenticated_Controller
 				break;
 			case 'driver': // Tambahkan Role Driver
 				$this->_driver($sess);
+				break;
+			case 'indah-kargo': // Tambahkan Role Indah Kargo
+				$this->_indah_kargo($sess);
 				break;
 			default:
 				show_error('Role tidak dikenali.', 403);
@@ -254,5 +256,29 @@ class Dashboard extends Authenticated_Controller
 		")->get('shipments')->row();
 
 		$this->render('app/pages/dashboard/v_checker', compact('title', 'stats'));
+	}
+
+	private function _indah_kargo($sess)
+	{
+		$title = 'Dashboard Indah Kargo';
+		// Statistik barang yang akan datang (dari driver) vs yang sudah diterima gudang
+		$stats = $this->db->select("
+			COUNT(*) as total_shipments,
+			SUM(CASE WHEN status = 'READY_TO_PICKUP' THEN 1 ELSE 0 END) as ready_to_pickup,
+			SUM(CASE WHEN status = 'PICKED_UP' THEN 1 ELSE 0 END) as picked_up,
+			SUM(CASE WHEN status = 'RECEIVED_AT_HERA_WAREHOUSE' THEN 1 ELSE 0 END) as received_at_warehouse
+		")->get('shipments')->row();
+
+		// echo '<pre>';
+		// print_r($sess);
+		// echo '</pre>';
+		// exit;
+
+		$data = [
+			'title' => $title,
+			// 'stats' => $stats
+		];
+
+		$this->render('app/pages/dashboard/v_indah_kargo', $data);
 	}
 }

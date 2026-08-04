@@ -7,11 +7,11 @@
 				<h2 class="page-title text-uppercase ls-1">Daftar Transaksi Shipment</h2>
 				<div class="text-muted mt-1">Monitoring & pengolahan data pengiriman kargo.</div>
 			</div>
-			<div class="col-auto ms-auto d-print-none">
+			<!-- <div class="col-auto ms-auto d-print-none">
 				<a href="<?= site_url('shipment/create') ?>" class="btn btn-primary shadow-sm">
 					<?= tabler_icon('plus', 'me-2') ?> Buat Booking Baru
 				</a>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>

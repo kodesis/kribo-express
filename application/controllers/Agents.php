@@ -98,7 +98,7 @@ class Agents extends Authenticated_Controller
 				$count = $this->db
 					->where('regency_id', $regency_id)
 					->count_all_results('agents');
-				$code = 'SMC-' . $regency_id . '.' . str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+				$code = 'KRX-' . $regency_id . '.' . str_pad($count + 1, 3, '0', STR_PAD_LEFT);
 			}
 
 			$insert = [
@@ -220,7 +220,7 @@ class Agents extends Authenticated_Controller
 			$result[] = [
 				'id'           => $r->id,
 				'nama'         => $r->nama,
-				'code_preview' => 'SMC-' . $r->id . '.' . $urut,
+				'code_preview' => 'KRX-' . $r->id . '.' . $urut,
 			];
 		}
 

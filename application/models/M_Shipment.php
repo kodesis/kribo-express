@@ -147,6 +147,10 @@ class M_Shipment extends CI_Model
 		if (!empty($filters['payment_status'])) {
 			$this->db->where('payment_status', $filters['payment_status']);
 		}
+
+		if (!empty($filters['is_indah_kargo'])) {
+			$this->db->where('shipments.is_indah_kargo', $filters['is_indah_kargo']);
+		}
 	}
 
 	// Di M_Shipment.php atau M_Manifest.php
@@ -487,5 +491,67 @@ class M_Shipment extends CI_Model
         SUM(CASE WHEN status IN ('ARRIVED','DEPARTED') 
             AND destination = {$city_name_escaped} THEN 1 ELSE 0 END) as inbound_pending
     ")->where('agent_id', $agent_id)->get('shipments')->row();
+	}
+
+	public function sync_vendor_tracking($shipment_id)
+	{
+		$shipment = $this->db->select('id, vendor, vendor_connote, status')
+			->from('shipments')
+			->where('id', $shipment_id)
+			->where_in('vendor', ['TLX', 'TRACKINGEXPORT']) // tambah vendor baru di sini
+			->get()->row_array();
+
+		if (!$shipment || empty($shipment['vendor_connote'])) return false;
+		if ($shipment['status'] === 'DELIVERED') return false;
+
+		// Resolve vendor class
+		$vendor_map = [
+			'TLX'           => 'Tlx_tracking',
+			'TRACKINGEXPORT' => 'Trackingexport_tracking', // nanti
+		];
+
+		$class_name = $vendor_map[$shipment['vendor']] ?? null;
+		if (!$class_name) return false;
+
+		require_once APPPATH . 'libraries/tracking/Tracking_contract.php'; // ← tambah ini
+		require_once APPPATH . 'libraries/tracking/' . $class_name . '.php';
+		$tracker = new $class_name();
+		$items   = $tracker->fetch($shipment['vendor_connote']);
+
+		if (empty($items)) return false;
+
+		// Ambil existing timestamps untuk dedup
+		$existing = $this->db->select('created_at')
+			->from('shipment_tracking')
+			->where('shipment_id', $shipment_id)
+			->get()->result_array();
+
+		$existing_timestamps = array_column($existing, 'created_at');
+		$has_delivered = false;
+
+		foreach ($items as $item) {
+			if (in_array($item['created_at'], $existing_timestamps)) continue;
+
+			$this->db->insert('shipment_tracking', [
+				'shipment_id' => $shipment_id,
+				'status'      => $item['status'],
+				'note'        => $item['note'],
+				'location'    => $item['location'],
+				'created_by'  => 0,
+				'created_at'  => $item['created_at'],
+			]);
+
+			if ($item['status'] === 'DELIVERED') $has_delivered = true;
+		}
+
+		if ($has_delivered) {
+			$this->db->where('id', $shipment_id)
+				->update('shipments', [
+					'status'     => 'DELIVERED',
+					'updated_at' => date('Y-m-d H:i:s'),
+				]);
+		}
+
+		return true;
 	}
 }

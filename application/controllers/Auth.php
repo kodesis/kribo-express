@@ -60,6 +60,7 @@ class Auth extends CI_Controller
 							'role_scope' => $user['role_scope'],   // 'global' atau 'agent'
 							'role_name'  => $user['role_name'],    // untuk tampilan di UI
 							'agent_id'   => $user['agent_id'],     // NULL kalau scope global
+							'is_indah_kargo' => $user['is_indah_kargo'], // 1 kalau user ini punya akses ke Indah Kargo
 						],
 						'is_logged_in' => TRUE,
 					];

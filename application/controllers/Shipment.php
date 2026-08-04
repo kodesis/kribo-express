@@ -33,6 +33,7 @@ class Shipment extends Authenticated_Controller
 			'status' => $this->input->get('status', TRUE),
 			'start'  => $this->input->get('start', TRUE),
 			'end'    => $this->input->get('end', TRUE),
+			'is_indah_kargo' => $sess['is_indah_kargo']
 		];
 
 		// 2. Hitung Total terfilter
@@ -78,6 +79,8 @@ class Shipment extends Authenticated_Controller
 	public function create()
 	{
 		$this->_check_access();
+
+		$sess = $this->session->userdata('user');
 
 		if ($this->input->server('REQUEST_METHOD') === 'POST') {
 
@@ -472,19 +475,28 @@ class Shipment extends Authenticated_Controller
 	public function create_intl()
 	{
 		$this->_check_access();
+		$sess = $this->session->userdata('user');
 
 		// Nanti lu butuh master data negara untuk dropdown tujuan internasional
 		$data = [
 			'title'     => 'Buat Booking (Internasional)',
-			'origins'	  => $this->db->select('origin')->where('category', 'INTERNATIONAL')->group_by('origin')->get('pricelist')->result(),
+			'origins'	  => $this->db->select('origin')->where(['category' => 'INTERNATIONAL', 'is_indah_kargo' => $sess['is_indah_kargo']])->group_by('origin')->get('pricelist')->result(),
 			'cities'    => $this->M_Pricelist->get_cities(), // Asal (Origin)
-			'countries' => $this->db->select('destination')->where('category', 'INTERNATIONAL')->get('pricelist')->result(), // Tujuan (Destination)
+			'countries' => $this->db->select('destination')->where(['category' => 'INTERNATIONAL', 'is_indah_kargo' => $sess['is_indah_kargo']])->get('pricelist')->result(), // Tujuan (Destination)
 			'services'  => $this->M_Pricelist->get_services('INTERNATIONAL'),
 			'commodities' => $this->db->get_where('master_commodities', ['is_active' => 1])->result(),
-			'addons'    => $this->db->get_where('master_addons', ['is_active' => 1])->result()
+			'addons'    => $this->db->get_where('master_addons', ['is_active' => 1])->result(),
+			// 'sess' => $sess
 		];
 
-		$this->render('app/pages/shipment/create_intl', $data);
+
+		if ($sess['is_indah_kargo'] === '1') {
+			$this->render('app/pages/shipment/create_intl_indahkargo', $data);
+		} else {
+			$this->render('app/pages/shipment/create_intl', $data);
+		}
+
+		// $this->render('app/pages/shipment/create_intl', $data);
 	}
 
 	public function save_intl()
@@ -504,7 +516,8 @@ class Shipment extends Authenticated_Controller
 			'origin'          => $origin,
 			'destination'     => $destination,
 			'service_type_id' => $service_id,
-			'is_active'       => 1
+			'is_active'       => 1,
+			'is_indah_kargo'  => $sess['is_indah_kargo']
 		])->row();
 
 		if (!$pricelist) {
@@ -694,7 +707,7 @@ class Shipment extends Authenticated_Controller
 		// ── 9. Generate No Resi ──
 		// $no_resi = 'KRX-INTL-' . date('ymd') . strtoupper(substr(md5(uniqid()), 0, 4));
 
-	$no_resi = $this->M_Shipment->generate_no_resi();
+		$no_resi = $this->M_Shipment->generate_no_resi();
 
 		// ── 10. Eksekusi Upload Foto ──
 		if (!empty($pending_upload)) {
@@ -720,6 +733,11 @@ class Shipment extends Authenticated_Controller
 		if ($payment_type === 'TRANSFER') {
 			$payment_expired_at = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 		}
+
+		$subtotal = $shipping_total + $pickup_fee + $total_addon_fee;
+		$ppn = ($sess['is_indah_kargo'] === '1') ? 0.011 : 0; // PPN 1.1% untuk Indah Kargo, 0% untuk Kribo Express
+		$ppn_amount = $subtotal * $ppn;
+		$grandTotal = $subtotal + $ppn_amount;
 
 		// ── 12. Susun Data Insert Shipment ──
 		$insert_shipment = [
@@ -768,8 +786,11 @@ class Shipment extends Authenticated_Controller
 			'pickup_rate_id'          => $pickup_id,
 			'pickup_fee'              => $pickup_fee,
 			'total_addon_fee'         => $total_addon_fee,
-			'total_amount'            => $shipping_total + $pickup_fee + $total_addon_fee,
+			'total_amount_before_tax' => $subtotal,
+			'total_amount'            => $grandTotal,
 			'margin_amount'           => $total_margin,
+			'ppn'							  => $ppn,
+			'ppn_amount'			  	  => $ppn_amount,
 
 			// Misc
 			'is_valuable'             => 0,
@@ -779,12 +800,8 @@ class Shipment extends Authenticated_Controller
 			'status'                  => 'BOOKED',
 			'created_by'              => $sess['id'],
 			'created_at'              => date('Y-m-d H:i:s'),
+			'is_indah_kargo'			  => $sess['is_indah_kargo']
 		];
-
-		// echo '<pre>';
-		// print_r($insert_shipment);
-		// echo '</pre>';
-		// exit;
 
 		// ── 13. Database Transaction ──
 		$this->db->trans_start();
@@ -815,6 +832,7 @@ class Shipment extends Authenticated_Controller
 			'location'    => $origin,
 			'note'        => 'Shipment internasional berhasil dibuat.',
 			'created_by'  => $sess['id'],
+			'is_indah_kargo' => $sess['is_indah_kargo']
 		]);
 
 		$this->db->trans_complete();
@@ -834,10 +852,11 @@ class Shipment extends Authenticated_Controller
 			'kelurahan_name' => $sender_kel_name  ? $sender_kel_name->nama_kelurahan : NULL,
 			'address_detail' => $this->input->post('sender_address_detail', TRUE),
 			'updated_at'     => date('Y-m-d H:i:s'),
-			'created_by'     => $sess['id'],
+			'created_by'     => $sess['id'],			
+			'is_indah_kargo'			  => $sess['is_indah_kargo']
 		];
 
-		$existing = $this->db->get_where('master_customers', ['phone' => $sender_phone])->row();
+		$existing = $this->db->get_where('master_customers', ['phone' => $sender_phone, 'is_indah_kargo' => $sess['is_indah_kargo']])->row();
 		if ($existing) {
 			$this->db->where('phone', $sender_phone)->update('master_customers', $customer_data);
 		} else {
@@ -853,6 +872,11 @@ class Shipment extends Authenticated_Controller
 			$this->session->set_flashdata('error', 'Gagal menyimpan data booking internasional!');
 			redirect('shipment/create_intl');
 		} else {
+			if ($sess['is_indah_kargo'] === '1') {
+				$this->session->set_flashdata('success', 'Booking berhasil! No Resi: ' . $no_resi);
+				redirect('shipment/detail/' . $shipment_id);
+			}
+
 			if ($payment_type === 'TRANSFER') {
 				$url      = base_url('home/confirm_payment/' . $no_resi);
 				$total_rp = number_format($shipping_total + $pickup_fee + $total_addon_fee, 0, ',', '.');
@@ -886,10 +910,21 @@ class Shipment extends Authenticated_Controller
 		$this->_check_access();
 
 		$shipment = $this->M_Shipment->get_by_id($id);
+		$sess = $this->session->userdata('user');
 
 		if (!$shipment) {
 			$this->session->set_flashdata('error', 'Data shipment tidak ditemukan.');
 			redirect('shipment');
+		}
+
+		if ($shipment['is_indah_kargo'] !== $sess['is_indah_kargo']) {
+			$this->session->set_flashdata('error', 'Anda tidak memiliki akses ke shipment ini.');
+			redirect('shipment');
+		}
+
+		// Sync tracking dari vendor kalau shipment ini punya vendor connote
+		if (!empty($shipment['vendor']) && !empty($shipment['vendor_connote'])) {
+			$this->M_Shipment->sync_vendor_tracking($id);
 		}
 
 		$data = [
@@ -972,7 +1007,7 @@ class Shipment extends Authenticated_Controller
 		}
 
 		$no_print_statuses = ['BOOKED', 'CANCELLED'];
-		if (in_array($resi['status'], $no_print_statuses)) {
+		if ((in_array($resi['status'], $no_print_statuses) && $resi['is_indah_kargo'] === '0')) {
 			$this->session->set_flashdata('error', 'Shipment dengan status ' . $resi['status'] . ' tidak bisa dicetak.');
 			redirect('shipment/detail/' . $resi['id']); // ← sesuaikan dengan route detail kamu
 		}
@@ -1371,11 +1406,14 @@ class Shipment extends Authenticated_Controller
 		if ($this->input->server('REQUEST_METHOD') !== 'GET') return;
 
 		$q = $this->input->get('term', TRUE); // term = input dari user
+		
+		$sess = $this->session->userdata('user');
 
 		$this->db->select('id, name, phone, nik, provinsi_id, provinsi_name, kota_id, kota_name, kecamatan_id, kecamatan_name, kelurahan_id, kelurahan_name, address_detail');
 		$this->db->like('phone', $q, 'after'); // search by phone prefix
 		$this->db->or_like('name', $q, 'both');
 		$this->db->limit(8);
+		$this->db->where('is_indah_kargo', $sess['is_indah_kargo']);
 		$customers = $this->db->get('master_customers')->result();
 
 		echo json_encode($customers);
@@ -1666,5 +1704,117 @@ class Shipment extends Authenticated_Controller
 		$writer = new Xlsx($spreadsheet);
 		$writer->save('php://output');
 		exit;
+	}
+
+
+
+	public function update_to_delivered()
+	{
+		// Validasi request AJAX
+		if (!$this->input->is_ajax_request()) {
+			show_404();
+		}
+
+		$shipment_id = $this->input->post('shipment_id');
+		$sess = $this->session->userdata('user'); // Mengambil ID dari session pemicu (sesuaikan key session kamu, misal $sess['id'])
+
+		if (empty($shipment_id)) {
+			echo json_encode(['status' => 'error', 'message' => 'ID Transaksi tidak valid.']);
+			exit;
+		}
+
+		// Ambil rute destination resi ini untuk dijadikan 'location' di tracking log
+		$shipment = $this->db->get_where('shipments', ['id' => $shipment_id])->row();
+		$location = $shipment ? $shipment->destination : 'DESTINATION';
+
+		// Tentukan path folder tujuan
+		$upload_path = './uploads/pod/';
+
+		// JIKA FOLDER BELUM ADA, CREATE OTOMATIS
+		if (!is_dir($upload_path)) {
+			if (!mkdir($upload_path, 0755, true)) {
+				echo json_encode(['status' => 'error', 'message' => 'Gagal membuat folder penyimpanan di server. Hubungi tim IT.']);
+				exit;
+			}
+		}
+
+		// Konfigurasi Upload Gambar ke Folder server
+		$config['upload_path']   = $upload_path;
+		$config['allowed_types'] = 'jpg|jpeg|png';
+		$config['max_size']      = 3072; // Maksimal ukuran 3MB
+		$config['file_name']     = 'POD_' . $shipment_id . '_' . time();
+
+		$this->load->library('upload', $config);
+
+		if (!$this->upload->do_upload('pod_image')) {
+			// Jika gagal upload gambar
+			$error = $this->upload->display_errors('', '');
+			echo json_encode(['status' => 'error', 'message' => 'Gagal mengunggah foto: ' . $error]);
+			exit;
+		} else {
+			// Jika sukses upload, dapatkan nama filenya
+			$upload_data = $this->upload->data();
+			$file_name   = $upload_data['file_name'];
+
+			// Mulai database transaction agar jika salah satu query gagal, data aman tidak corupt
+			$this->db->trans_begin();
+
+			// 1. Update tabel utama 'shipments' (hanya status dan waktu diperbarui)
+			$update_data = [
+				'status'     => 'DELIVERED',
+				'updated_at' => date('Y-m-d H:i:s')
+			];
+			$this->db->where('id', $shipment_id);
+			$this->db->update('shipments', $update_data);
+
+			// 2. Insert riwayat tracking log ke tabel 'shipment_tracking' beserta foto bukti (photo_proof)
+			$tracking_data = [
+				'shipment_id' => $shipment_id,
+				'status'      => 'DELIVERED',
+				'location'    => $location,
+				'note'        => 'Paket telah sukses diterima oleh yang bersangkutan. (DELIVERED)',
+				'photo_proof' => $file_name, // Foto disimpan di tabel tracking sekarang, bro!
+				'created_by'  => $sess['id'],
+				'created_at'  => date('Y-m-d H:i:s')
+			];
+			$this->db->insert('shipment_tracking', $tracking_data);
+
+			// Cek status transaksi database
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+
+				// Hapus file foto yang terupload jika query transaksi database gagal
+				if (file_exists($upload_path . $file_name)) {
+					unlink($upload_path . $file_name);
+				}
+
+				echo json_encode(['status' => 'error', 'message' => 'Gagal memperbarui riwayat status di database.']);
+			} else {
+				$this->db->trans_commit();
+				echo json_encode(['status' => 'success', 'message' => 'Status resi berhasil diubah menjadi DELIVERED dan tracking log telah diperbarui.']);
+			}
+			exit;
+		}
+	}
+
+	public function ajax_set_vendor()
+	{
+		$id      = $this->input->post('id');
+		$vendor  = strtoupper(trim($this->input->post('vendor')));
+		$connote = trim($this->input->post('connote'));
+
+		if (!$id || !$vendor || !$connote) {
+			return $this->output->set_content_type('application/json')
+				->set_output(json_encode(['status' => false, 'message' => 'Data tidak lengkap.']));
+		}
+
+		$this->db->where('id', $id)->update('shipments', [
+			'vendor'         => $vendor,
+			'vendor_connote' => $connote,
+			'updated_at'     => date('Y-m-d H:i:s'),
+		]);
+
+		return $this->output->set_content_type('application/json')
+			->set_output(json_encode(['status' => true, 'message' => 'Vendor berhasil disimpan.']));
 	}
 }

@@ -60,7 +60,9 @@
 							</div>
 						</div>
 					</div>
-					<?php if ($city_name): ?>
+					<?php 
+					$sess = $this->session->userdata('user');
+					if ($city_name && $sess['is_indah_kargo'] !== '1'): ?>
 						<div class="card-footer p-2">
 							<a href="<?= site_url('shipment/inbound_scan') ?>" class="btn btn-sm btn-purple w-100">
 								<?= tabler_icon('scan', 'me-1') ?> Buka Scanner Inbound
