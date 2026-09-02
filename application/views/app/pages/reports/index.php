@@ -119,6 +119,9 @@
 			<div class="card-header">
 				<h3 class="card-title">Rincian Performa Pengiriman</h3>
 				<div class="card-options">
+					<a href="<?= site_url('reports/export_excel_shipment?') . http_build_query($_GET) ?>" class="btn btn-success btn-sm">
+						<?= tabler_icon('file-spreadsheet') ?> Export Excel Shipment
+					</a>
 					<a href="<?= site_url('reports/export_excel?') . http_build_query($_GET) ?>" class="btn btn-success btn-sm">
 						<?= tabler_icon('file-spreadsheet') ?> Export Excel
 					</a>

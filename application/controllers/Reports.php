@@ -145,4 +145,133 @@ class Reports extends MY_Controller
 		$writer->save('php://output');
 		exit;
 	}
+
+	public function export_excel_shipment()
+	{
+		$sess = $this->session->userdata('user');
+		$role = $sess['role_slug'];
+		$scope = $sess['role_scope'];
+
+		$filters = [
+			'start'    => $this->input->get('start'),
+			'end'      => $this->input->get('end'),
+			'agent_id' => ($scope === 'agent') ? $sess['agent_id'] : $this->input->get('agent_id'),
+			'status'   => $this->input->get('status')
+		];
+
+		$results = $this->M_Report->get_shipment_report($filters);
+
+		// 1. Load Library
+		require_once FCPATH . 'vendor/autoload.php';
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+
+		// 2. Styling Header
+		$headerStyle = [
+			'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+			'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => '206BC4']],
+			'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+		];
+
+		// 3. Define Header Columns
+		$columns = [
+			'A' => 'No. Resi',
+			'B' => 'Tanggal',
+			'C' => 'Status',
+			'D' => 'Asal',
+			'E' => 'Destinasi',
+			'F' => 'Pengirim',
+			'G' => 'No. Telp Pengirim',
+			'H' => 'Penerima',
+			'I' => 'No. Telp Penerima',
+			'J' => 'Alamat Penerima',
+			'K' => 'Komoditi / Barang',
+			'L' => 'Tipe Pembayaran',
+			'M' => 'Koli',
+			'N' => 'Berat Aktual (Kg)',
+			'O' => 'Berat Volume (Kg)',
+			'P' => 'Berat Ditagihkan / Chargeable (Kg)'
+		];
+		$currentCol = 'Q';
+
+		// if (in_array($role, ['superadmin', 'finance-kribo', 'admin-kribo'])) {
+		// 	$columns[$currentCol++] = 'Cost Kribo';
+		// }
+		if (in_array($role, ['superadmin', 'admin-kribo', 'admin-mitra'])) {
+			$columns[$currentCol++] = 'Total Jual';
+		}
+
+		// Set Header ke Sheet
+		foreach ($columns as $col => $title) {
+			$sheet->setCellValue($col . '1', $title);
+			$sheet->getStyle($col . '1')->applyFromArray($headerStyle);
+			$sheet->getColumnDimension($col)->setAutoSize(true);
+		}
+
+		// 4. Isi Data
+		$row = 2;
+		$t_weight = 0;
+		$t_cost = 0;
+		$t_sell = 0;
+
+		foreach ($results as $r) {
+			$is_void = ($r->status === 'CANCELLED');
+			$total_cost = $r->chargeable_weight * $r->cost_price;
+
+			$sheet->setCellValue('A' . $row, $r->no_resi);
+			$sheet->setCellValue('B' . $row, date('d/m/Y', strtotime($r->created_at)));
+			$sheet->setCellValue('C' . $row, $r->status);
+			$sheet->setCellValue('D' . $row, $r->origin);
+			$sheet->setCellValue('E' . $row, $r->destination);
+			$sheet->setCellValue('F' . $row, $r->sender_name);
+			$sheet->setCellValue('G' . $row, $r->sender_phone);
+			$sheet->setCellValue('H' . $row, $r->receiver_name);
+			$sheet->setCellValue('I' . $row, $r->receiver_phone);
+			$sheet->setCellValue('J' . $row, $r->receiver_address);
+			$sheet->setCellValue('K' . $row, $r->commodity_detail);
+			$sheet->setCellValue('L' . $row, $r->payment_type);
+			$sheet->setCellValue('M' . $row, $r->koli);
+			$sheet->setCellValue('N' . $row, $r->actual_weight);
+			$sheet->setCellValue('O' . $row, $r->volume_weight);
+			$sheet->setCellValue('P' . $row, $r->chargeable_weight);
+
+			$dataCol = 'Q';
+			// if (in_array($role, ['superadmin', 'finance-kribo', 'admin-kribo'])) {
+			// 	$val = $is_void ? 0 : $total_cost;
+			// 	$sheet->setCellValue($dataCol++ . $row, $val);
+			// 	if (!$is_void) $t_cost += $val;
+			// }
+			if (in_array($role, ['superadmin', 'admin-kribo', 'admin-mitra'])) {
+				$val = $is_void ? 0 : $r->total_amount;
+				$sheet->setCellValue($dataCol++ . $row, $val);
+				if (!$is_void) $t_sell += $val;
+			}
+
+			if (!$is_void) $t_weight += $r->chargeable_weight;
+			$row++;
+		}
+
+		// 5. Tambah Baris Total
+		$footerRow = $row;
+		$sheet->setCellValue('A' . $footerRow, 'TOTAL AKTIF');
+		$sheet->mergeCells("A$footerRow:O$footerRow"); // Merge sampai kolom O
+		$sheet->getStyle("A$footerRow:$currentCol$footerRow")->getFont()->setBold(true);
+
+		$sheet->setCellValue('P' . $footerRow, $t_weight); // Total diletakkan di kolom Chargeable Weight (P)
+
+		$footerCol = 'Q';
+		// if (in_array($role, ['superadmin', 'finance-kribo', 'admin-kribo'])) $sheet->setCellValue($footerCol++ . $footerRow, $t_cost);
+		if (in_array($role, ['superadmin', 'admin-kribo', 'admin-mitra'])) $sheet->setCellValue($footerCol++ . $footerRow, $t_sell);
+
+		// 6. Export ke Browser
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+		$filename = "Report_Shipment_Detail_" . date('Ymd_His') . ".xlsx";
+
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment;filename="' . $filename . '"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+		exit;
+	}
 }

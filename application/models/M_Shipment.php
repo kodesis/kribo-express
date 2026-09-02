@@ -498,39 +498,53 @@ class M_Shipment extends CI_Model
 		$shipment = $this->db->select('id, vendor, vendor_connote, status')
 			->from('shipments')
 			->where('id', $shipment_id)
-			->where_in('vendor', ['TLX', 'TRACKINGEXPORT']) // tambah vendor baru di sini
+			->where_in('vendor', ['TLX', 'CHOIR EXPRESS'])
 			->get()->row_array();
 
 		if (!$shipment || empty($shipment['vendor_connote'])) return false;
+
+		// 🔴 REMOVED: 
 		if ($shipment['status'] === 'DELIVERED') return false;
+		// Baris di atas dihapus agar jika data tracking dihapus manual/di-reset, sync tetap bisa berjalan.
 
 		// Resolve vendor class
 		$vendor_map = [
-			'TLX'           => 'Tlx_tracking',
-			'TRACKINGEXPORT' => 'Trackingexport_tracking', // nanti
+			'TLX'   => 'Tlx_tracking',
+			'CHOIR EXPRESS' => 'Choir_tracking',
 		];
 
 		$class_name = $vendor_map[$shipment['vendor']] ?? null;
 		if (!$class_name) return false;
 
-		require_once APPPATH . 'libraries/tracking/Tracking_contract.php'; // ← tambah ini
+		require_once APPPATH . 'libraries/tracking/Tracking_contract.php';
 		require_once APPPATH . 'libraries/tracking/' . $class_name . '.php';
+
 		$tracker = new $class_name();
 		$items   = $tracker->fetch($shipment['vendor_connote']);
 
 		if (empty($items)) return false;
 
-		// Ambil existing timestamps untuk dedup
-		$existing = $this->db->select('created_at')
+		// Ambil existing tracking untuk dedup presisi (kombinasi created_at + note)
+		$existing = $this->db->select('created_at, note')
 			->from('shipment_tracking')
 			->where('shipment_id', $shipment_id)
 			->get()->result_array();
 
-		$existing_timestamps = array_column($existing, 'created_at');
-		$has_delivered = false;
+		$existing_signatures = array_map(function ($row) {
+			return $row['created_at'] . '|' . trim($row['note']);
+		}, $existing);
+
+		// Urutkan $items ASC berdasarkan created_at agar data ter-insert dari terlama ke terbaru
+		usort($items, function ($a, $b) {
+			return strtotime($a['created_at']) <=> strtotime($b['created_at']);
+		});
+
+		$inserted_count = 0;
 
 		foreach ($items as $item) {
-			if (in_array($item['created_at'], $existing_timestamps)) continue;
+			$signature = $item['created_at'] . '|' . trim($item['note']);
+
+			if (in_array($signature, $existing_signatures)) continue;
 
 			$this->db->insert('shipment_tracking', [
 				'shipment_id' => $shipment_id,
@@ -541,15 +555,21 @@ class M_Shipment extends CI_Model
 				'created_at'  => $item['created_at'],
 			]);
 
-			if ($item['status'] === 'DELIVERED') $has_delivered = true;
+			$inserted_count++;
 		}
 
-		if ($has_delivered) {
-			$this->db->where('id', $shipment_id)
-				->update('shipments', [
-					'status'     => 'DELIVERED',
-					'updated_at' => date('Y-m-d H:i:s'),
-				]);
+		// ── FIX UPDATE STATUS UTAMA: Selalu ambil status dengan timestamp paling baru dari array ──
+		$latest_item = end($items);
+
+		if ($latest_item && !empty($latest_item['status'])) {
+			// Update shipments status jika ada data baru di-insert ATAU status shipments saat ini beda dengan status terbaru
+			if ($inserted_count > 0 || $shipment['status'] !== $latest_item['status']) {
+				$this->db->where('id', $shipment_id)
+					->update('shipments', [
+						'status'     => $latest_item['status'],
+						'updated_at' => date('Y-m-d H:i:s'),
+					]);
+			}
 		}
 
 		return true;

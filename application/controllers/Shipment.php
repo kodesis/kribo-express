@@ -1410,10 +1410,10 @@ class Shipment extends Authenticated_Controller
 		$sess = $this->session->userdata('user');
 
 		$this->db->select('id, name, phone, nik, provinsi_id, provinsi_name, kota_id, kota_name, kecamatan_id, kecamatan_name, kelurahan_id, kelurahan_name, address_detail');
+		$this->db->where('is_indah_kargo', $sess['is_indah_kargo']);
 		$this->db->like('phone', $q, 'after'); // search by phone prefix
 		$this->db->or_like('name', $q, 'both');
 		$this->db->limit(8);
-		$this->db->where('is_indah_kargo', $sess['is_indah_kargo']);
 		$customers = $this->db->get('master_customers')->result();
 
 		echo json_encode($customers);

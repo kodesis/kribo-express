@@ -570,47 +570,47 @@ $(document).ready(function () {
 		updateRowNumbers();
 	});
 
-	$("#nama_pengirim").autocomplete({
-		source: function (request, response) {
-			$.ajax({
-				url: base_url + "booking/autocompleteCustomer",
-				dataType: "json",
-				data: {
-					term: request.term
-				},
-				success: function (data) {
-					response(data);
-				}
-			});
-		},
-		minLength: 2,
-		select: function (event, ui) {
-			$("#nama_pengirim").val(ui.item.nama_customer);
-			$("#telepon_pengirim").val(ui.item.telepon_customer);
-			$("#alamat_pengirim").val(ui.item.alamat_customer);
-		}
-	});
+	// $("#nama_pengirim").autocomplete({
+	// 	source: function (request, response) {
+	// 		$.ajax({
+	// 			url: base_url + "booking/autocompleteCustomer",
+	// 			dataType: "json",
+	// 			data: {
+	// 				term: request.term
+	// 			},
+	// 			success: function (data) {
+	// 				response(data);
+	// 			}
+	// 		});
+	// 	},
+	// 	minLength: 2,
+	// 	select: function (event, ui) {
+	// 		$("#nama_pengirim").val(ui.item.nama_customer);
+	// 		$("#telepon_pengirim").val(ui.item.telepon_customer);
+	// 		$("#alamat_pengirim").val(ui.item.alamat_customer);
+	// 	}
+	// });
 
-	$("#nama_penerima").autocomplete({
-		source: function (request, response) {
-			$.ajax({
-				url: base_url + "booking/autocompleteCustomer",
-				dataType: "json",
-				data: {
-					term: request.term
-				},
-				success: function (data) {
-					response(data);
-				}
-			});
-		},
-		minLength: 2,
-		select: function (event, ui) {
-			$("#nama_penerima").val(ui.item.nama_customer);
-			$("#telepon_penerima").val(ui.item.telepon_customer);
-			$("#alamat_penerima").val(ui.item.alamat_customer);
-		}
-	});
+	// $("#nama_penerima").autocomplete({
+	// 	source: function (request, response) {
+	// 		$.ajax({
+	// 			url: base_url + "booking/autocompleteCustomer",
+	// 			dataType: "json",
+	// 			data: {
+	// 				term: request.term
+	// 			},
+	// 			success: function (data) {
+	// 				response(data);
+	// 			}
+	// 		});
+	// 	},
+	// 	minLength: 2,
+	// 	select: function (event, ui) {
+	// 		$("#nama_penerima").val(ui.item.nama_customer);
+	// 		$("#telepon_penerima").val(ui.item.telepon_customer);
+	// 		$("#alamat_penerima").val(ui.item.alamat_customer);
+	// 	}
+	// });
 
 	$('.select2').select2();
 
