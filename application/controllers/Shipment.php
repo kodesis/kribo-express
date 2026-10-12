@@ -917,10 +917,10 @@ class Shipment extends Authenticated_Controller
 			redirect('shipment');
 		}
 
-		if ($shipment['is_indah_kargo'] !== $sess['is_indah_kargo']) {
-			$this->session->set_flashdata('error', 'Anda tidak memiliki akses ke shipment ini.');
-			redirect('shipment');
-		}
+		// if ($shipment['is_indah_kargo'] !== $sess['is_indah_kargo']) {
+		// 	$this->session->set_flashdata('error', 'Anda tidak memiliki akses ke shipment ini.');
+		// 	redirect('shipment');
+		// }
 
 		// Sync tracking dari vendor kalau shipment ini punya vendor connote
 		if (!empty($shipment['vendor']) && !empty($shipment['vendor_connote'])) {

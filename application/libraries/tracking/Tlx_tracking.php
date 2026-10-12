@@ -14,6 +14,15 @@ class Tlx_tracking implements Tracking_contract
 		'SFD' => 'DELIVERED',
 	];
 
+	// tambahin di atas fetch(), di class
+	private $details_map = [
+		// urutan penting: yang spesifik dulu
+		'ARRIVED AT DESTINATION'   => 'ARRIVED',
+		'DEPARTED TO DESTINATION'  => 'IN_TRANSIT',
+		'has been processed'       => 'MANIFESTED',
+		'has been arrived'         => 'RECEIVED_ORIGIN',
+	];
+
 	public function fetch(string $connote): array
 	{
 		$curl = curl_init();
@@ -37,7 +46,11 @@ class Tlx_tracking implements Tracking_contract
 
 		$result = [];
 		foreach ($decoded['data'][0]['tracking_status'] as $item) {
-			if (empty($item['code']) || !isset($this->code_map[$item['code']])) continue;
+			$status = $this->resolve_status($item);
+			if ($status === null) {
+				log_message('error', 'TLX unmapped: ' . json_encode($item));
+				continue;
+			}
 
 			$note = $item['status'] ?? '';
 			if (!empty($item['details'])) {
@@ -45,7 +58,7 @@ class Tlx_tracking implements Tracking_contract
 			}
 
 			$result[] = [
-				'status'     => $this->code_map[$item['code']],
+				'status'     => $status,
 				'note'       => $note,
 				'location'   => '',
 				'created_at' => date('Y-m-d H:i:s', $item['date_time']),
@@ -53,5 +66,17 @@ class Tlx_tracking implements Tracking_contract
 		}
 
 		return $result;
+	}
+
+	private function resolve_status(array $item): ?string
+	{
+		if (!empty($item['code']) && isset($this->code_map[$item['code']])) {
+			return $this->code_map[$item['code']];
+		}
+		$details = $item['details'] ?? '';
+		foreach ($this->details_map as $needle => $status) {
+			if (stripos($details, $needle) !== false) return $status;
+		}
+		return null;
 	}
 }
